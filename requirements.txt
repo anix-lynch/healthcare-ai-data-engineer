@@ -1,7 +1,11 @@
-fastapi>=0.110
+fastapi>=0.115
 uvicorn[standard]>=0.27
 pydantic>=2.0
 pandas>=2.0
+# fastapi>=0.115 + starlette>=0.40 required: newer httpx 0.28+ TestClient
+# uses ASGITransport(app=...) instead of TestClient(app=...) — older fastapi
+# versions break with the new httpx signature.
+starlette>=0.40
 
 # dbt (Fabric target) — optional for portfolio browse; needed for `dbt run`
 # dbt-core>=1.7
