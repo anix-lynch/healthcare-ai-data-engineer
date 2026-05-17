@@ -204,9 +204,9 @@ Full endpoint reference + 14 more curl recipes: [`api/README.md`](api/README.md)
 **Production swap path:** `api/app/main.py` loads the CSV into pandas at cold
 start (fine for ≤100K rows). For 1M+ rows: drop in DuckDB (`pip install duckdb`
 + `con.execute('SELECT ... FROM read_csv_auto(...)')`) or point at a cloud
-warehouse (BigQuery / Snowflake / Fabric). All endpoints already return
-Pydantic-typed responses (`api/app/schemas.py`), so the swap is a backend
-implementation change with zero API contract impact.
+warehouse (BigQuery / Snowflake / Fabric). The response shape is
+documented as Pydantic reference contracts in [`api/app/schemas.py`](api/app/schemas.py),
+so either backend swap preserves the API surface.
 
 ---
 

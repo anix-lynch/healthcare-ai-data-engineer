@@ -1,14 +1,23 @@
-"""Pydantic response models for the Healthcare API.
+"""Pydantic reference contracts for the Healthcare API.
 
-Used as `response_model=` on every endpoint in api/app/main.py so:
-    1. OpenAPI docs auto-generate with proper field types
-    2. unexpected/hallucinated fields get filtered at serialization time
-    3. response shape is a contract — change here = visible diff in docs
+These models document the response shape of every endpoint in main.py.
+They are NOT wired as `response_model=` decorators today because the
+existing endpoints return rich nested aggregates (per-condition counts,
+demographic / clinical / financial / operational nested blocks) that
+benefit from staying as raw dicts during the demo phase.
 
-Honest scope: these schemas describe what the in-memory pandas-backed API
-returns today. The PRODUCTION path swaps pandas-read-CSV for a warehouse
-query (DuckDB local · BigQuery / Snowflake / Fabric cloud). Schemas stay
-identical across both backends.
+Why publish them as a separate file then?
+    1. Living contract for consumers — they can `pip install` this package
+       and use the models for validation client-side.
+    2. Target shape when we promote endpoints to strict validation.
+    3. Guarantees the production-DB swap (pandas → DuckDB / warehouse)
+       doesn't drift the API surface — the contract stays the same.
+
+Production swap path (also documented in README):
+    api/app/main.py loads the CSV into pandas at cold start. For >100K rows:
+        - DuckDB local:  `con.execute("SELECT ... FROM read_csv_auto(...)")`
+        - Cloud warehouse: BigQuery / Snowflake / Fabric query layer
+    Either backend returns the SAME shapes documented here.
 """
 from __future__ import annotations
 from typing import Any
@@ -16,112 +25,99 @@ from pydantic import BaseModel, ConfigDict, Field
 
 
 class _Base(BaseModel):
-    model_config = ConfigDict(extra="ignore")  # drop unexpected fields, never error
+    model_config = ConfigDict(extra="ignore")  # forward-compat: ignore new fields
 
 
-class EndpointInfo(_Base):
-    method: str
-    path: str
-    description: str
-
-
+# ── GET / ──────────────────────────────────────────────────────────────
 class RootResponse(_Base):
-    name: str = "Healthcare API"
-    description: str
+    message: str
     version: str
     total_encounters: int
-    endpoints: list[EndpointInfo]
+    date_range: dict[str, str]
+    endpoints: dict[str, str]
+    docs: str
+    github: str | None = None
 
 
-class Encounter(_Base):
-    """One row from healthcare_dataset.csv (denormalized view)."""
-    Name: str | None = None
-    Age: int | float | None = None
-    Gender: str | None = None
-    Medical_Condition: str | None = Field(None, alias="Medical Condition")
-    Date_of_Admission: str | None = Field(None, alias="Date of Admission")
-    Doctor: str | None = None
-    Hospital: str | None = None
-    Insurance_Provider: str | None = Field(None, alias="Insurance Provider")
-    Billing_Amount: float | None = Field(None, alias="Billing Amount")
-    Room_Number: int | float | None = Field(None, alias="Room Number")
-    Admission_Type: str | None = Field(None, alias="Admission Type")
-    Discharge_Date: str | None = Field(None, alias="Discharge Date")
-    Medication: str | None = None
-    Test_Results: str | None = Field(None, alias="Test Results")
-
-    model_config = ConfigDict(populate_by_name=True, extra="ignore")
-
-
+# ── GET /api/encounters ────────────────────────────────────────────────
 class EncounterListResponse(_Base):
-    total: int = Field(..., description="rows matching the filter, before pagination")
-    returned: int = Field(..., description="rows in this response (≤ limit)")
+    total: int = Field(..., description="rows matching filter, pre-pagination")
     limit: int
     offset: int
-    data: list[dict] = Field(default_factory=list, description=(
-        "encounter rows. dict instead of Encounter typed list to preserve "
-        "the original alias-laden field names for backward compatibility."
-    ))
+    count: int = Field(..., description="rows in this response")
+    data: list[dict] = Field(default_factory=list)
 
 
-class PatientSummary(_Base):
-    patient_name: str | None = None
-    age: int | float | None = None
-    gender: str | None = None
-    encounter_count: int = 0
+# ── GET /api/encounters/{encounter_id} ─────────────────────────────────
+class EncounterDetailResponse(_Base):
+    id: int
+    data: dict
 
 
-class PatientListResponse(_Base):
+# ── GET /api/patients · /api/doctors · /api/hospitals ──────────────────
+class GroupedListResponse(_Base):
+    """Used by /patients, /doctors, /hospitals. They all return the same
+    shape — group-by aggregates with total + limit + count + data."""
     total: int
-    returned: int
     limit: int
-    offset: int
+    count: int
     data: list[dict]
 
 
-class DoctorSummary(_Base):
-    doctor: str
-    encounter_count: int
-
-
-class DoctorListResponse(_Base):
+# ── GET /api/conditions · /api/medications · /api/insurance ────────────
+class CatalogListResponse(_Base):
+    """Used by /conditions, /medications, /insurance.
+    No pagination — returns full catalog with per-item aggregates."""
     total: int
-    returned: int
     data: list[dict]
 
 
-class HospitalSummary(_Base):
-    hospital: str
-    encounter_count: int
+# ── GET /api/stats ─────────────────────────────────────────────────────
+class StatsDatasetBlock(_Base):
+    total_encounters: int
+    unique_patients: int
+    unique_doctors: int
+    unique_hospitals: int
+    date_range: dict[str, Any]
 
 
-class HospitalListResponse(_Base):
-    total: int
-    returned: int
-    data: list[dict]
+class StatsDemographicsBlock(_Base):
+    avg_age: float
+    age_range: dict[str, int]
+    gender_distribution: dict[str, int]
 
 
-class StringListResponse(_Base):
-    """For /api/conditions · /api/medications · /api/insurance."""
-    total: int
-    data: list[str]
+class StatsClinicalBlock(_Base):
+    conditions: dict[str, int]
+    admission_types: dict[str, int]
+    test_results: dict[str, int]
+    readmission_rate: float = Field(..., description="% within 30 days")
+
+
+class StatsFinancialBlock(_Base):
+    total_billing: float
+    avg_cost_per_encounter: float
+    cost_range: dict[str, float]
+
+
+class StatsOperationalBlock(_Base):
+    avg_length_of_stay: float
+    los_range: dict[str, int]
+    total_patient_days: int
 
 
 class StatsResponse(_Base):
-    """Aggregate over the whole corpus. Shape is flexible — values are dict
-    of counts per dimension. Pydantic preserves the shape but doesn't enforce
-    inner dict schemas (pandas value-counts output varies)."""
-    total_encounters: int
-    by_condition: dict[str, int] | None = None
-    by_admission_type: dict[str, int] | None = None
-    by_gender: dict[str, int] | None = None
-    avg_billing_amount: float | None = None
-    avg_age: float | None = None
-    date_range: dict[str, Any] | None = None
+    dataset: StatsDatasetBlock
+    demographics: StatsDemographicsBlock
+    clinical: StatsClinicalBlock
+    financial: StatsFinancialBlock
+    operational: StatsOperationalBlock
 
 
+# ── GET /api/search ────────────────────────────────────────────────────
 class SearchResponse(_Base):
     query: str
-    total_matches: int
-    returned: int
+    total: int
+    limit: int
+    count: int
     data: list[dict]
