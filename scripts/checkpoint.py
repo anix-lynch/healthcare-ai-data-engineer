@@ -128,6 +128,14 @@ def check_critical_nulls(rows: list[dict]) -> dict:
 
 
 def check_duplicate_encounters(rows: list[dict]) -> dict:
+    """Flag duplicate encounters via (patient_name, admission_date) key.
+
+    Kaggle dataset has no encounter_id column, so we synthesize the key from
+    patient_name + Date of Admission. In a real EHR (Epic/Cerner/Athena),
+    the gate would key on source encounter_id / visit_id and flag
+    (patient_id, encounter_id) duplicates — the (name+date) heuristic
+    here is a synthetic-data stand-in for that production check.
+    """
     keys = [_encounter_key(r) for r in rows]
     counts = Counter(keys)
     dupes = {f"{name}|{admit}": n for (name, admit), n in counts.items() if n > 1}

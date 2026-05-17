@@ -46,7 +46,13 @@ SELECT
     -- Generate surrogate key for encounter
     {{ dbt_utils.generate_surrogate_key(['patient_name', 'date_of_admission']) }} AS encounter_id,
     
-    -- Hash PII for patient name (using SQL Server HASHBYTES)
+    -- Hash PII for patient name (SQL Server / Fabric syntax: HASHBYTES).
+    -- ADAPTER NOTE: this is dbt-fabric / dbt-sqlserver flavor.
+    --   - DuckDB:    sha256(patient_name)
+    --   - BigQuery:  to_hex(sha256(patient_name))
+    --   - Snowflake: sha2(patient_name, 256)
+    --   - Postgres:  encode(digest(patient_name, 'sha256'), 'hex')  (pgcrypto)
+    -- Wrap in a macro (e.g. {{ sha256(...) }}) before deploying multi-adapter.
     CONVERT(VARCHAR(64), HASHBYTES('SHA2_256', patient_name), 2) AS patient_name_hash,
 
     -- Clean column names and type cast dates

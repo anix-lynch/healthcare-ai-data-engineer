@@ -73,6 +73,13 @@ def enrich_one(row: dict, *, model: str, dry_run: bool, max_retries: int = 3) ->
             return {**row, **_flatten(enrich)}
         except Exception as e:
             last_err = e
+            # Log every retry to stderr so silent backoff doesn't hide
+            # systemic Vertex outages / quota burn during long runs.
+            print(
+                f"[enrich-retry] attempt {attempt + 1}/{max_retries} "
+                f"failed: {type(e).__name__}: {str(e)[:200]}",
+                file=sys.stderr,
+            )
             if attempt < max_retries - 1:
                 time.sleep(2 ** attempt)  # 1s, 2s, 4s
     raise RuntimeError(f"failed after {max_retries} tries: {last_err}")

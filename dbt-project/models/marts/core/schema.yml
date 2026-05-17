@@ -1,0 +1,141 @@
+version: 2
+
+# dbt schema tests for the gold mart layer.
+#
+# Comet flagged: dim_*/fact_* had no schema.yml — no enforced unique/not_null
+# /relationships, no accepted_values for clinical enums. These are the cheap
+# tests that catch the kinds of bugs that make L2 patterns hallucinate
+# (silent FK drops, dirty admission_type values, duplicate encounters).
+#
+# All tests run on `dbt test` and gate `dbt build`. Honest scope: this is
+# row-shape integrity. NOT semantic clinical validation (e.g. "Emergency
+# patients shouldn't have elective procedures") — that lives in domain
+# rules, not schema tests.
+
+models:
+  - name: fact_patient_encounters
+    description: >
+      One row per patient encounter. Surrogate-keyed FKs to all 7 dims +
+      8 measures (billing, LOS, cost/day, is_emergency, is_readmission,
+      previous_admission_count, age_group, season).
+    columns:
+      - name: encounter_id
+        description: stable encounter id derived from name+admission_date (synthetic dataset; real EHR would use the source MRN+encounter_id).
+        tests:
+          - not_null
+          - unique
+      - name: patient_key
+        description: surrogate FK → dim_patient.patient_key
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_patient')
+              field: patient_key
+      - name: doctor_key
+        description: surrogate FK → dim_doctor.doctor_key
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_doctor')
+              field: doctor_key
+      - name: hospital_key
+        description: surrogate FK → dim_hospital.hospital_key
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_hospital')
+              field: hospital_key
+      - name: diagnosis_key
+        description: surrogate FK → dim_diagnosis.diagnosis_key
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_diagnosis')
+              field: diagnosis_key
+      - name: insurance_key
+        description: surrogate FK → dim_insurance.insurance_key
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_insurance')
+              field: insurance_key
+      - name: is_emergency
+        description: 1 if admission_type = 'Emergency'; else 0.
+        tests:
+          - not_null
+          - accepted_values:
+              values: [0, 1]
+              quote: false
+      - name: is_readmission
+        description: 1 if same patient was admitted within 30 days prior; else 0.
+        tests:
+          - not_null
+          - accepted_values:
+              values: [0, 1]
+              quote: false
+      - name: billing_amount
+        description: gross billed amount (USD). Synthetic — pre-insurance write-off.
+        tests:
+          - not_null
+      - name: length_of_stay_days
+        description: discharge_date − admission_date, in days. >= 0 (temporal_sanity check in L1 gate).
+        tests:
+          - not_null
+
+  - name: dim_patient
+    description: One row per unique patient (deduped via patient_name_hash).
+    columns:
+      - name: patient_key
+        tests:
+          - not_null
+          - unique
+      - name: patient_name_hash
+        description: SHA256 short-id from L1 patient_identity resolver.
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_doctor
+    description: One row per unique doctor name.
+    columns:
+      - name: doctor_key
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_hospital
+    description: One row per unique hospital name.
+    columns:
+      - name: hospital_key
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_diagnosis
+    description: One row per unique medical condition (Kaggle: 6 conditions).
+    columns:
+      - name: diagnosis_key
+        tests:
+          - not_null
+          - unique
+      - name: diagnosis_name
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Diabetes', 'Hypertension', 'Cancer', 'Obesity', 'Asthma', 'Arthritis']
+
+  - name: dim_insurance
+    description: One row per insurance provider (Kaggle: 5 providers).
+    columns:
+      - name: insurance_key
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_medication
+    description: One row per medication.
+    columns:
+      - name: medication_key
+        tests:
+          - not_null
+          - unique
