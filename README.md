@@ -114,7 +114,7 @@ Makefile · requirements.txt · openapi_snapshot.json
 ✅ temporal_sanity         discharge ≥ admission · LoS within [0, 365]
 ✅ pii_in_narrative        0 SSN/phone/email/CC patterns in CC/HPI/notes
 ✅ patient_identity        40,235 patients resolved · 47 synthetic edges flagged
-✅ audit_lineage           gracefully absent (Phase A — acceptable)
+✅ audit_lineage           complete · source_system + ingest_ts + row_hash + pii_redaction_status on every row
 
 PASS — 7/7 checks · 0 critical failures
 ```
@@ -213,7 +213,7 @@ canonical_patient_context    one row per encounter — Rachel / Mad Lib groundin
 retrieval_corpus_view         doc_text + source_id + patient_id for RAG indexing
 feature_view                  predicted_los / readmission / mortality features
 eval_holdout_view             100 stratified rows — NEVER fed to training/index
-audit_lineage_view            source_system + ingest_ts + row_hash (Phase B/C)
+audit_lineage_view            source_system + ingest_ts + row_hash + pii_redaction_status (live · every gold row)
 ```
 
 Full schema spec: [`docs/contracts.md`](docs/contracts.md).
@@ -244,7 +244,6 @@ WHAT THIS REPO IS                     WHAT IT'S NOT
 ✅ Vertex AI LLM enrichment shipped    ❌ full clinical narrative dataset
 ✅ Patient identity bridge             ❌ MRN-based MDM (uses name hash)
 ✅ 7-check L1 quality gate             ❌ Great Expectations / Soda replacement
-✅ ML scaffold (readmission proxy)     ❌ trained production model
 ✅ FastAPI 11 endpoints                ❌ auth / rate limiting / multi-tenant
 ```
 
