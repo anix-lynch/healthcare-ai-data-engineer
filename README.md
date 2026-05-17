@@ -2,7 +2,7 @@
 
 > **Focused presentation cut of [`healthcare-genai-fullstack`](https://github.com/anix-lynch/healthcare-genai-fullstack) — AI Data Engineer lens.**
 
-This repo presents the **data backbone** slice of the master monorepo, narrowed for the AI Data Engineer interview signal:
+This repo presents the **data backbone** slice of the master monorepo, scoped to the AI Data Engineer workflow:
 
 - dbt medallion architecture (bronze → silver → gold)
 - FastAPI surface over the warehouse
@@ -41,5 +41,5 @@ Standalone Layer 1 audit target (richer copy with all scripts + data):
 This repo is a **presentation lens**, not an independent codebase.  
 When in doubt, the monorepo is authoritative.
 
-The goal here is **interview clarity** for the AI Data Engineer role specifically,  
+The goal here is **scoped presentation** for the AI Data Engineer view,  
 not a parallel infrastructure project.
