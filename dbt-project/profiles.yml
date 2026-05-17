@@ -1,0 +1,15 @@
+healthcare_analytics:
+  target: dev
+  outputs:
+    dev:
+      type: fabric
+      driver: 'ODBC Driver 18 for SQL Server'
+      server: "{{ env_var('FABRIC_SERVER', 'ndcddt2bpc6elclhiudkopyo5m-h7sh2v5uegpepgnw5j4pglsscy.datawarehouse.fabric.microsoft.com') }}"
+      port: 1433
+      database: "{{ env_var('FABRIC_DATABASE', 'HealthcareWarehouse') }}"
+      schema: dbo
+      authentication: CLI
+      encrypt: true
+      trust_cert: false
+      retries: 3
+      threads: 4

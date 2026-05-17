@@ -1,0 +1,15 @@
+{
+  "feature": "high_utilizer_flag",
+  "type": "rule-based",
+  "rule": "visit_count >= 2",
+  "rationale": "Real production: \u22653 visits in 12 months (CMS high-utilizer definition). This synthetic dataset has only 1 patient with \u22653 visits, so threshold lowered to \u22652 to produce non-empty signal. Threshold is config-driven.",
+  "n_total_patients": 49992,
+  "n_flagged": 5507,
+  "flag_rate": 0.1102,
+  "visit_count_distribution": {
+    "1": 44485,
+    "2": 5506,
+    "3": 1
+  },
+  "computed_at": "2026-05-09T23:18:11.340526"
+}

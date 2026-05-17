@@ -1,0 +1,11 @@
+WITH int_encounters_enriched AS (
+    SELECT DISTINCT medical_condition
+    FROM {{ ref('int_encounters_enriched') }}
+)
+
+SELECT
+    {{ dbt_utils.generate_surrogate_key(['medical_condition']) }} AS diagnosis_key,
+    medical_condition AS diagnosis_name,
+    CURRENT_TIMESTAMP AS created_at,
+    CURRENT_TIMESTAMP AS updated_at
+FROM int_encounters_enriched

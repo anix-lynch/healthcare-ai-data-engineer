@@ -1,0 +1,21 @@
+fastapi>=0.110
+uvicorn[standard]>=0.27
+pydantic>=2.0
+pandas>=2.0
+
+# dbt (Fabric target) — optional for portfolio browse; needed for `dbt run`
+# dbt-core>=1.7
+# dbt-fabric>=1.7
+
+# Enrichment (Vertex AI) — optional, needs GCP auth
+# google-cloud-aiplatform>=1.60
+# vertexai>=1.60
+
+# ML pipeline (MLflow + XGBoost) — optional
+# mlflow>=2.9
+# xgboost>=2.0
+# scikit-learn>=1.4
+
+# Tests
+pytest>=7.4
+httpx>=0.27

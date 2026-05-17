@@ -1,0 +1,267 @@
+version: 2
+
+# Sources are defined in sources.yml - removed duplicate definition here
+
+models:
+  - name: stg_healthcare
+    description: "Staging model for healthcare data, cleaning and standardizing raw data."
+    columns:
+      - name: encounter_id
+        description: "Unique identifier for each patient encounter."
+        tests:
+          - unique
+          - not_null
+      - name: patient_name_hash
+        description: "Hashed patient name for PII protection."
+        tests:
+          - not_null
+      - name: patient_name_cleaned
+        description: "Cleaned patient name."
+      - name: admission_date
+        description: "Standardized admission date."
+        tests:
+          - not_null
+          - dbt_utils.is_date
+      - name: discharge_date
+        description: "Standardized discharge date."
+        tests:
+          - not_null
+          - dbt_utils.is_date
+      - name: age
+        description: "Age of the patient."
+      - name: gender
+        description: "Gender of the patient."
+      - name: blood_type
+        description: "Blood type of the patient."
+      - name: medical_condition
+        description: "Medical condition of the patient."
+      - name: medication
+        description: "Medication prescribed to the patient."
+      - name: test_results
+        description: "Results of medical tests."
+      - name: admission_type
+        description: "Type of admission."
+      - name: doctor_name
+        description: "Name of the attending doctor."
+      - name: hospital_name
+        description: "Name of the hospital."
+      - name: insurance_provider
+        description: "Insurance provider of the patient."
+      - name: billing_amount
+        description: "Total billing amount for the encounter."
+      - name: room_number
+        description: "Room number assigned to the patient."
+
+  - name: int_encounters_enriched
+    description: "Intermediate model enriching encounter data with calculated fields."
+    columns:
+      - name: encounter_id
+        description: "Unique identifier for each patient encounter."
+      - name: patient_name_hash
+        description: "Hashed patient name for PII protection."
+      - name: admission_date
+        description: "Standardized admission date."
+      - name: discharge_date
+        description: "Standardized discharge date."
+      - name: length_of_stay_days
+        description: "Calculated length of stay in days."
+      - name: cost_per_day
+        description: "Calculated cost per day of stay."
+      - name: is_emergency
+        description: "Flag indicating if the admission was an emergency."
+      - name: age_group
+        description: "Categorized age group of the patient."
+      - name: season
+        description: "Season of admission."
+
+  - name: int_readmissions
+    description: "Intermediate model identifying readmissions and calculating related metrics."
+    columns:
+      - name: encounter_id
+        description: "Unique identifier for each patient encounter."
+      - name: patient_name_hash
+        description: "Hashed patient name for PII protection."
+      - name: admission_date
+        description: "Standardized admission date."
+      - name: days_since_last_admission
+        description: "Number of days since the patient's last admission."
+      - name: is_readmission
+        description: "Flag indicating if the encounter is a readmission within 30 days."
+      - name: previous_admission_count
+        description: "Count of previous admissions for the patient."
+
+  - name: dim_patient
+    description: "Dimension table for patient information."
+    columns:
+      - name: patient_key
+        description: "Unique surrogate key for the patient."
+        tests:
+          - unique
+          - not_null
+      - name: patient_name_hash
+        description: "Hashed patient name for PII protection."
+      - name: patient_name_cleaned
+        description: "Cleaned patient name."
+      - name: gender
+        description: "Gender of the patient."
+      - name: age
+        description: "Age of the patient."
+      - name: blood_type
+        description: "Blood type of the patient."
+      - name: medical_condition
+        description: "Medical condition of the patient."
+      - name: insurance_provider
+        description: "Insurance provider of the patient."
+
+  - name: dim_date
+    description: "Dimension table for dates."
+    columns:
+      - name: date_day
+        description: "The date itself."
+        tests:
+          - unique
+          - not_null
+
+  - name: dim_doctor
+    description: "Dimension table for doctor information."
+    columns:
+      - name: doctor_key
+        description: "Unique surrogate key for the doctor."
+        tests:
+          - unique
+          - not_null
+      - name: doctor_name
+        description: "Name of the doctor."
+
+  - name: dim_hospital
+    description: "Dimension table for hospital information."
+    columns:
+      - name: hospital_key
+        description: "Unique surrogate key for the hospital."
+        tests:
+          - unique
+          - not_null
+      - name: hospital_name
+        description: "Name of the hospital."
+
+  - name: dim_diagnosis
+    description: "Dimension table for medical conditions/diagnoses."
+    columns:
+      - name: diagnosis_key
+        description: "Unique surrogate key for the diagnosis."
+        tests:
+          - unique
+          - not_null
+      - name: diagnosis_name
+        description: "Name of the medical condition/diagnosis."
+
+  - name: dim_medication
+    description: "Dimension table for medication information."
+    columns:
+      - name: medication_key
+        description: "Unique surrogate key for the medication."
+        tests:
+          - unique
+          - not_null
+      - name: medication_name
+        description: "Name of the medication."
+
+  - name: dim_insurance
+    description: "Dimension table for insurance provider information."
+    columns:
+      - name: insurance_key
+        description: "Unique surrogate key for the insurance provider."
+        tests:
+          - unique
+          - not_null
+      - name: insurance_provider_name
+        description: "Name of the insurance provider."
+
+  - name: fact_patient_encounters
+    description: "Fact table for patient encounters."
+    columns:
+      - name: encounter_id
+        description: "Unique identifier for each patient encounter."
+        tests:
+          - unique
+          - not_null
+      - name: patient_key
+        description: "Foreign key to the patient dimension."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_patient')
+              field: patient_key
+      - name: admission_date_key
+        description: "Foreign key to the date dimension for admission date."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_date')
+              field: date_day
+      - name: discharge_date_key
+        description: "Foreign key to the date dimension for discharge date."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_date')
+              field: date_day
+      - name: doctor_key
+        description: "Foreign key to the doctor dimension."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_doctor')
+              field: doctor_key
+      - name: hospital_key
+        description: "Foreign key to the hospital dimension."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_hospital')
+              field: hospital_key
+      - name: diagnosis_key
+        description: "Foreign key to the diagnosis dimension."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_diagnosis')
+              field: diagnosis_key
+      - name: medication_key
+        description: "Foreign key to the medication dimension."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_medication')
+              field: medication_key
+      - name: insurance_key
+        description: "Foreign key to the insurance dimension."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_insurance')
+              field: insurance_key
+      - name: billing_amount
+        description: "Total billing amount for the encounter."
+        tests:
+          - not_null
+      - name: length_of_stay_days
+        description: "Calculated length of stay in days."
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 365
+      - name: cost_per_day
+        description: "Calculated cost per day of stay."
+      - name: is_emergency
+        description: "Flag indicating if the admission was an emergency."
+      - name: is_readmission
+        description: "Flag indicating if the encounter is a readmission within 30 days."
+      - name: previous_admission_count
+        description: "Count of previous admissions for the patient."
+      - name: age_group
+        description: "Categorized age group of the patient."
+      - name: season
+        description: "Season of admission."
+      - name: room_number
+        description: "Room number assigned to the patient."

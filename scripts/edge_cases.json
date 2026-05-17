@@ -1,0 +1,68 @@
+[
+  {"case_type": "stemi_acute_mi", "Age": "58", "Gender": "Male", "Medical Condition": "Hypertension", "Admission Type": "Emergency", "Medication": "Aspirin", "Test Results": "Abnormal", "scenario_hint": "STEMI / acute anterior MI: substernal chest pressure, diaphoresis, radiates to left arm/jaw"},
+  {"case_type": "stemi_acute_mi", "Age": "62", "Gender": "Male", "Medical Condition": "Hypertension", "Admission Type": "Emergency", "Medication": "Aspirin", "Test Results": "Abnormal", "scenario_hint": "STEMI: tearing chest pain + nausea + cold sweats"},
+  {"case_type": "stemi_acute_mi", "Age": "67", "Gender": "Female", "Medical Condition": "Diabetes", "Admission Type": "Emergency", "Medication": "Aspirin", "Test Results": "Abnormal", "scenario_hint": "Atypical female MI: jaw pain + dyspnea + fatigue, no chest pressure"},
+  {"case_type": "nstemi_unstable_angina", "Age": "71", "Gender": "Male", "Medical Condition": "Hypertension", "Admission Type": "Emergency", "Medication": "Lipitor", "Test Results": "Abnormal", "scenario_hint": "NSTEMI: intermittent chest pressure + mild troponin elevation"},
+
+  {"case_type": "stroke_ischemic", "Age": "74", "Gender": "Female", "Medical Condition": "Hypertension", "Admission Type": "Emergency", "Medication": "Aspirin", "Test Results": "Abnormal", "scenario_hint": "Acute ischemic stroke: right-sided weakness + slurred speech + facial droop, last-known-well 90 min ago"},
+  {"case_type": "stroke_hemorrhagic", "Age": "68", "Gender": "Male", "Medical Condition": "Hypertension", "Admission Type": "Emergency", "Medication": "Aspirin", "Test Results": "Abnormal", "scenario_hint": "Hemorrhagic stroke: sudden severe headache + vomiting + altered mental status"},
+  {"case_type": "tia", "Age": "65", "Gender": "Female", "Medical Condition": "Diabetes", "Admission Type": "Urgent", "Medication": "Aspirin", "Test Results": "Normal", "scenario_hint": "TIA: transient left arm weakness x 20 min, resolved on arrival, ABCD2 score moderate"},
+
+  {"case_type": "sepsis_general", "Age": "72", "Gender": "Male", "Medical Condition": "Diabetes", "Admission Type": "Emergency", "Medication": "Penicillin", "Test Results": "Abnormal", "scenario_hint": "Sepsis from UTI source: fever 102, hypotension, tachycardia, AMS"},
+  {"case_type": "sepsis_general", "Age": "58", "Gender": "Female", "Medical Condition": "Diabetes", "Admission Type": "Emergency", "Medication": "Penicillin", "Test Results": "Abnormal", "scenario_hint": "Septic shock: BP 78/40, lactate 6.2, oliguria, requires pressors"},
+  {"case_type": "sepsis_pneumonia", "Age": "67", "Gender": "Male", "Medical Condition": "Asthma", "Admission Type": "Emergency", "Medication": "Penicillin", "Test Results": "Abnormal", "scenario_hint": "Severe community-acquired pneumonia with sepsis: high fever, productive cough, hypoxia"},
+
+  {"case_type": "neutropenic_fever", "Age": "43", "Gender": "Female", "Medical Condition": "Cancer", "Admission Type": "Urgent", "Medication": "Paracetamol", "Test Results": "Abnormal", "scenario_hint": "Neutropenic fever: breast cancer on chemo, fever 102.5, WBC 0.8, immediate broad-spectrum abx"},
+  {"case_type": "neutropenic_fever", "Age": "61", "Gender": "Male", "Medical Condition": "Cancer", "Admission Type": "Urgent", "Medication": "Paracetamol", "Test Results": "Abnormal", "scenario_hint": "Neutropenic fever in colon cancer chemo patient + abdominal pain — concern for typhlitis"},
+  {"case_type": "cancer_pain_crisis", "Age": "55", "Gender": "Female", "Medical Condition": "Cancer", "Admission Type": "Urgent", "Medication": "Ibuprofen", "Test Results": "Inconclusive", "scenario_hint": "Metastatic breast cancer with severe bone pain refractory to home opioids"},
+
+  {"case_type": "dka_severe", "Age": "28", "Gender": "Male", "Medical Condition": "Diabetes", "Admission Type": "Emergency", "Medication": "Insulin", "Test Results": "Abnormal", "scenario_hint": "DKA: blood glucose 580, anion gap 24, vomiting, Kussmaul breathing"},
+  {"case_type": "hypoglycemia_severe", "Age": "78", "Gender": "Female", "Medical Condition": "Diabetes", "Admission Type": "Emergency", "Medication": "Insulin", "Test Results": "Abnormal", "scenario_hint": "Severe hypoglycemia: glucose 32, AMS, hemiparesis-like presentation (stroke mimic)"},
+  {"case_type": "diabetes_routine_followup", "Age": "52", "Gender": "Female", "Medical Condition": "Diabetes", "Admission Type": "Elective", "Medication": "Insulin", "Test Results": "Normal", "scenario_hint": "Outpatient diabetes review, well-controlled, no acute issues"},
+
+  {"case_type": "asthma_severe_exacerbation", "Age": "34", "Gender": "Female", "Medical Condition": "Asthma", "Admission Type": "Emergency", "Medication": "Penicillin", "Test Results": "Abnormal", "scenario_hint": "Severe asthma exacerbation: silent chest, SpO2 88%, accessory muscle use, peak flow 25% baseline"},
+  {"case_type": "asthma_status_asthmaticus", "Age": "22", "Gender": "Male", "Medical Condition": "Asthma", "Admission Type": "Emergency", "Medication": "Penicillin", "Test Results": "Abnormal", "scenario_hint": "Status asthmaticus refractory to bronchodilators, considering intubation"},
+  {"case_type": "asthma_mild_exacerbation", "Age": "29", "Gender": "Female", "Medical Condition": "Asthma", "Admission Type": "Urgent", "Medication": "Penicillin", "Test Results": "Normal", "scenario_hint": "Mild asthma flare improving with nebulizer, peak flow 60% baseline"},
+
+  {"case_type": "hypertensive_emergency", "Age": "65", "Gender": "Male", "Medical Condition": "Hypertension", "Admission Type": "Emergency", "Medication": "Lipitor", "Test Results": "Abnormal", "scenario_hint": "Hypertensive emergency: BP 230/130, severe headache, blurred vision, end-organ damage concern"},
+  {"case_type": "hypertensive_urgency", "Age": "58", "Gender": "Female", "Medical Condition": "Hypertension", "Admission Type": "Urgent", "Medication": "Lipitor", "Test Results": "Inconclusive", "scenario_hint": "Hypertensive urgency: BP 195/115, asymptomatic, no end-organ findings"},
+
+  {"case_type": "pediatric_febrile_under_1", "Age": "1", "Gender": "Female", "Medical Condition": "Asthma", "Admission Type": "Emergency", "Medication": "Paracetamol", "Test Results": "Abnormal", "scenario_hint": "8-month-old female with high fever 39.8C, lethargy, poor feeding — pediatric red flag, always escalate"},
+  {"case_type": "pediatric_febrile_under_1", "Age": "1", "Gender": "Male", "Medical Condition": "Asthma", "Admission Type": "Emergency", "Medication": "Paracetamol", "Test Results": "Abnormal", "scenario_hint": "10-month-old male, respiratory distress, RSV bronchiolitis suspected"},
+  {"case_type": "pediatric_well", "Age": "5", "Gender": "Male", "Medical Condition": "Asthma", "Admission Type": "Elective", "Medication": "Paracetamol", "Test Results": "Normal", "scenario_hint": "5yo well-child checkup, asthma well-controlled, no acute issues"},
+
+  {"case_type": "geriatric_polypharm_fall", "Age": "85", "Gender": "Female", "Medical Condition": "Hypertension", "Admission Type": "Emergency", "Medication": "Aspirin", "Test Results": "Abnormal", "scenario_hint": "85yo F on Aspirin + Lipitor + warfarin + multiple antihypertensives, mechanical fall + head strike, INR 4.1"},
+  {"case_type": "geriatric_polypharm_confusion", "Age": "82", "Gender": "Male", "Medical Condition": "Hypertension", "Admission Type": "Urgent", "Medication": "Lipitor", "Test Results": "Inconclusive", "scenario_hint": "82yo M new-onset confusion + 8 medications, concern for delirium vs medication effect"},
+  {"case_type": "geriatric_chest_pain_atypical", "Age": "79", "Gender": "Female", "Medical Condition": "Hypertension", "Admission Type": "Urgent", "Medication": "Aspirin", "Test Results": "Inconclusive", "scenario_hint": "79yo F vague chest discomfort + nausea + fatigue (atypical ACS presentation in elderly)"},
+
+  {"case_type": "ortho_simple_fracture", "Age": "32", "Gender": "Male", "Medical Condition": "Arthritis", "Admission Type": "Urgent", "Medication": "Ibuprofen", "Test Results": "Normal", "scenario_hint": "Closed distal radius fracture from FOOSH, neurovascular intact, isolated injury"},
+  {"case_type": "ortho_open_fracture", "Age": "28", "Gender": "Male", "Medical Condition": "Arthritis", "Admission Type": "Emergency", "Medication": "Ibuprofen", "Test Results": "Abnormal", "scenario_hint": "Open tibial fracture from MVC, exposed bone, ortho consult immediate"},
+  {"case_type": "ortho_septic_joint", "Age": "65", "Gender": "Male", "Medical Condition": "Arthritis", "Admission Type": "Emergency", "Medication": "Penicillin", "Test Results": "Abnormal", "scenario_hint": "Acute septic knee: warm, erythematous, refusing to bear weight, fever, WBC elevated"},
+
+  {"case_type": "obesity_bariatric_complication", "Age": "47", "Gender": "Female", "Medical Condition": "Obesity", "Admission Type": "Emergency", "Medication": "Paracetamol", "Test Results": "Abnormal", "scenario_hint": "Post-gastric-bypass abdominal pain, internal hernia suspected"},
+  {"case_type": "obesity_routine_followup", "Age": "55", "Gender": "Male", "Medical Condition": "Obesity", "Admission Type": "Elective", "Medication": "Ibuprofen", "Test Results": "Normal", "scenario_hint": "Outpatient obesity / metabolic clinic visit, weight stable, lifestyle counseling"},
+
+  {"case_type": "well_visit_anti_match", "Age": "26", "Gender": "Female", "Medical Condition": "Asthma", "Admission Type": "Elective", "Medication": "Paracetamol", "Test Results": "Normal", "scenario_hint": "Annual physical, asymptomatic, well controlled — Rachel must NOT match near-death cases"},
+  {"case_type": "well_visit_anti_match", "Age": "38", "Gender": "Male", "Medical Condition": "Hypertension", "Admission Type": "Elective", "Medication": "Lipitor", "Test Results": "Normal", "scenario_hint": "Routine HTN follow-up, well-controlled, no acute concerns"},
+  {"case_type": "well_visit_anti_match", "Age": "44", "Gender": "Female", "Medical Condition": "Diabetes", "Admission Type": "Elective", "Medication": "Insulin", "Test Results": "Normal", "scenario_hint": "Routine diabetes follow-up, A1c at goal, no acute findings"},
+
+  {"case_type": "anaphylaxis", "Age": "24", "Gender": "Female", "Medical Condition": "Asthma", "Admission Type": "Emergency", "Medication": "Penicillin", "Test Results": "Abnormal", "scenario_hint": "Anaphylactic shock to penicillin: hives, angioedema, hypotension, wheezing, given IM epi"},
+  {"case_type": "anaphylaxis_food", "Age": "31", "Gender": "Male", "Medical Condition": "Asthma", "Admission Type": "Emergency", "Medication": "Penicillin", "Test Results": "Abnormal", "scenario_hint": "Peanut anaphylaxis: throat tightness, wheeze, hypotension"},
+
+  {"case_type": "gi_bleed_upper", "Age": "62", "Gender": "Male", "Medical Condition": "Arthritis", "Admission Type": "Emergency", "Medication": "Ibuprofen", "Test Results": "Abnormal", "scenario_hint": "Upper GI bleed from NSAID-induced ulcer: melena + hypotension + Hgb 6.8"},
+  {"case_type": "gi_bleed_lower", "Age": "71", "Gender": "Female", "Medical Condition": "Arthritis", "Admission Type": "Emergency", "Medication": "Aspirin", "Test Results": "Abnormal", "scenario_hint": "Lower GI bleed in elderly on Aspirin: bright red blood per rectum, mild tachycardia"},
+
+  {"case_type": "pulmonary_embolism", "Age": "44", "Gender": "Female", "Medical Condition": "Cancer", "Admission Type": "Emergency", "Medication": "Paracetamol", "Test Results": "Abnormal", "scenario_hint": "PE in cancer patient: acute dyspnea, pleuritic chest pain, tachycardia, mild hypoxia"},
+  {"case_type": "pulmonary_embolism_massive", "Age": "58", "Gender": "Male", "Medical Condition": "Cancer", "Admission Type": "Emergency", "Medication": "Paracetamol", "Test Results": "Abnormal", "scenario_hint": "Massive PE: syncope, hypotension, RV strain, tPA considered"},
+
+  {"case_type": "altered_mental_status", "Age": "78", "Gender": "Male", "Medical Condition": "Diabetes", "Admission Type": "Emergency", "Medication": "Insulin", "Test Results": "Inconclusive", "scenario_hint": "Acute AMS in elderly diabetic: workup for hypoglycemia, stroke, sepsis, meds"},
+
+  {"case_type": "suicidal_ideation", "Age": "29", "Gender": "Female", "Medical Condition": "Asthma", "Admission Type": "Urgent", "Medication": "Ibuprofen", "Test Results": "Normal", "scenario_hint": "Active suicidal ideation with plan, requires psych eval — always escalate per safety rule"},
+  {"case_type": "intentional_overdose", "Age": "34", "Gender": "Female", "Medical Condition": "Asthma", "Admission Type": "Emergency", "Medication": "Paracetamol", "Test Results": "Abnormal", "scenario_hint": "Intentional acetaminophen overdose 30 tabs 4h ago, suicidal ideation"},
+
+  {"case_type": "trauma_polytrauma", "Age": "23", "Gender": "Male", "Medical Condition": "Arthritis", "Admission Type": "Emergency", "Medication": "Ibuprofen", "Test Results": "Abnormal", "scenario_hint": "High-speed MVC polytrauma: GCS 12, FAST positive, BP 88/52 — trauma team activation"},
+
+  {"case_type": "uncommon_low_acuity_arthritis", "Age": "67", "Gender": "Female", "Medical Condition": "Arthritis", "Admission Type": "Urgent", "Medication": "Ibuprofen", "Test Results": "Normal", "scenario_hint": "Rheumatoid arthritis flare, joint pain, no infectious signs"},
+
+  {"case_type": "non_specific_complaint", "Age": "82", "Gender": "Female", "Medical Condition": "Hypertension", "Admission Type": "Urgent", "Medication": "Aspirin", "Test Results": "Inconclusive", "scenario_hint": "82yo F brought in by family for 'just not herself,' vague decline — broad differential"}
+]
