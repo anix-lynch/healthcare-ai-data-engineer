@@ -1,11 +1,11 @@
 {
   "checkpoint_version": 1,
-  "scanned_at": "2026-05-16T22:34:45",
+  "scanned_at": "2026-05-16T22:53:11",
   "input_file": "/Users/anixlynch/dev/healthcare-ai-data-engineer/data/raw/healthcare_dataset_enriched.csv",
   "n_rows": 497,
   "checks": {
     "schema_drift": {
-      "n_columns_present": 29,
+      "n_columns_present": 33,
       "missing_required_original": [],
       "enriched_columns_present": [
         "acuity_red_flags",
@@ -29,11 +29,11 @@
     "critical_nulls": {
       "null_counts": {
         "Discharge Date": 0,
-        "Medical Condition": 0,
-        "Name": 0,
-        "Date of Admission": 0,
         "Gender": 0,
-        "Age": 0
+        "Age": 0,
+        "Date of Admission": 0,
+        "Name": 0,
+        "Medical Condition": 0
       },
       "failing_columns": {},
       "verdict_critical": false
@@ -63,7 +63,7 @@
       "verdict_critical": false
     },
     "audit_lineage": {
-      "audit_lineage_status": "absent (acceptable for Phase A)",
+      "audit_lineage_status": "complete",
       "verdict_critical": false
     }
   },

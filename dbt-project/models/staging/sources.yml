@@ -47,3 +47,9 @@ sources:
           - {name: case_type, description: "edge-case scenario label (sepsis_general, stemi_acute_mi, ...) — NULL for non-edge rows"}
           - {name: scenario_hint, description: "free-text scenario directive used during enrichment"}
           - {name: holdout, description: "TRUE for the 100 eval-only rows — never feed into retrieval index or training"}
+
+          # Audit lineage columns (Phase B — populated 2026-05-16)
+          - {name: source_system, description: "origin of the row: kaggle_synthetic_v1 | edge_case_synthetic_v1"}
+          - {name: ingest_ts, description: "ISO timestamp when this row landed in the corpus snapshot"}
+          - {name: row_hash, description: "sha256 of canonical row content — change detection"}
+          - {name: pii_redaction_status, description: "cleared | partial | needs_review — confirmed by pii_in_narrative check"}

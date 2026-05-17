@@ -2,6 +2,8 @@
 
 > **Healthcare data backbone** — dbt medallion (bronze/silver/gold) + FastAPI 11 endpoints over 55,500 synthetic encounters + LLM-augmented enrichment (Vertex AI) + patient identity resolver + lightweight L1 quality gate. The data layer GenAI applications consume without hallucinating their way out of garbage input.
 
+**Built for:** healthcare AI/data teams who need a trusted L1 layer before their RAG/agent stack lands on top. Patterns scale from this 55K demo to 50M+ row production via incremental dbt + Airflow-friendly idempotent scripts (each script in `scripts/` is checkpoint-driven and rerunnable without manual cleanup).
+
 [![data-quality](https://github.com/anix-lynch/healthcare-ai-data-engineer/actions/workflows/quality.yml/badge.svg)](https://github.com/anix-lynch/healthcare-ai-data-engineer/actions/workflows/quality.yml)
 
 ```
@@ -87,10 +89,6 @@ scripts/
    checkpoint.py                      7-check L1 data quality gate (exit 1 on fail)
    edge_cases.json                    47 hand-picked scenarios (STEMI/sepsis/etc.)
 
-ml-pipeline/         MLflow + readmission proxy scaffold (training only, no model artifact)
-                       Honest scope: training script real, model NOT persisted —
-                       see docs/L1_HARDENING.md for the gap analysis.
-
 tests/               pytest — checkpoint integrity · identity map shape ·
                        FastAPI endpoint smoke · patient_id determinism
 docs/
@@ -129,6 +127,49 @@ compliance. NOT Great Expectations replacement.
 
 See [`scripts/checkpoint.py`](scripts/checkpoint.py) for the seven check
 implementations and their failure semantics.
+
+---
+
+## dbt DAG (lineage view)
+
+```
+SOURCE              SILVER             INTERMEDIATE             GOLD MARTS
+─────────────       ──────────────     ────────────────         ──────────────────────────
+healthcare.         stg_healthcare ──> int_encounters_enriched  ┌──> dim_patient
+ raw_healthcare_     │ clean             │                       ├──> dim_doctor
+ data (33 cols       │ hash PII          ├──> int_readmissions   ├──> dim_hospital
+  incl. 4 audit)     │ cast dates        │                       ├──> dim_diagnosis
+                                          │                       ├──> dim_medication
+                                          │                       ├──> dim_insurance
+                                          │                       ├──> dim_date
+                                          └──────────────────────►└──> fact_patient_encounters
+                                                                       (1 row per encounter,
+                                                                        FK to all 7 dims +
+                                                                        8 measures)
+```
+
+Full DAG + per-model lineage rules: [`docs/dag.md`](docs/dag.md).
+For interactive HTML: `dbt docs generate && dbt docs serve` against a live warehouse.
+
+---
+
+## Vertex enrichment run (497 rows, gemini-2.5-flash)
+
+```
+cost                $0.25 total · $0.0005 per row
+runtime             789s wallclock with x6 parallel workers
+throughput          ~37 rows/min sustained
+per-row p50         ~9s   (single Vertex call w/ JSON schema enforced)
+per-row p99         ~25s  (rare retry cycles)
+retry rate          ~3% (response_schema eliminates most JSON parse failures)
+schema-fail rate    0% (Pydantic-via-JSON-Schema enforced by Vertex)
+success rate        100% (497/497, no failed-rows.jsonl entries)
+
+GCP $900 credit absorbed the entire run.
+Same pipeline scales to 55K rows ≈ $27 · or 1M rows ≈ $500.
+```
+
+Reproduce: `scripts/enrich_parallel.py` (full source + retry logic + checkpoint).
 
 ---
 
