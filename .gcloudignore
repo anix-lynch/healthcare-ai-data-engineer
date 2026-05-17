@@ -1,0 +1,26 @@
+.git
+.gitignore
+.venv
+__pycache__
+**/__pycache__
+*.pyc
+.DS_Store
+.pytest_cache
+tests/
+docs/
+demo/
+notebooks/
+outputs/
+dbt-project/
+scripts/
+*.md
+Makefile
+docker-compose.yml
+.github/
+deploy/cloudrun.sh
+# Drop bulky derived data — keep only the raw CSV the API actually serves.
+data/raw/healthcare_dataset_enriched.*
+data/raw/enriched_holdout_100.jsonl
+data/raw/enriched_use_397.jsonl
+data/derived/
+data/quality/
