@@ -13,6 +13,15 @@ import pandas as pd
 from datetime import datetime
 import os
 
+# Typed response models — see api/app/schemas.py for the full set.
+# Wired on the most-skimmed endpoints so OpenAPI docs are honest +
+# response shape becomes a contract.
+from .schemas import (
+    RootResponse, EncounterListResponse, StatsResponse,
+    PatientListResponse, DoctorListResponse, HospitalListResponse,
+    StringListResponse, SearchResponse,
+)
+
 # Initialize FastAPI
 app = FastAPI(
     title="Healthcare API",
@@ -48,7 +57,7 @@ def df_to_dict(dataframe):
     return dataframe.to_dict(orient='records')
 
 
-@app.get("/")
+@app.get("/", response_model=RootResponse)
 def root():
     """API root - welcome message and endpoints"""
     return {
@@ -74,7 +83,7 @@ def root():
     }
 
 
-@app.get("/api/encounters")
+@app.get("/api/encounters", response_model=EncounterListResponse)
 def get_encounters(
     limit: int = Query(default=10, ge=1, le=1000, description="Number of records to return"),
     offset: int = Query(default=0, ge=0, description="Number of records to skip"),
@@ -142,7 +151,7 @@ def get_encounter_by_id(encounter_id: int):
     }
 
 
-@app.get("/api/patients")
+@app.get("/api/patients", response_model=PatientListResponse)
 def get_patients(
     limit: int = Query(default=10, ge=1, le=100),
     age_group: Optional[str] = Query(None, description="Age group (0-17, 18-30, 31-50, 51-70, 70+)")
@@ -185,7 +194,7 @@ def get_patients(
     }
 
 
-@app.get("/api/doctors")
+@app.get("/api/doctors", response_model=DoctorListResponse)
 def get_doctors(
     limit: int = Query(default=10, ge=1, le=100),
     specialty: Optional[str] = Query(None, description="Filter by specialty")
@@ -214,7 +223,7 @@ def get_doctors(
     }
 
 
-@app.get("/api/hospitals")
+@app.get("/api/hospitals", response_model=HospitalListResponse)
 def get_hospitals(limit: int = Query(default=10, ge=1, le=100)):
     """Get list of hospitals with their statistics"""
     hospital_df = df.groupby('Hospital').agg({
@@ -237,7 +246,7 @@ def get_hospitals(limit: int = Query(default=10, ge=1, le=100)):
     }
 
 
-@app.get("/api/conditions")
+@app.get("/api/conditions", response_model=StringListResponse)
 def get_conditions():
     """Get all medical conditions with statistics"""
     condition_df = df.groupby('Medical Condition').agg({
@@ -258,7 +267,7 @@ def get_conditions():
     }
 
 
-@app.get("/api/medications")
+@app.get("/api/medications", response_model=StringListResponse)
 def get_medications():
     """Get all medications with usage statistics"""
     med_df = df.groupby('Medication').agg({
@@ -277,7 +286,7 @@ def get_medications():
     }
 
 
-@app.get("/api/insurance")
+@app.get("/api/insurance", response_model=StringListResponse)
 def get_insurance_providers():
     """Get insurance providers with coverage statistics"""
     insurance_df = df.groupby('Insurance Provider').agg({
@@ -296,7 +305,7 @@ def get_insurance_providers():
     }
 
 
-@app.get("/api/stats")
+@app.get("/api/stats", response_model=StatsResponse)
 def get_statistics():
     """Get overall dataset statistics"""
     
@@ -344,7 +353,7 @@ def get_statistics():
     }
 
 
-@app.get("/api/search")
+@app.get("/api/search", response_model=SearchResponse)
 def search(
     q: str = Query(..., min_length=2, description="Search query"),
     limit: int = Query(default=10, ge=1, le=100)
