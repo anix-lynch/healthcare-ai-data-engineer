@@ -16,3 +16,7 @@ dist/
 
 # Syncthing temp files
 **/.syncthing.*.tmp
+
+# Local-only outreach scratch — NEVER commit to public repo
+_outreach/
+**/.syncthing.*.tmp
