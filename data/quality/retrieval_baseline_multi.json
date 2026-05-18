@@ -1,0 +1,584 @@
+{
+  "scanned_at": "2026-05-18T14:58:31Z",
+  "k": 5,
+  "ndcg_k": 10,
+  "n_queries": 20,
+  "by_method": {
+    "bm25": {
+      "aggregates": {
+        "n_queries": 20,
+        "hit_at_5": 0.95,
+        "precision_at_5": 0.36,
+        "mrr": 0.9,
+        "ndcg_at_10": 0.8921,
+        "p95_latency_ms": 1
+      },
+      "per_query": [
+        {
+          "id": "Q-001",
+          "method": "bm25",
+          "hit_at_k": 1,
+          "precision_at_k": 0.2,
+          "rr": 0.5,
+          "ndcg_at_k": 0.6309,
+          "latency_ms": 110
+        },
+        {
+          "id": "Q-002",
+          "method": "bm25",
+          "hit_at_k": 1,
+          "precision_at_k": 0.4,
+          "rr": 1.0,
+          "ndcg_at_k": 0.9197,
+          "latency_ms": 1
+        },
+        {
+          "id": "Q-003",
+          "method": "bm25",
+          "hit_at_k": 1,
+          "precision_at_k": 0.4,
+          "rr": 1.0,
+          "ndcg_at_k": 0.9197,
+          "latency_ms": 1
+        },
+        {
+          "id": "Q-004",
+          "method": "bm25",
+          "hit_at_k": 1,
+          "precision_at_k": 0.4,
+          "rr": 1.0,
+          "ndcg_at_k": 1.0,
+          "latency_ms": 0
+        },
+        {
+          "id": "Q-005",
+          "method": "bm25",
+          "hit_at_k": 1,
+          "precision_at_k": 0.6,
+          "rr": 1.0,
+          "ndcg_at_k": 1.0,
+          "latency_ms": 0
+        },
+        {
+          "id": "Q-006",
+          "method": "bm25",
+          "hit_at_k": 1,
+          "precision_at_k": 0.2,
+          "rr": 1.0,
+          "ndcg_at_k": 1.0,
+          "latency_ms": 0
+        },
+        {
+          "id": "Q-007",
+          "method": "bm25",
+          "hit_at_k": 1,
+          "precision_at_k": 0.6,
+          "rr": 1.0,
+          "ndcg_at_k": 1.0,
+          "latency_ms": 0
+        },
+        {
+          "id": "Q-008",
+          "method": "bm25",
+          "hit_at_k": 1,
+          "precision_at_k": 0.2,
+          "rr": 1.0,
+          "ndcg_at_k": 1.0,
+          "latency_ms": 0
+        },
+        {
+          "id": "Q-009",
+          "method": "bm25",
+          "hit_at_k": 1,
+          "precision_at_k": 0.4,
+          "rr": 1.0,
+          "ndcg_at_k": 0.9197,
+          "latency_ms": 0
+        },
+        {
+          "id": "Q-010",
+          "method": "bm25",
+          "hit_at_k": 0,
+          "precision_at_k": 0.0,
+          "rr": 0.0,
+          "ndcg_at_k": 0.0,
+          "latency_ms": 0
+        },
+        {
+          "id": "Q-011",
+          "method": "bm25",
+          "hit_at_k": 1,
+          "precision_at_k": 0.4,
+          "rr": 1.0,
+          "ndcg_at_k": 0.9197,
+          "latency_ms": 0
+        },
+        {
+          "id": "Q-012",
+          "method": "bm25",
+          "hit_at_k": 1,
+          "precision_at_k": 0.2,
+          "rr": 1.0,
+          "ndcg_at_k": 1.0,
+          "latency_ms": 0
+        },
+        {
+          "id": "Q-013",
+          "method": "bm25",
+          "hit_at_k": 1,
+          "precision_at_k": 0.6,
+          "rr": 1.0,
+          "ndcg_at_k": 1.0,
+          "latency_ms": 0
+        },
+        {
+          "id": "Q-014",
+          "method": "bm25",
+          "hit_at_k": 1,
+          "precision_at_k": 0.4,
+          "rr": 1.0,
+          "ndcg_at_k": 1.0,
+          "latency_ms": 0
+        },
+        {
+          "id": "Q-015",
+          "method": "bm25",
+          "hit_at_k": 1,
+          "precision_at_k": 0.4,
+          "rr": 1.0,
+          "ndcg_at_k": 1.0,
+          "latency_ms": 0
+        },
+        {
+          "id": "Q-016",
+          "method": "bm25",
+          "hit_at_k": 1,
+          "precision_at_k": 0.4,
+          "rr": 0.5,
+          "ndcg_at_k": 0.6934,
+          "latency_ms": 0
+        },
+        {
+          "id": "Q-017",
+          "method": "bm25",
+          "hit_at_k": 1,
+          "precision_at_k": 0.4,
+          "rr": 1.0,
+          "ndcg_at_k": 0.9197,
+          "latency_ms": 0
+        },
+        {
+          "id": "Q-018",
+          "method": "bm25",
+          "hit_at_k": 1,
+          "precision_at_k": 0.2,
+          "rr": 1.0,
+          "ndcg_at_k": 1.0,
+          "latency_ms": 0
+        },
+        {
+          "id": "Q-019",
+          "method": "bm25",
+          "hit_at_k": 1,
+          "precision_at_k": 0.4,
+          "rr": 1.0,
+          "ndcg_at_k": 0.9197,
+          "latency_ms": 0
+        },
+        {
+          "id": "Q-020",
+          "method": "bm25",
+          "hit_at_k": 1,
+          "precision_at_k": 0.4,
+          "rr": 1.0,
+          "ndcg_at_k": 1.0,
+          "latency_ms": 0
+        }
+      ]
+    },
+    "dense": {
+      "aggregates": {
+        "n_queries": 20,
+        "hit_at_5": 1,
+        "precision_at_5": 0.38,
+        "mrr": 0.8083,
+        "ndcg_at_10": 0.86,
+        "p95_latency_ms": 17
+      },
+      "per_query": [
+        {
+          "id": "Q-001",
+          "method": "dense",
+          "hit_at_k": 1,
+          "precision_at_k": 0.2,
+          "rr": 0.3333,
+          "ndcg_at_k": 0.5,
+          "latency_ms": 6
+        },
+        {
+          "id": "Q-002",
+          "method": "dense",
+          "hit_at_k": 1,
+          "precision_at_k": 0.4,
+          "rr": 1.0,
+          "ndcg_at_k": 1.0,
+          "latency_ms": 6
+        },
+        {
+          "id": "Q-003",
+          "method": "dense",
+          "hit_at_k": 1,
+          "precision_at_k": 0.4,
+          "rr": 1.0,
+          "ndcg_at_k": 1.0,
+          "latency_ms": 9
+        },
+        {
+          "id": "Q-004",
+          "method": "dense",
+          "hit_at_k": 1,
+          "precision_at_k": 0.4,
+          "rr": 0.5,
+          "ndcg_at_k": 0.6934,
+          "latency_ms": 16
+        },
+        {
+          "id": "Q-005",
+          "method": "dense",
+          "hit_at_k": 1,
+          "precision_at_k": 0.4,
+          "rr": 0.5,
+          "ndcg_at_k": 0.6934,
+          "latency_ms": 7
+        },
+        {
+          "id": "Q-006",
+          "method": "dense",
+          "hit_at_k": 1,
+          "precision_at_k": 0.2,
+          "rr": 0.3333,
+          "ndcg_at_k": 0.5,
+          "latency_ms": 17
+        },
+        {
+          "id": "Q-007",
+          "method": "dense",
+          "hit_at_k": 1,
+          "precision_at_k": 0.6,
+          "rr": 1.0,
+          "ndcg_at_k": 1.0,
+          "latency_ms": 7
+        },
+        {
+          "id": "Q-008",
+          "method": "dense",
+          "hit_at_k": 1,
+          "precision_at_k": 0.2,
+          "rr": 0.5,
+          "ndcg_at_k": 0.6309,
+          "latency_ms": 6
+        },
+        {
+          "id": "Q-009",
+          "method": "dense",
+          "hit_at_k": 1,
+          "precision_at_k": 0.6,
+          "rr": 1.0,
+          "ndcg_at_k": 1.0,
+          "latency_ms": 51
+        },
+        {
+          "id": "Q-010",
+          "method": "dense",
+          "hit_at_k": 1,
+          "precision_at_k": 0.4,
+          "rr": 1.0,
+          "ndcg_at_k": 1.0,
+          "latency_ms": 9
+        },
+        {
+          "id": "Q-011",
+          "method": "dense",
+          "hit_at_k": 1,
+          "precision_at_k": 0.6,
+          "rr": 1.0,
+          "ndcg_at_k": 1.0,
+          "latency_ms": 12
+        },
+        {
+          "id": "Q-012",
+          "method": "dense",
+          "hit_at_k": 1,
+          "precision_at_k": 0.2,
+          "rr": 1.0,
+          "ndcg_at_k": 1.0,
+          "latency_ms": 7
+        },
+        {
+          "id": "Q-013",
+          "method": "dense",
+          "hit_at_k": 1,
+          "precision_at_k": 0.6,
+          "rr": 1.0,
+          "ndcg_at_k": 1.0,
+          "latency_ms": 7
+        },
+        {
+          "id": "Q-014",
+          "method": "dense",
+          "hit_at_k": 1,
+          "precision_at_k": 0.4,
+          "rr": 1.0,
+          "ndcg_at_k": 1.0,
+          "latency_ms": 8
+        },
+        {
+          "id": "Q-015",
+          "method": "dense",
+          "hit_at_k": 1,
+          "precision_at_k": 0.2,
+          "rr": 0.5,
+          "ndcg_at_k": 0.6309,
+          "latency_ms": 9
+        },
+        {
+          "id": "Q-016",
+          "method": "dense",
+          "hit_at_k": 1,
+          "precision_at_k": 0.2,
+          "rr": 0.5,
+          "ndcg_at_k": 0.6309,
+          "latency_ms": 7
+        },
+        {
+          "id": "Q-017",
+          "method": "dense",
+          "hit_at_k": 1,
+          "precision_at_k": 0.6,
+          "rr": 1.0,
+          "ndcg_at_k": 1.0,
+          "latency_ms": 6
+        },
+        {
+          "id": "Q-018",
+          "method": "dense",
+          "hit_at_k": 1,
+          "precision_at_k": 0.2,
+          "rr": 1.0,
+          "ndcg_at_k": 1.0,
+          "latency_ms": 6
+        },
+        {
+          "id": "Q-019",
+          "method": "dense",
+          "hit_at_k": 1,
+          "precision_at_k": 0.4,
+          "rr": 1.0,
+          "ndcg_at_k": 1.0,
+          "latency_ms": 9
+        },
+        {
+          "id": "Q-020",
+          "method": "dense",
+          "hit_at_k": 1,
+          "precision_at_k": 0.4,
+          "rr": 1.0,
+          "ndcg_at_k": 0.9197,
+          "latency_ms": 8
+        }
+      ]
+    },
+    "hybrid": {
+      "aggregates": {
+        "n_queries": 20,
+        "hit_at_5": 1,
+        "precision_at_5": 0.38,
+        "mrr": 0.8333,
+        "ndcg_at_10": 0.8815,
+        "p95_latency_ms": 50
+      },
+      "per_query": [
+        {
+          "id": "Q-001",
+          "method": "hybrid",
+          "hit_at_k": 1,
+          "precision_at_k": 0.4,
+          "rr": 0.5,
+          "ndcg_at_k": 0.6934,
+          "latency_ms": 12
+        },
+        {
+          "id": "Q-002",
+          "method": "hybrid",
+          "hit_at_k": 1,
+          "precision_at_k": 0.4,
+          "rr": 1.0,
+          "ndcg_at_k": 1.0,
+          "latency_ms": 8
+        },
+        {
+          "id": "Q-003",
+          "method": "hybrid",
+          "hit_at_k": 1,
+          "precision_at_k": 0.6,
+          "rr": 1.0,
+          "ndcg_at_k": 1.0,
+          "latency_ms": 10
+        },
+        {
+          "id": "Q-004",
+          "method": "hybrid",
+          "hit_at_k": 1,
+          "precision_at_k": 0.4,
+          "rr": 0.5,
+          "ndcg_at_k": 0.6934,
+          "latency_ms": 7
+        },
+        {
+          "id": "Q-005",
+          "method": "hybrid",
+          "hit_at_k": 1,
+          "precision_at_k": 0.4,
+          "rr": 1.0,
+          "ndcg_at_k": 1.0,
+          "latency_ms": 6
+        },
+        {
+          "id": "Q-006",
+          "method": "hybrid",
+          "hit_at_k": 1,
+          "precision_at_k": 0.2,
+          "rr": 0.3333,
+          "ndcg_at_k": 0.5,
+          "latency_ms": 7
+        },
+        {
+          "id": "Q-007",
+          "method": "hybrid",
+          "hit_at_k": 1,
+          "precision_at_k": 0.6,
+          "rr": 1.0,
+          "ndcg_at_k": 1.0,
+          "latency_ms": 8
+        },
+        {
+          "id": "Q-008",
+          "method": "hybrid",
+          "hit_at_k": 1,
+          "precision_at_k": 0.2,
+          "rr": 1.0,
+          "ndcg_at_k": 1.0,
+          "latency_ms": 7
+        },
+        {
+          "id": "Q-009",
+          "method": "hybrid",
+          "hit_at_k": 1,
+          "precision_at_k": 0.6,
+          "rr": 1.0,
+          "ndcg_at_k": 1.0,
+          "latency_ms": 8
+        },
+        {
+          "id": "Q-010",
+          "method": "hybrid",
+          "hit_at_k": 1,
+          "precision_at_k": 0.4,
+          "rr": 0.5,
+          "ndcg_at_k": 0.6934,
+          "latency_ms": 9
+        },
+        {
+          "id": "Q-011",
+          "method": "hybrid",
+          "hit_at_k": 1,
+          "precision_at_k": 0.2,
+          "rr": 1.0,
+          "ndcg_at_k": 1.0,
+          "latency_ms": 5
+        },
+        {
+          "id": "Q-012",
+          "method": "hybrid",
+          "hit_at_k": 1,
+          "precision_at_k": 0.2,
+          "rr": 0.5,
+          "ndcg_at_k": 0.6309,
+          "latency_ms": 14
+        },
+        {
+          "id": "Q-013",
+          "method": "hybrid",
+          "hit_at_k": 1,
+          "precision_at_k": 0.6,
+          "rr": 1.0,
+          "ndcg_at_k": 1.0,
+          "latency_ms": 50
+        },
+        {
+          "id": "Q-014",
+          "method": "hybrid",
+          "hit_at_k": 1,
+          "precision_at_k": 0.6,
+          "rr": 1.0,
+          "ndcg_at_k": 1.0,
+          "latency_ms": 9
+        },
+        {
+          "id": "Q-015",
+          "method": "hybrid",
+          "hit_at_k": 1,
+          "precision_at_k": 0.2,
+          "rr": 1.0,
+          "ndcg_at_k": 1.0,
+          "latency_ms": 9
+        },
+        {
+          "id": "Q-016",
+          "method": "hybrid",
+          "hit_at_k": 1,
+          "precision_at_k": 0.2,
+          "rr": 0.3333,
+          "ndcg_at_k": 0.5,
+          "latency_ms": 47
+        },
+        {
+          "id": "Q-017",
+          "method": "hybrid",
+          "hit_at_k": 1,
+          "precision_at_k": 0.4,
+          "rr": 1.0,
+          "ndcg_at_k": 1.0,
+          "latency_ms": 7
+        },
+        {
+          "id": "Q-018",
+          "method": "hybrid",
+          "hit_at_k": 1,
+          "precision_at_k": 0.2,
+          "rr": 1.0,
+          "ndcg_at_k": 1.0,
+          "latency_ms": 9
+        },
+        {
+          "id": "Q-019",
+          "method": "hybrid",
+          "hit_at_k": 1,
+          "precision_at_k": 0.4,
+          "rr": 1.0,
+          "ndcg_at_k": 0.9197,
+          "latency_ms": 50
+        },
+        {
+          "id": "Q-020",
+          "method": "hybrid",
+          "hit_at_k": 1,
+          "precision_at_k": 0.4,
+          "rr": 1.0,
+          "ndcg_at_k": 1.0,
+          "latency_ms": 9
+        }
+      ]
+    }
+  }
+}
