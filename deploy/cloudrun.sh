@@ -29,7 +29,21 @@ REPO="cloud-run-source-deploy"
 IMAGE="${REGION}-docker.pkg.dev/${PROJECT}/${REPO}/${SERVICE}:latest"
 
 echo "[1/3] Building image → ${IMAGE}"
-gcloud builds submit --tag "$IMAGE" --project "$PROJECT" .
+# --async pattern: deploy SA can't stream Cloud Build logs (the streamer
+# requires project Viewer/Owner OAuth-style perms that don't grant cleanly
+# to a deploy SA). The build itself runs fine — we just poll for status.
+BUILD_ID=$(gcloud builds submit --tag "$IMAGE" --project "$PROJECT" \
+  --async --format="value(id)" .)
+echo "[1/3]   build id: $BUILD_ID — polling for completion..."
+while true; do
+  STATUS=$(gcloud builds describe "$BUILD_ID" --project "$PROJECT" \
+    --format="value(status)")
+  case "$STATUS" in
+    SUCCESS) echo "[1/3]   ✅ build SUCCESS"; break ;;
+    WORKING|QUEUED|PENDING) sleep 5 ;;
+    *) echo "[1/3]   ❌ build $STATUS"; exit 1 ;;
+  esac
+done
 
 echo "[2/3] Deploying to Cloud Run..."
 gcloud run deploy "$SERVICE" \
