@@ -1,0 +1,84 @@
+"""
+BM25 retrieval over the L1-enriched corpus.
+
+Loads data/raw/enriched_use_397.jsonl from the L1 pantry. Each row already
+has chief_complaint + hpi + physician_note + vitals — pre-enriched at L1
+time by Vertex AI (gemini-2.5-flash). Retrieval combines those three text
+fields into a single document for BM25 indexing.
+
+Why this lives in repo#2 (data engineer lane), not repo#1 (genai lane):
+    repo#2 = "L1 + serving" — it proves the L1 substrate can feed any
+    downstream chef. /api/retrieve serves the retrieval-feature view of
+    the corpus; the genai chef (repo#1) consumes this kind of view but
+    layers its own re-ranking + generation on top.
+"""
+import json
+import os
+import re
+from typing import List, Dict, Any
+
+from rank_bm25 import BM25Okapi
+
+_TOKEN_RE = re.compile(r"[a-z0-9]+")
+
+
+def _tokenize(text: str) -> List[str]:
+    return _TOKEN_RE.findall(text.lower())
+
+
+class CorpusRetriever:
+    def __init__(self, jsonl_path: str):
+        self.rows: List[Dict[str, Any]] = []
+        with open(jsonl_path, "r") as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                self.rows.append(json.loads(line))
+
+        docs_tokens = [_tokenize(self._doc_text(r)) for r in self.rows]
+        self.bm25 = BM25Okapi(docs_tokens)
+
+    @staticmethod
+    def _doc_text(row: Dict[str, Any]) -> str:
+        parts = [
+            row.get("chief_complaint", ""),
+            row.get("hpi", ""),
+            row.get("physician_note", ""),
+            row.get("Medical Condition", ""),
+            row.get("Medication", ""),
+        ]
+        return " ".join(str(p) for p in parts if p)
+
+    def search(self, query: str, k: int = 5) -> List[Dict[str, Any]]:
+        scores = self.bm25.get_scores(_tokenize(query))
+        ranked = sorted(
+            enumerate(scores), key=lambda x: x[1], reverse=True
+        )[:k]
+        out = []
+        for idx, score in ranked:
+            row = self.rows[idx]
+            out.append({
+                "rank": len(out) + 1,
+                "score": round(float(score), 4),
+                "id": idx,
+                "age": row.get("Age"),
+                "gender": row.get("Gender"),
+                "medical_condition": row.get("Medical Condition"),
+                "chief_complaint": row.get("chief_complaint"),
+                "esi_tier_truth": row.get("esi_tier_truth"),
+                "snippet": (row.get("hpi") or "")[:240],
+            })
+        return out
+
+
+_RETRIEVER: CorpusRetriever | None = None
+
+
+def get_retriever() -> CorpusRetriever:
+    global _RETRIEVER
+    if _RETRIEVER is None:
+        here = os.path.dirname(__file__)
+        path = os.path.join(here, "../../data/raw/enriched_use_397.jsonl")
+        _RETRIEVER = CorpusRetriever(path)
+    return _RETRIEVER

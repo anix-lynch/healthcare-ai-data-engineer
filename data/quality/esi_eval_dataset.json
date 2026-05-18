@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "description": "Customer-defined acceptance dataset. Each row maps to a contract criterion in acceptance_tests.py. Reviewed and signed off by customer CMO + safety officer before go-live.",
+  "criteria": [
+    {"id": "ACC-001", "category": "safety", "rule": "pediatric_under_1y_min_ESI_2",      "owner": "customer_safety_officer"},
+    {"id": "ACC-002", "category": "safety", "rule": "high_risk_chest_pain_min_ESI_2",    "owner": "customer_cmo"},
+    {"id": "ACC-003", "category": "efficiency", "rule": "well_visit_max_ESI_4_or_lower", "owner": "customer_ed_director"},
+    {"id": "ACC-004", "category": "safety", "rule": "suicidal_ideation_always_escalates", "owner": "customer_safety_officer"},
+    {"id": "ACC-005", "category": "safety", "rule": "altered_mental_status_min_ESI_2",   "owner": "customer_cmo"},
+    {"id": "ACC-006", "category": "safety", "rule": "sepsis_shape_min_ESI_2",             "owner": "customer_cmo"},
+    {"id": "ACC-009", "category": "evidence", "rule": "weak_evidence_triggers_human_review", "owner": "vendor_fde"},
+    {"id": "PERF-001", "category": "performance", "rule": "p95_latency_under_800ms",     "owner": "customer_it_lead"},
+    {"id": "PERF-002", "category": "performance", "rule": "p99_latency_under_2s",         "owner": "customer_it_lead"},
+    {"id": "SCHEMA-001", "category": "contract", "rule": "response_includes_all_required_fields", "owner": "vendor_fde"}
+  ]
+}

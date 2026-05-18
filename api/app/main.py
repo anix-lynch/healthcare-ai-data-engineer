@@ -6,12 +6,23 @@ Author: Anix Lynch
 Dataset: 55,500 patient encounters (2019-2024)
 """
 
-from fastapi import FastAPI, Query, HTTPException
+from fastapi import FastAPI, Query, HTTPException, Body
 from fastapi.middleware.cors import CORSMiddleware
 from typing import Optional, List
 import pandas as pd
 from datetime import datetime
 import os
+
+try:
+    from .retrieval import get_retriever
+    from .classifier import classify_esi
+except ImportError:
+    # Direct script load (importlib spec loader, no parent package)
+    import sys
+    from pathlib import Path
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from retrieval import get_retriever  # type: ignore
+    from classifier import classify_esi  # type: ignore
 
 # Typed response contracts live in api/app/schemas.py.
 # They are reference contracts (publishable as OpenAPI components manually if
@@ -382,6 +393,63 @@ def search(
         "count": len(results),
         "data": results
     }
+
+
+# ─────────────────────────────────────────────────────────────────────
+# L1-feeds-downstream-chefs endpoints (added 2026-05-18)
+# ─────────────────────────────────────────────────────────────────────
+# These two endpoints prove the L1 substrate (healthcare-api pantry) can
+# feed BOTH retrieval-style consumers (genai-engineer / RAG) AND
+# classification-style consumers (forward-deployed-engineer / ESI triage)
+# from the same enriched corpus. Same pantry, two chefs.
+
+@app.get("/api/retrieve")
+async def retrieve(
+    q: str = Query(..., description="Query text (free-form clinical)"),
+    k: int = Query(5, ge=1, le=20, description="Top-K results"),
+):
+    """
+    BM25 retrieval over the 497-row enriched holdout corpus.
+
+    Feeds the retrieval-style consumer (genai-engineer / RAG runtime).
+    Returns top-K matches with score, age, gender, medical condition,
+    chief complaint, ESI ground-truth label, and HPI snippet.
+
+    Test against data/quality/golden_retrieval_set.json (20 queries).
+    """
+    results = get_retriever().search(q, k=k)
+    return {
+        "query": q,
+        "k": k,
+        "method": "bm25_okapi",
+        "corpus": "enriched_use_397.jsonl",
+        "results": results,
+    }
+
+
+@app.post("/api/classify")
+async def classify(payload: dict = Body(...)):
+    """
+    Rule-based ESI triage classifier with customer-signed safety floors.
+
+    Feeds the classification-style consumer (forward-deployed-engineer
+    ER triage). Applies the 10 acceptance criteria from
+    data/quality/esi_eval_dataset.json (ACC-001..ACC-009, etc).
+
+    Input:
+      {
+        "age": 62,
+        "chief_complaint": "Chest pain, shortness of breath, diaphoresis",
+        "vitals": {
+          "bp_systolic": 142, "bp_diastolic": 88,
+          "heart_rate": 108, "respiratory_rate": 22,
+          "temperature_f": 98.8, "spo2_pct": 93
+        }
+      }
+
+    Output: { esi_tier, rules_fired[], confidence, human_review_required }
+    """
+    return classify_esi(payload)
 
 
 if __name__ == "__main__":
