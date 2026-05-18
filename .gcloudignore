@@ -18,9 +18,9 @@ Makefile
 docker-compose.yml
 .github/
 deploy/cloudrun.sh
-# Drop bulky derived data — keep only the raw CSV the API actually serves.
+# Drop bulky derived data — keep only files the API actually serves.
+# enriched_use_397.jsonl IS served (BM25 retrieval over CC+HPI+notes).
 data/raw/healthcare_dataset_enriched.*
 data/raw/enriched_holdout_100.jsonl
-data/raw/enriched_use_397.jsonl
 data/derived/
 data/quality/
