@@ -10,6 +10,18 @@
 
 set -euo pipefail
 
+# ── Auth: use bchan-genai-deploy SA if its key is present ──
+# Avoids the daily `gcloud auth login` browser dance. One-time setup:
+#   gcloud iam service-accounts create bchan-genai-deploy
+#   + 5 deploy roles · key at ~/.config/secrets/bchan-genai-deploy.json
+SA_KEY="$HOME/.config/secrets/bchan-genai-deploy.json"
+if [[ -f "$SA_KEY" ]]; then
+  SA_EMAIL="bchan-genai-deploy@bchan-genai-lab.iam.gserviceaccount.com"
+  gcloud auth activate-service-account --key-file="$SA_KEY" --quiet >/dev/null 2>&1 || true
+  export CLOUDSDK_CORE_ACCOUNT="$SA_EMAIL"
+  echo "[auth] using SA $SA_EMAIL"
+fi
+
 PROJECT="${GCP_PROJECT:-bchan-genai-lab}"
 REGION="${GCP_REGION:-us-west1}"
 SERVICE="${SERVICE_NAME:-healthcare-ai-data}"
