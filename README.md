@@ -2,6 +2,10 @@
 
 > **Healthcare data backbone** — dbt medallion (bronze/silver/gold) + FastAPI 11 endpoints over 55,500 synthetic encounters + LLM-augmented enrichment (Vertex AI) + patient identity resolver + lightweight L1 quality gate. The data layer GenAI applications consume without hallucinating their way out of garbage input.
 
+![Demo](demo.gif)
+
+🔗 **Live:** https://healthcare-ai-data-2ihyeqmb6q-uw.a.run.app/docs
+
 **Built for:** healthcare AI/data teams who need a trusted L1 layer before their RAG/agent stack lands on top. Patterns scale from this 55K demo to 50M+ row production via incremental dbt + Airflow-friendly idempotent scripts (each script in `scripts/` is checkpoint-driven and rerunnable without manual cleanup).
 
 [![data-quality](https://github.com/anix-lynch/healthcare-ai-data-engineer/actions/workflows/quality.yml/badge.svg)](https://github.com/anix-lynch/healthcare-ai-data-engineer/actions/workflows/quality.yml)
