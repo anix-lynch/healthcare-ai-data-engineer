@@ -46,12 +46,18 @@ while true; do
 done
 
 echo "[2/3] Deploying to Cloud Run..."
+# Runtime identity: the deploy SA (bchan-genai-deploy) holds roles/aiplatform.user,
+# so /api/ask can call Gemini via Vertex. The default compute SA does NOT have it
+# (it 403s aiplatform.endpoints.predict), so DO NOT drop this flag — grounded
+# generation regresses to retrieval-only if the service reverts to the compute SA.
+RUNTIME_SA="${RUNTIME_SA:-bchan-genai-deploy@bchan-genai-lab.iam.gserviceaccount.com}"
 gcloud run deploy "$SERVICE" \
     --image "$IMAGE" \
     --region "$REGION" \
     --project "$PROJECT" \
     --platform managed \
     --allow-unauthenticated \
+    --service-account "$RUNTIME_SA" \
     --memory 1Gi \
     --cpu 1 \
     --timeout 300 \
