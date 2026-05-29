@@ -1,3 +1,10 @@
+# A4 — Pipeline Operations DAG
+
+> Runtime / data-production flow only. `portfolio/` is the cockpit (how humans
+> read the system), **not** part of the pipeline — it appears here only as a
+> final consumer of the published marts/API.
+
+```
 ┌───────────────────────────────────────────────────────────────────────────────┐
 │ 🔄 A4 PIPELINE OPERATIONS DAG                                                  │
 │ What runs first? What depends on what? What breaks downstream?                 │
@@ -45,7 +52,6 @@
                                       │ FAIL → block + alert   │
                                       └───────────┬───────────┘
                                                   │
-                                                  ▼
                    ┌──────────────────────────────┼──────────────────────────────┐
                    ▼                              ▼                              ▼
         ┌──────────────────────┐       ┌──────────────────────┐       ┌──────────────────────┐
@@ -67,8 +73,11 @@
             │ (14) A1 dashboard     │ │ (15) A2 trust view    │ │ (16) AI consumers     │
             │ executive cockpit     │ │ quality cockpit       │ │ RAG / agents          │
             └──────────────────────┘ └──────────────────────┘ └──────────────────────┘
+```
 
-DEPENDENCY RULES
+## Dependency rules
+
+```
 1 → 2
 2 → 3,4
 3,4 → 5
@@ -77,39 +86,33 @@ DEPENDENCY RULES
 9 → 10,11,12
 10,11,12 → 13
 13 → 14,15,16
+```
 
-BLAST RADIUS EXAMPLES
+## Blast radius
+
+```
 If (3) identity_resolver.py fails:
     patient_identity_map.json fails
-    ↓
-    dbt build may still run but trust quality drops
-    ↓
-    A2 Trust Dashboard turns yellow/red
+    → dbt build may still run but trust quality drops
+    → A2 Trust Dashboard turns yellow/red
+
 If (6) dbt tests fail:
     quality_gate.py blocks publish
-    ↓
-    marts do not refresh
-    ↓
-    API/dashboard use last-known-good snapshot
+    → marts do not refresh
+    → API/dashboard serve last-known-good snapshot
+
 If (9) quality_gate.py fails:
     mart_patient / mart_visit / mart_claims blocked
-    ↓
-    A1 Executive Dashboard shows degraded mode
-    ↓
-    AI consumers do not receive bad data
+    → A1 Executive Dashboard shows degraded mode
+    → AI consumers do not receive bad data
+```
 
-A4 should prove:
-Freshness:
-    data arrives and refreshes on schedule
-Reliability:
-    tasks run in dependency order
-Recovery:
-    failed jobs retry or block publish safely
-Blast radius:
-    you know what breaks downstream
+## What A4 proves
 
-Keep portfolio/ out of the DAG except as final consumers:
+- **Freshness** — data arrives and refreshes on schedule
+- **Reliability** — tasks run in dependency order
+- **Recovery** — failed jobs retry or block publish safely
+- **Blast radius** — you know what breaks downstream
 
-marts/API → A1/A2 screenshots
-
-because the DAG is about runtime flow, not folder layout.
+`portfolio/` stays out of the DAG except as final consumers (marts/API → A1/A2
+screenshots), because the DAG is about runtime flow, not folder layout.
