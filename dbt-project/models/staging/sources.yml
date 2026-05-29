@@ -2,7 +2,8 @@ version: 2
 
 sources:
   - name: healthcare
-    schema: dbo
+    # BigQuery dataset holding the raw load (see scripts/load_bigquery.py)
+    schema: "{{ env_var('BQ_DATASET', 'healthcare_analytics') }}"
     tables:
       - name: raw_healthcare_data
         identifier: raw_healthcare_data

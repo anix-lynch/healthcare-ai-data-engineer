@@ -112,7 +112,7 @@ models:
           - unique
 
   - name: dim_diagnosis
-    description: One row per unique medical condition (Kaggle: 6 conditions).
+    description: "One row per unique medical condition (Kaggle: 6 conditions)."
     columns:
       - name: diagnosis_key
         tests:
@@ -122,10 +122,11 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: ['Diabetes', 'Hypertension', 'Cancer', 'Obesity', 'Asthma', 'Arthritis']
+              # staging standardizes conditions to lowercase + underscores
+              values: ['diabetes', 'hypertension', 'cancer', 'obesity', 'asthma', 'arthritis']
 
   - name: dim_insurance
-    description: One row per insurance provider (Kaggle: 5 providers).
+    description: "One row per insurance provider (Kaggle: 5 providers)."
     columns:
       - name: insurance_key
         tests:

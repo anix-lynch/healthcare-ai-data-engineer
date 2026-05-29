@@ -23,3 +23,8 @@ _outreach/
 
 # Internal build prompt — not for public showroom
 CLAUDE_CODE_PROMPT.md
+.dbt-venv/
+dbt-project/target/
+dbt-project/dbt_packages/
+dbt-project/logs/
+dbt-project/.user.yml

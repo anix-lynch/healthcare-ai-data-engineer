@@ -53,6 +53,7 @@ SELECT
     ir.cost_per_day,
     ir.is_emergency,
     ir.is_readmission,
+    ir.days_since_last_admission,
     ir.previous_admission_count,
     ir.age_group,
     ir.season,

@@ -1,6 +1,17 @@
 healthcare_analytics:
-  target: dev
+  # Default target = BigQuery (GCP $900 credit). Fabric kept as legacy alt.
+  target: bigquery
   outputs:
+    bigquery:
+      type: bigquery
+      method: oauth          # uses gcloud ADC (owner: alynch@gozeroshot.dev)
+      project: "{{ env_var('GCP_PROJECT_ID', 'bchan-genai-lab') }}"
+      dataset: "{{ env_var('BQ_DATASET', 'healthcare_analytics') }}"
+      location: "{{ env_var('BQ_LOCATION', 'US') }}"
+      threads: 4
+      priority: interactive
+      job_execution_timeout_seconds: 300
+      job_retries: 1
     dev:
       type: fabric
       driver: 'ODBC Driver 18 for SQL Server'
