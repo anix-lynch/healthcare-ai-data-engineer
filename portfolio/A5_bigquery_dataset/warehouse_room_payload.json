@@ -1,0 +1,138 @@
+{
+  "artifact": "A5_bigquery_dataset",
+  "display_mode": "warehouse-explorer",
+  "generated_at": "2026-05-29T15:28:03-07:00",
+  "source_truth": {
+    "checkpoint_report": "data/quality/l1_checkpoint_report.json",
+    "dbt_models_root": "dbt-project/models",
+    "sample_queries": "portfolio/A5_bigquery_dataset/sample_queries.sql"
+  },
+  "header": {
+    "title": "\ud83c\udfed BIGQUERY WAREHOUSE EXPLORER",
+    "dataset": "healthcare_dw (storytelling alias over dbt core models)",
+    "subtitle": "BigQuery Data Warehouse"
+  },
+  "datasets_panel": {
+    "bronze": [
+      "raw/healthcare_dataset.csv"
+    ],
+    "silver": [
+      "stg_healthcare"
+    ],
+    "intermediate": [
+      "int_encounters_enriched",
+      "int_readmissions"
+    ],
+    "gold": [
+      "dim_date",
+      "dim_diagnosis",
+      "dim_doctor",
+      "dim_hospital",
+      "dim_insurance",
+      "dim_medication",
+      "dim_patient",
+      "fact_patient_encounters"
+    ],
+    "selected": "fact_patient_encounters"
+  },
+  "table_details": {
+    "table": "fact_patient_encounters",
+    "grain": "1 row = 1 encounter",
+    "owner": "Analytics Engineering",
+    "purpose": "Encounter analytics + downstream API serving",
+    "last_refresh": "12:51",
+    "rows": 497,
+    "actions": [
+      "Preview Data",
+      "Open SQL",
+      "Open Lineage"
+    ]
+  },
+  "mart_inventory": [
+    {
+      "model": "fact_patient_encounters",
+      "grain": "1 row = 1 encounter",
+      "purpose": "Core encounter analytics"
+    },
+    {
+      "model": "dim_patient",
+      "grain": "1 row = 1 patient",
+      "purpose": "Patient dimension"
+    },
+    {
+      "model": "dim_hospital",
+      "grain": "1 row = 1 hospital",
+      "purpose": "Facility dimension"
+    }
+  ],
+  "sample_query": {
+    "query": "-- Proof queries aligned to real dbt core models in this repo.\n-- A5 portfolio panel should point to these instead of synthetic placeholders.\n\nselect\n  medical_condition,\n  count(*) as encounters\nfrom fact_patient_encounters\ngroup by 1\norder by encounters desc;",
+    "status": "\ud83d\udfe2 Query shape verified from repo SQL",
+    "runtime": "n/a (offline portfolio layer)",
+    "rows_returned": "n/a"
+  },
+  "warehouse_summary": {
+    "datasets": 1,
+    "tables": 11,
+    "gold_models": 8,
+    "views": 0,
+    "last_refresh": "12:51",
+    "warehouse_health": "Healthy \ud83d\udfe2"
+  },
+  "related_artifacts": [
+    "A3 Data Marketplace",
+    "A4 Pipeline Operations",
+    "A1 Executive Dashboard"
+  ],
+  "notes": [
+    "A5 is a storytelling/explorer layer over existing root dbt + checkpoint artifacts.",
+    "No parallel warehouse is created under portfolio.",
+    "Metrics and model inventory are derived from existing repo assets."
+  ],
+  "link_targets": {
+    "A1 Executive Dashboard": "portfolio/A1_executive_dashboard/README.md",
+    "A3 Data Marketplace": "portfolio/A3_dbt_documentation/README.md",
+    "A4 Pipeline Operations": "portfolio/A4_airflow_dag/README.md",
+    "Open SQL": "portfolio/A5_bigquery_dataset/sample_queries.sql",
+    "Open Lineage": "docs/dag.md",
+    "Preview Data": "dbt-project/models/marts/core/fact_patient_encounters.sql"
+  },
+  "click_audit": {
+    "resolved_count": 6,
+    "unresolved_count": 0,
+    "coverage_pct": 100.0,
+    "resolved": [
+      {
+        "label": "A1 Executive Dashboard",
+        "target": "portfolio/A1_executive_dashboard/README.md",
+        "exists": true
+      },
+      {
+        "label": "A3 Data Marketplace",
+        "target": "portfolio/A3_dbt_documentation/README.md",
+        "exists": true
+      },
+      {
+        "label": "A4 Pipeline Operations",
+        "target": "portfolio/A4_airflow_dag/README.md",
+        "exists": true
+      },
+      {
+        "label": "Open Lineage",
+        "target": "docs/dag.md",
+        "exists": true
+      },
+      {
+        "label": "Open SQL",
+        "target": "portfolio/A5_bigquery_dataset/sample_queries.sql",
+        "exists": true
+      },
+      {
+        "label": "Preview Data",
+        "target": "dbt-project/models/marts/core/fact_patient_encounters.sql",
+        "exists": true
+      }
+    ],
+    "unresolved": []
+  }
+}

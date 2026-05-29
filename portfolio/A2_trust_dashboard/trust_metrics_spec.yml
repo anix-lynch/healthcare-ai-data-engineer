@@ -1,0 +1,36 @@
+artifact: A2_trust_dashboard
+title: Trust Dashboard
+question: Can we trust the patient and visit numbers?
+tech:
+  - Looker Studio
+  - BigQuery
+  - dbt tests
+quality_rules:
+  schema_drift:
+    good: "no required columns missing"
+    strong: "no missing or unexpected columns"
+    proof: data/quality/l1_checkpoint_report.json
+  critical_nulls:
+    good: "0 nulls in required identity and date fields"
+    strong: "0 nulls in required fields"
+    proof: data/quality/l1_checkpoint_report.json
+  duplicate_encounters:
+    good: "0 duplicate keys"
+    strong: "0 duplicate keys"
+    proof: data/quality/l1_checkpoint_report.json
+  temporal_sanity:
+    good: "discharge >= admission"
+    strong: "no negative or extreme length of stay"
+    proof: data/quality/l1_checkpoint_report.json
+  pii_in_narrative:
+    good: "0 direct PII hits"
+    strong: "0 direct PII hits"
+    proof: data/quality/l1_checkpoint_report.json
+  patient_identity:
+    good: "map present"
+    strong: "stable resolved mapping"
+    proof: data/derived/patient_identity_map.json
+  audit_lineage:
+    good: "complete"
+    strong: "complete"
+    proof: data/quality/l1_checkpoint_report.json

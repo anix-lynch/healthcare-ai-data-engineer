@@ -1,0 +1,40 @@
+flowchart TD
+  root["README.md"]
+  portfolio_readme["portfolio/README.md"]
+  manifest["portfolio/manifest.json"]
+  prompt["portfolio/PROMPT_FOR_AGENT.md"]
+
+  checkpoint["data/quality/l1_checkpoint_report.json"]
+  identity["data/derived/patient_identity_map.json"]
+  openapi["openapi_snapshot.json"]
+
+  patient_script["scripts/patient_identity.py"]
+  checkpoint_script["scripts/checkpoint.py"]
+  snapshot_script["scripts/build_portfolio_snapshot.py"]
+
+  api["api/app/main.py"]
+  control_room["api/app/control_room.py"]
+  dbt["dbt-project/"]
+  docs["docs/"]
+  tests["tests/"]
+  portfolio["portfolio/"]
+
+  root --> portfolio_readme --> manifest
+  portfolio_readme --> prompt
+  checkpoint --> control_room
+  identity --> control_room
+  openapi --> control_room
+
+  patient_script --> identity
+  patient_script --> snapshot_script
+  checkpoint_script --> checkpoint
+  checkpoint_script --> tests
+  dbt --> docs
+  dbt --> portfolio
+  api --> control_room
+  api --> openapi
+  root --> docs
+  root --> dbt
+  root --> tests
+  root --> api
+  root --> portfolio

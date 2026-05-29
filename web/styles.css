@@ -1,0 +1,82 @@
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  background: #f4f4f4;
+  color: #111;
+}
+.top {
+  padding: 18px 20px;
+  border-bottom: 2px solid #222;
+  background: #fff;
+}
+.top h1 { margin: 0 0 6px 0; font-size: 22px; }
+.top p { margin: 0; color: #444; font-size: 13px; }
+main { padding: 16px; max-width: 1400px; margin: 0 auto; }
+.panel {
+  background: #fff;
+  border: 2px solid #222;
+  padding: 12px;
+  margin-bottom: 16px;
+}
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 14px;
+}
+.card {
+  background: #fff;
+  border: 2px solid #222;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.card h3 { margin: 0; font-size: 16px; }
+.question { margin: 0; font-size: 13px; color: #444; min-height: 34px; }
+.card img {
+  width: 100%;
+  border: 1px solid #333;
+  border-radius: 3px;
+  background: #f8f8f8;
+}
+.card .actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.livebox {
+  border: 1px solid #333;
+  background: #f9fff7;
+  padding: 8px;
+  font-size: 12px;
+}
+.liverow { margin-top: 4px; color: #222; }
+.liveerr {
+  border: 1px solid #922;
+  background: #fff5f5;
+  color: #700;
+  padding: 8px;
+  font-size: 12px;
+}
+button, .linkbtn {
+  border: 1px solid #222;
+  background: #fafafa;
+  color: #111;
+  text-decoration: none;
+  padding: 6px 10px;
+  font-size: 12px;
+  cursor: pointer;
+}
+.detail.hidden { display: none; }
+.detail-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+#detail-json {
+  margin: 0;
+  max-height: 50vh;
+  overflow: auto;
+  background: #fcfcfc;
+  border: 1px solid #ccc;
+  padding: 8px;
+  font-size: 12px;
+}

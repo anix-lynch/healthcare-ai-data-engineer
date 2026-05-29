@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>healthcare-ai-data-engineer · L1 control room</title>
+<style>
+  :root{
+    --cream:#FBF7F0; --paper:#FFFDF8; --ink:#2B2A27; --ink-soft:#6B675E;
+    --line:#E7DFD1; --line-strong:#C9BCA2;
+    --coral:#E8765B; --green:#5FA978; --green-deep:#2f6a45;
+    --amber:#D4A23A; --red:#D9534F; --blue:#5B7FB9;
+    --mono:"SF Mono",ui-monospace,Menlo,Consolas,"Roboto Mono",monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:var(--cream);color:var(--ink);font-family:var(--mono);
+    line-height:1.55;-webkit-font-smoothing:antialiased;font-size:14px}
+  .wrap{max-width:920px;margin:0 auto;padding:16px 16px 70px}
+  a{color:inherit}
+
+  /* dots */
+  .d{display:inline-block;width:10px;height:10px;border-radius:50%;vertical-align:middle}
+  .d.g{background:var(--green);box-shadow:0 0 0 3px rgba(95,169,120,.18)}
+  .d.a{background:var(--amber);box-shadow:0 0 0 3px rgba(212,162,58,.18)}
+  .d.r{background:var(--red);box-shadow:0 0 0 3px rgba(217,83,79,.18)}
+  .live{animation:pulse 2.2s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+  /* header */
+  header{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:12px 15px;
+    background:var(--paper);border:2px solid var(--ink);border-radius:12px}
+  .logo{font-weight:700;letter-spacing:-.3px}
+  .logo .s{color:var(--coral)}
+  .pill{font-size:11.5px;font-weight:700;padding:4px 10px;border-radius:999px;
+    border:1.5px solid var(--line-strong);background:var(--cream)}
+  .pill.run{border-color:var(--blue);color:var(--blue);background:#fff}
+  .sp{flex:1}
+  .repo{font-size:11.5px;color:var(--ink-soft);text-decoration:none;border-bottom:1.5px dashed var(--line-strong)}
+  .repo:hover{color:var(--coral);border-color:var(--coral)}
+
+  /* nav */
+  nav{display:flex;gap:7px;flex-wrap:wrap;margin:16px 0 14px}
+  .tab{cursor:pointer;font-size:12.5px;font-weight:700;padding:8px 12px;border-radius:9px;
+    background:var(--paper);border:2px solid var(--line-strong);color:var(--ink-soft);
+    transition:transform .08s ease;user-select:none}
+  .tab:hover{transform:translateY(-2px);color:var(--ink)}
+  .tab.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .tab.start.active{background:var(--coral);border-color:var(--coral)}
+
+  /* panels */
+  .panel{display:none}.panel.show{display:block;animation:fade .22s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+
+  /* terminal box */
+  .box{background:var(--paper);border:2px dashed var(--line-strong);border-radius:12px;
+    padding:14px 16px;margin-bottom:12px}
+  .box.solid{border-style:solid;border-color:var(--ink)}
+  .box .title{font-weight:700;display:flex;align-items:center;gap:8px;margin-bottom:4px}
+  .box .q{color:var(--ink-soft);font-size:13px;margin:0 0 10px}
+  .ctr{text-align:center}
+
+  /* status rows */
+  .row{display:flex;align-items:baseline;gap:6px;padding:3px 0;font-size:13.5px}
+  .row .k{color:var(--ink-soft)}
+  .row .fill{flex:1;border-bottom:1.5px dotted var(--line-strong);transform:translateY(-3px);margin:0 4px}
+  .row .v{font-weight:700;white-space:nowrap}
+
+  /* grid of mini panels */
+  .cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+
+  /* open buttons */
+  .opens{margin-top:10px;display:flex;gap:7px;flex-wrap:wrap}
+  .open{cursor:pointer;font-family:var(--mono);font-size:12px;font-weight:700;
+    padding:5px 11px;border-radius:8px;background:var(--cream);
+    border:1.5px solid var(--line-strong);color:var(--ink);transition:all .1s ease;user-select:none}
+  .open:hover{background:var(--coral);border-color:var(--coral);color:#fff;transform:translateY(-2px)}
+
+  /* panic panel */
+  .panic .verdict{font-size:18px;font-weight:700;text-align:center;margin:2px 0 12px}
+  .panic .verdict .d{width:13px;height:13px;margin-right:7px}
+  .panic .lines div{padding:1px 0}
+  .panic .punch{margin-top:10px;color:var(--green-deep);font-weight:700}
+
+  /* red router */
+  .router .rr{display:flex;align-items:center;gap:6px;padding:4px 0;cursor:pointer;border-radius:6px}
+  .router .rr:hover{background:var(--cream)}
+  .router .rr .k{flex:1;color:var(--ink-soft)}
+  .router .rr .arr{color:var(--coral);font-weight:700}
+  .router .rr:hover .k{color:var(--ink)}
+
+  /* medallion */
+  .med{display:flex;gap:8px;flex-wrap:wrap;align-items:stretch;margin:6px 0 2px}
+  .ly{flex:1;min-width:120px;border:2px solid;border-radius:10px;padding:11px}
+  .ly .l{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+  .ly .w{font-size:12px;color:var(--ink-soft);margin-top:4px}
+  .ly.b{background:#F2E2D3;border-color:#B87341}.ly.b .l{color:#B87341}
+  .ly.s{background:#ECEEF0;border-color:#9AA0A6}.ly.s .l{color:#6c7177}
+  .ly.gd{background:#F7ECCF;border-color:#D4A23A}.ly.gd .l{color:#8a6516}
+  .ly.m{background:#E3EAF6;border-color:#5B7FB9}.ly.m .l{color:#33508a}
+  .ar{align-self:center;color:var(--line-strong);font-weight:700}
+
+  /* arch */
+  .stage{display:flex;align-items:center;gap:12px;padding:7px 0}
+  .stage .n{width:26px;height:26px;flex:none;border-radius:50%;background:var(--ink);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px}
+  .stage .bx{flex:1;background:var(--cream);border:2px solid var(--line-strong);border-radius:10px;padding:9px 12px;font-size:13px}
+  .stage .bx.run{border-color:var(--blue);background:#E3EAF6}
+  .stage .bx.hum{border-color:var(--coral);background:#FBE3DB}
+  .stage .bx.ag{border-color:var(--green);background:#E1F0E5}
+  .stage .bx b{font-weight:700}
+  .dn{text-align:center;color:var(--line-strong);margin:-3px 0}
+  .ep{font-size:11.5px;background:#fff;border:1.5px solid var(--blue);color:#33508a;
+    border-radius:6px;padding:1px 6px;margin:2px 3px 0 0;display:inline-block}
+
+  /* trace */
+  .trace{margin-top:11px;font-size:11.5px;color:var(--ink-soft);display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+  .crumb{padding:3px 9px;border-radius:999px;background:var(--cream);border:1.5px solid var(--line-strong)}
+  .crumb .ok{color:var(--green);font-weight:700}
+
+  .note{margin-top:11px;font-size:12.5px;color:#8a6516;background:#F7ECCF;
+    border:1.5px solid #e9d29a;border-radius:10px;padding:10px 12px}
+  .note b{color:#6b4e10}
+
+  /* --- A2 investigation room --- */
+  .lk{cursor:pointer;font-family:var(--mono);font-size:11px;font-weight:600;
+    padding:2px 8px;border-radius:6px;background:var(--cream);border:1.5px solid var(--line-strong);
+    color:var(--ink-soft);transition:all .1s ease;user-select:none;display:inline-block;margin:3px 4px 0 0;
+    text-decoration:none;white-space:nowrap}
+  .lk:hover{background:var(--ink);border-color:var(--ink);color:#fff;transform:translateY(-1px)}
+  /* unresolved label: looks like a plain tag, not a clickable-but-dead link */
+  .lk.dead{cursor:default;background:transparent;border-color:var(--line);color:var(--ink-soft);opacity:.6;font-weight:500}
+  .lk.dead:hover{background:transparent;border-color:var(--line);color:var(--ink-soft);transform:none}
+  .status .sline{padding:1px 0}
+  .vital{padding:9px 0;border-bottom:1.5px dotted var(--line-strong)}
+  .vital:last-child{border-bottom:0}
+  .vital .top{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+  .vital .num{font-weight:700;color:var(--ink-soft)}
+  .vital .name{font-weight:700}
+  .vital .grow{flex:1;border-bottom:1.5px dotted var(--line-strong);transform:translateY(-3px);margin:0 4px;min-width:20px}
+  .vital .val{font-weight:700;white-space:nowrap}
+  .vital .bench{color:var(--ink-soft);font-size:11.5px;white-space:nowrap}
+  .vital .lks{margin-top:2px}
+  .ev{display:grid;grid-template-columns:1.4fr 1fr;gap:14px;padding:11px 0;border-bottom:1.5px dotted var(--line-strong)}
+  .ev:last-child{border-bottom:0}
+  .ev .ehead{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+  .ev .ehead .name{font-weight:700}
+  .ev .ehead .val{font-weight:700;white-space:nowrap}
+  .ev .ehead .exp{color:var(--ink-soft);font-size:11.5px}
+  .ev .pclicks{font-size:11.5px;color:var(--ink-soft);margin-top:5px}
+  .radar{border-left:2px solid var(--line-strong);padding-left:11px;font-size:12px}
+  .radar .rh{font-weight:700;color:var(--ink-soft);font-size:11px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}
+  .radar ul{margin:0;padding-left:15px}.radar li{margin:1px 0}
+  .triage-item{padding:7px 0;border-bottom:1.5px dotted var(--line-strong)}
+  .triage-item:last-child{border-bottom:0}
+  .triage-item .meta{font-size:12px;color:var(--ink-soft);margin:2px 0}
+  .chk{display:flex;align-items:flex-start;gap:8px;padding:3px 0;font-size:13px;flex-wrap:wrap}
+  .chk .box-tick{color:var(--green);font-weight:700}
+  .chk .grow{flex:1;min-width:10px}
+  .hitl{display:grid;grid-template-columns:1.3fr 1fr;gap:16px}
+  .hitl .versus{font-weight:700;margin-bottom:4px}
+  .hitl .warn{color:#a8402c}
+  .hitl ul{margin:4px 0;padding-left:16px}.hitl li{margin:1px 0}
+  .hitl .cast li{margin:3px 0}
+  .resolve{margin-top:10px;padding-top:9px;border-top:2px dashed var(--line-strong)}
+  .resolve ol{margin:0 0 6px;padding-left:18px}.resolve li{margin:2px 0}
+  .step{display:flex;gap:10px;align-items:flex-start;padding:6px 0;font-size:13px}
+  .step .snum{flex:none;width:22px;height:22px;border-radius:50%;background:var(--coral);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;margin-top:1px}
+  .cta{margin-top:10px;padding:9px 12px;background:var(--coral-soft);border:1.5px solid #f0c6bb;
+    border-radius:10px;font-size:12.5px}
+  .autofix{margin-top:10px;padding-top:9px;border-top:1.5px dotted var(--line-strong)}
+  .afhead{display:flex;justify-content:space-between;align-items:baseline;font-weight:700;font-size:13px}
+  .afhead .afpct{color:var(--green-deep)}
+  .afbar{height:12px;background:var(--silver-soft);border:1.5px solid var(--line-strong);
+    border-radius:999px;overflow:hidden;margin:6px 0}
+  .affill{height:100%;background:linear-gradient(90deg,var(--green),#7ec295);
+    border-radius:999px 0 0 999px}
+  .afnote{font-size:12px;color:var(--ink-soft)}
+  @media(max-width:620px){.ev,.hitl{grid-template-columns:1fr}.radar{border-left:0;border-top:2px solid var(--line-strong);padding-left:0;padding-top:8px}}
+
+  /* --- A4 dag --- */
+  .dag{display:flex;flex-direction:column;align-items:center;gap:0;padding:4px 0}
+  .lvl{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;width:100%}
+  .node{background:var(--cream);border:2px solid var(--line-strong);border-radius:11px;
+    padding:9px 13px;min-width:165px;text-align:center;position:relative}
+  .node .nn{font-size:11px;font-weight:700;color:#fff;background:var(--ink);
+    border-radius:6px;padding:1px 7px;margin-right:6px}
+  .node .nm{font-weight:700;font-size:13px}
+  .node .sub{font-size:11.5px;color:var(--ink-soft);margin-top:5px;text-align:left;display:inline-block}
+  .node.ingest{border-color:#B87341;background:#F2E2D3}
+  .node.build{border-color:#D4A23A;background:#F7ECCF}
+  .node.test{border-color:var(--green);background:#E1F0E5}
+  .node.gate{border-color:var(--amber);background:#FBF1D6;border-style:dashed}
+  .node.mart{border-color:var(--blue);background:#E3EAF6}
+  .node.api{border-color:var(--ink);background:var(--paper)}
+  .conn{display:flex;flex-direction:column;align-items:center;color:var(--line-strong);
+    font-weight:700;line-height:1;padding:3px 0}
+  .conn .bar{font-size:16px}
+  .conn .lab{font-size:11px;color:var(--ink-soft);font-style:italic;font-weight:600;margin:1px 0}
+  .conn .ar{font-size:15px}
+  .gateflag{font-size:11.5px;margin-top:4px;text-align:left;display:inline-block}
+  .gateflag .pass{color:var(--green-deep);font-weight:700}
+  .gateflag .fail{color:var(--red);font-weight:700}
+  .node.cons{border-color:var(--green);background:#E1F0E5}
+
+  /* --- A3 marketplace --- */
+  .flags{margin-top:9px;display:flex;flex-direction:column;gap:2px;font-size:12px}
+  .flags span{color:var(--green-deep);font-weight:600}
+  .mlabel{color:var(--ink-soft);font-size:12px;margin:2px 0 8px}
+  .codeline{font-family:var(--mono);font-size:12px;background:#2B2A27;color:#E8F0E8;
+    border-radius:8px;padding:7px 11px;margin-top:9px;overflow-x:auto}
+  .codeline .kw{color:#E8765B;font-weight:700}
+
+  /* --- A4 deprules / blast / proves --- */
+  .deprule{font-family:var(--mono);font-size:12.5px;background:var(--cream);
+    border:1.5px solid var(--line-strong);border-radius:10px;padding:10px 13px;
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:2px 14px}
+  .deprule span{white-space:nowrap}
+  .deprule b{color:var(--coral)}
+  .blast{font-size:12.5px;margin:9px 0;padding:9px 12px;border-left:3px solid var(--amber);
+    background:#FBF5E6;border-radius:0 10px 10px 0}
+  .blast .bh{font-weight:700}
+  .blast .casc{color:var(--ink-soft);padding-left:6px}
+  .proves{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}
+  .proves .p{background:var(--cream);border:1.5px solid var(--line-strong);border-radius:10px;padding:10px 12px}
+  .proves .p h4{margin:0 0 3px;font-size:13px;display:flex;align-items:center;gap:6px}
+  .proves .p span{font-size:12px;color:var(--ink-soft)}
+
+  /* --- A5 star schema + story --- */
+  .storybar{background:var(--ink);color:#fff;border-radius:10px;padding:10px 14px;
+    font-size:12.5px;font-weight:600;margin-bottom:12px;text-align:center;line-height:1.7}
+  .storybar b{color:#ffce9e}
+  .glance{display:flex;flex-wrap:wrap;gap:8px}
+  .glance .g1{background:var(--cream);border:1.5px solid var(--line-strong);border-radius:9px;
+    padding:7px 12px;font-size:12.5px;color:var(--ink-soft)}
+  .glance .g1 b{color:var(--ink)}
+  .dims{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:8px}
+  .factnode{min-width:240px;text-align:center;border:2px solid var(--gold);background:var(--gold-soft);
+    border-radius:11px;padding:11px 14px}
+  .factnode .nm{font-weight:700}.factnode .sub{font-size:11.5px;color:#8a6516;margin-top:3px}
+
+  footer{margin-top:22px;text-align:center;font-size:11.5px;color:var(--ink-soft)}
+  footer .h{color:var(--coral)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <span class="logo">healthcare-ai-data-engineer<span class="s"> /</span></span>
+    <span class="pill run">▲ Cloud Run</span>
+    <span class="pill" id="livepill"><span class="d a"></span> connecting…</span>
+    <span class="sp"></span>
+    <a class="repo" href="#" onclick="return false">view repo ↗</a>
+  </header>
+
+  <nav id="nav">
+    <div class="tab start active" data-p="a1">🏥 A1 Control Room</div>
+    <div class="tab" data-p="a2">❤️ A2 Trust</div>
+    <div class="tab" data-p="a3">🧬 A3 Models</div>
+    <div class="tab" data-p="a4">🔄 A4 Pipeline</div>
+    <div class="tab" data-p="a5">🏭 A5 Warehouse</div>
+    <div class="tab" data-p="a6">🏗 A6 Architecture</div>
+  </nav>
+
+  <!-- ===================== A1 CONTROL ROOM ===================== -->
+  <section class="panel show" id="a1">
+
+    <div class="box solid ctr">
+      <div class="title ctr" style="justify-content:center">🏥 HEALTHCARE DATA PLATFORM — L1 CONTROL ROOM</div>
+      <div class="q ctr" style="margin-bottom:6px">Can humans + AI trust hospital data today?</div>
+      <div style="font-weight:700">PROD <span class="d g live"></span> &nbsp;|&nbsp; Updated 08:02 AM</div>
+    </div>
+
+    <div class="box panic">
+      <div class="title" style="justify-content:center">🟢 SYSTEM STATUS — SHOULD WE PANIC TODAY?</div>
+      <div class="verdict"><span class="d g"></span>No — all systems operational. 🎉</div>
+      <div class="lines">
+        <div><span class="d g"></span> No fake patients</div>
+        <div><span class="d g"></span> No broken feeds</div>
+        <div><span class="d g"></span> No critical quality failures</div>
+      </div>
+      <div class="punch">Charts are safe to read. Data is safe to feed agents.</div>
+    </div>
+
+    <div class="cols">
+      <div class="box">
+        <div class="title">❤️ Can we trust the chart?</div>
+        <div class="row"><span class="k">QC passed?</span><span class="fill"></span><span class="v">99.2% <span class="d g"></span></span></div>
+        <div class="row"><span class="k">Missing keys?</span><span class="fill"></span><span class="v">0.04% <span class="d g"></span></span></div>
+        <div class="row"><span class="k">Duplicate visits?</span><span class="fill"></span><span class="v">0.00% <span class="d g"></span></span></div>
+        <div class="row"><span class="k">Fake patients?</span><span class="fill"></span><span class="v">none <span class="d g"></span></span></div>
+        <div class="opens"><span class="open" onclick="go('a2')">[Open A2]</span></div>
+      </div>
+
+      <div class="box">
+        <div class="title">⏰ Is the data fresh?</div>
+        <div class="row"><span class="k">Latest ingest</span><span class="fill"></span><span class="v">08:01 <span class="d g"></span></span></div>
+        <div class="row"><span class="k">Data delay</span><span class="fill"></span><span class="v">2m <span class="d g"></span></span></div>
+        <div class="row"><span class="k">Stale alert</span><span class="fill"></span><span class="v">ON <span class="d g"></span></span></div>
+        <div class="row"><span class="k">SLA met</span><span class="fill"></span><span class="v">99.1% <span class="d g"></span></span></div>
+        <div class="opens"><span class="open" onclick="go('a4')">[Open A4]</span></div>
+      </div>
+
+      <div class="box">
+        <div class="title">🔧 Is it alive?</div>
+        <div class="row"><span class="k">Uptime</span><span class="fill"></span><span class="v">99.94% <span class="d g"></span></span></div>
+        <div class="row"><span class="k">Jobs OK</span><span class="fill"></span><span class="v">99.1% <span class="d g"></span></span></div>
+        <div class="row"><span class="k">MTTR</span><span class="fill"></span><span class="v">38m <span class="d g"></span></span></div>
+        <div class="row"><span class="k">Silent fails</span><span class="fill"></span><span class="v">0 <span class="d g"></span></span></div>
+        <div class="opens"><span class="open" onclick="go('a4')">[Open A4]</span></div>
+      </div>
+    </div>
+
+    <div class="cols">
+      <div class="box">
+        <div class="title">📋 Can people use this?</div>
+        <div class="row"><span class="k">Star schema</span><span class="fill"></span><span class="v">PASS <span class="d g"></span></span></div>
+        <div class="row"><span class="k">Contracts</span><span class="fill"></span><span class="v">PASS <span class="d g"></span></span></div>
+        <div class="row"><span class="k">Query marts</span><span class="fill"></span><span class="v">YES <span class="d g"></span></span></div>
+        <div class="opens"><span class="open" onclick="go('a3')">[Open A3]</span><span class="open" onclick="go('a5')">[Open A5]</span></div>
+      </div>
+
+      <div class="box">
+        <div class="title">🛡 Will compliance yell?</div>
+        <div class="row"><span class="k">PII scan</span><span class="fill"></span><span class="v">PASS <span class="d g"></span></span></div>
+        <div class="row"><span class="k">Audit lineage</span><span class="fill"></span><span class="v">ON <span class="d g"></span></span></div>
+        <div class="row"><span class="k">HIPAA tagging</span><span class="fill"></span><span class="v">PASS <span class="d g"></span></span></div>
+        <div class="opens"><span class="open" onclick="go('a2')">[Open A2]</span><span class="open" onclick="go('a6')">[Open A6]</span></div>
+      </div>
+
+      <div class="box">
+        <div class="title">🤖 Is it agent-ready?</div>
+        <div class="row"><span class="k">Marts agent-allowed</span><span class="fill"></span><span class="v">4 / 5 <span class="d g"></span></span></div>
+        <div class="row"><span class="k">PII-safe views</span><span class="fill"></span><span class="v">ON <span class="d g"></span></span></div>
+        <div class="row"><span class="k">Contract coverage</span><span class="fill"></span><span class="v">100% <span class="d g"></span></span></div>
+        <div class="row"><span class="k">Agent freshness SLA</span><span class="fill"></span><span class="v">met <span class="d g"></span></span></div>
+        <div class="opens"><span class="open" onclick="go('a2')">[Open A2]</span><span class="open" onclick="go('a5')">[Open A5]</span></div>
+      </div>
+    </div>
+
+    <div class="box router">
+      <div class="title" style="justify-content:center">🚨 IF SOMETHING TURNS RED</div>
+      <div class="rr" onclick="go('a2')"><span class="k">Trust issue</span><span class="arr">→ Open A2</span></div>
+      <div class="rr" onclick="go('a3')"><span class="k">Modeling issue</span><span class="arr">→ Open A3</span></div>
+      <div class="rr" onclick="go('a4')"><span class="k">Pipeline issue</span><span class="arr">→ Open A4</span></div>
+      <div class="rr" onclick="go('a5')"><span class="k">Warehouse issue</span><span class="arr">→ Open A5</span></div>
+      <div class="rr" onclick="go('a5')"><span class="k">Agent-readiness issue</span><span class="arr">→ Open A5</span></div>
+      <div class="rr" onclick="go('a6')"><span class="k">Architecture</span><span class="arr">→ Open A6</span></div>
+    </div>
+
+    <div class="trace"><span>traces to:</span>
+      <span class="crumb">/api/control-room <span class="ok">200</span></span>
+      <span class="crumb">dashboard_spec.yml</span>
+      <span class="crumb">data/quality/l1_checkpoint_report.json</span>
+    </div>
+  </section>
+
+  <!-- ===================== A2 TRUST INVESTIGATION ROOM ===================== -->
+  <section class="panel" id="a2">
+
+    <div class="box solid ctr">
+      <div class="title" style="justify-content:center">❤️ TRUST INVESTIGATION ROOM</div>
+      <div class="q ctr" style="margin-bottom:6px">Can we trust the patient and visit numbers?</div>
+      <div style="font-weight:700">PROD <span class="d g live"></span> &nbsp;|&nbsp; Updated 08:02 AM</div>
+    </div>
+
+    <div class="box status">
+      <div class="title">😌 CURRENT STATUS</div>
+      <div class="sline"><span class="d a"></span> Mostly healthy — 1 issue needs attention (NOT patient-facing yet)</div>
+      <div class="sline"><span class="d g"></span> No fake patients detected</div>
+    </div>
+
+    <div class="box">
+      <div class="title">❤️ TRUST VITALS <span style="font-weight:400;color:var(--ink-soft);font-size:12px">(value + inline benchmark)</span></div>
+
+      <div class="vital">
+        <div class="top"><span class="num">1.</span><span class="name">🧪 QC passed?</span><span class="grow"></span><span class="val">99.2% <span class="d g"></span></span><span class="bench">(good ≥95 | strong ≥99)</span></div>
+        <div class="lks"><a class="lk" href="#" onclick="return false">Open dbt tests</a><a class="lk" href="#" onclick="return false">Open run_results.json</a><a class="lk" href="#" onclick="return false">Open Job Log</a></div>
+      </div>
+      <div class="vital">
+        <div class="top"><span class="num">2.</span><span class="name">👁 Missing key fields?</span><span class="grow"></span><span class="val">0.04% <span class="d g"></span></span><span class="bench">(good &lt;1 | strong &lt;0.1)</span></div>
+        <div class="lks"><a class="lk" href="#" onclick="return false">Open null offenders query</a><a class="lk" href="#" onclick="return false">Show sample rows</a><a class="lk" href="#" onclick="return false">Open Lineage</a></div>
+      </div>
+      <div class="vital">
+        <div class="top"><span class="num">3.</span><span class="name">👯 Duplicate visits?</span><span class="grow"></span><span class="val">0.00% <span class="d g"></span></span><span class="bench">(good &lt;1 | strong =0)</span></div>
+        <div class="lks"><a class="lk" href="#" onclick="return false">Open duplicate keys query</a><a class="lk" href="#" onclick="return false">Show validation</a></div>
+      </div>
+      <div class="vital">
+        <div class="top"><span class="num">4.</span><span class="name">🧑 Fake patients?</span><span class="grow"></span><span class="val">100.0% <span class="d g"></span></span><span class="bench">(good ≥99 | strong =100)</span></div>
+        <div class="lks"><a class="lk" href="#" onclick="return false">Open orphan records query</a><a class="lk" href="#" onclick="return false">Open relationship test</a><a class="lk" href="#" onclick="return false">Open upstream job</a></div>
+      </div>
+      <div class="vital">
+        <div class="top"><span class="num">5.</span><span class="name">🕵 Can we trace every number?</span><span class="grow"></span><span class="val">94% <span class="d g"></span></span><span class="bench">(good ≥90 | strong ≥95)</span></div>
+        <div class="lks"><a class="lk" href="#" onclick="return false">Open manifest.json</a><a class="lk" href="#" onclick="return false">Open lineage gaps</a><a class="lk" href="#" onclick="return false">Open model owners</a></div>
+      </div>
+      <div class="vital">
+        <div class="top"><span class="num">6.</span><span class="name">🧮 Do systems agree?</span><span class="grow"></span><span class="val">99.94% <span class="d g"></span></span><span class="bench">(good ≥99 | strong ≥99.9)</span></div>
+        <div class="lks"><a class="lk" href="#" onclick="return false">Open recon query</a><a class="lk" href="#" onclick="return false">Open KPI definitions</a><a class="lk" href="#" onclick="return false">Open decision log</a></div>
+      </div>
+    </div>
+
+    <div class="box">
+      <div class="title">📑 EVIDENCE (PROOF) <span style="font-weight:400;color:var(--ink-soft);font-size:12px">— show me receipts (direct clicks to bad files)</span></div>
+
+      <div class="ev">
+        <div>
+          <div class="ehead"><span class="d r"></span><span class="name">visit → patient relationship</span><span class="val">97.8% <span class="d r"></span></span><span class="exp">(expected =100)</span></div>
+          <div class="pclicks">direct proof clicks:</div>
+          <div><a class="lk" href="#" onclick="return false">Open Query</a><a class="lk" href="#" onclick="return false">Open failing rows</a><a class="lk" href="#" onclick="return false">Open dbt Test</a><a class="lk" href="#" onclick="return false">Open Job Log</a><a class="lk" href="#" onclick="return false">Open Owner</a></div>
+        </div>
+        <div class="radar">
+          <div class="rh">blast radar</div>
+          <ul>
+            <li>impacts: Patient Count KPI, ER Census, RAG Patient Lookup</li>
+            <li>scope: clinical marts only</li>
+            <li>patient-facing dashboards: <b>NOT impacted (yet)</b></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="ev">
+        <div>
+          <div class="ehead"><span class="d a"></span><span class="name">MRN null spike</span><span class="val">0.12% <span class="d a"></span></span><span class="exp">(strong &lt;0.10)</span></div>
+          <div class="pclicks">direct proof clicks:</div>
+          <div><a class="lk" href="#" onclick="return false">Show Rows</a><a class="lk" href="#" onclick="return false">Open Query</a><a class="lk" href="#" onclick="return false">Open Lineage</a><a class="lk" href="#" onclick="return false">Open Model</a><a class="lk" href="#" onclick="return false">Open Owner</a></div>
+        </div>
+        <div class="radar">
+          <div class="rh">blast radar</div>
+          <ul>
+            <li>impacts: reporting only (for now)</li>
+            <li>risk: if it grows → becomes patient-identity risk</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="ev">
+        <div>
+          <div class="ehead"><span class="d g"></span><span class="name">duplicate visit_id</span><span class="val">0.00% <span class="d g"></span></span><span class="exp">(required =0)</span></div>
+          <div class="pclicks">proof: <a class="lk" href="#" onclick="return false">Show Validation</a></div>
+        </div>
+        <div class="radar"><div class="rh">blast radar</div><ul><li>none</li></ul></div>
+      </div>
+    </div>
+
+    <div class="box">
+      <div class="title">🚑 TRIAGE <span style="font-weight:400;color:var(--ink-soft);font-size:12px">— what do we do + who owns it</span></div>
+      <div class="triage-item">
+        <div><span class="d r"></span> <b>Broken visit → patient join</b></div>
+        <div class="meta">owner: Data Platform (on-call) &nbsp;|&nbsp; ETA: &lt; 1h &nbsp;|&nbsp; action: Page on-call</div>
+        <div>runbook: <a class="lk" href="#" onclick="return false">Open runbook</a><a class="lk" href="#" onclick="return false">Open rollback plan</a><a class="lk" href="#" onclick="return false">Open incident thread</a></div>
+      </div>
+      <div class="triage-item">
+        <div><span class="d a"></span> <b>MRN null spike</b></div>
+        <div class="meta">owner: Analytics Engineering &nbsp;|&nbsp; ETA: next sprint &nbsp;|&nbsp; action: Create ticket</div>
+        <div>paper trail: <a class="lk" href="#" onclick="return false">Open ticket</a><a class="lk" href="#" onclick="return false">Open data contract</a><a class="lk" href="#" onclick="return false">Open upstream owner</a></div>
+      </div>
+    </div>
+
+    <div class="box">
+      <div class="title">🛟 AUTO-MITIGATIONS <span style="font-weight:400;color:var(--ink-soft);font-size:12px">— what we already auto healed so humans don't panic</span></div>
+      <div class="chk"><span class="box-tick">✅</span><span>Retried failed dbt job (success)</span><span class="grow"></span><a class="lk" href="#" onclick="return false">Open retry logs</a></div>
+      <div class="chk"><span class="box-tick">✅</span><span>Refreshed affected marts</span><span class="grow"></span><a class="lk" href="#" onclick="return false">Open refresh job</a></div>
+      <div class="chk"><span class="box-tick">✅</span><span>Switched dashboards to last-known-good snapshot</span><span class="grow"></span><a class="lk" href="#" onclick="return false">Open snapshot ID</a><a class="lk" href="#" onclick="return false">Open diff</a></div>
+      <div class="chk"><span class="box-tick">✅</span><span>Added warning banner (degraded mode)</span><span class="grow"></span><a class="lk" href="#" onclick="return false">Open dashboard link</a></div>
+      <div class="chk"><span class="box-tick">✅</span><span>Notified owner</span><span class="grow"></span><a class="lk" href="#" onclick="return false">Open incident thread</a></div>
+      <div class="autofix">
+        <div class="afhead"><span>🤖 Auto-remediation coverage</span><span class="afpct">50%</span></div>
+        <div class="afbar"><div class="affill" style="width:50%"></div></div>
+        <div class="afnote">✅ Machines stabilized the symptoms — dashboards stayed up, no bad data shipped.<br>⏳ The other 50% needs a human: the KPI definition call below. 👇</div>
+      </div>
+    </div>
+
+    <div class="box">
+      <div class="title">🤝 GOOD LUCK HUMAN <span style="font-weight:400;color:var(--ink-soft);font-size:12px">— HITL your turn now</span></div>
+      <div class="hitl">
+        <div>
+          <div class="versus">💰 Finance visits: 1,024 &nbsp;vs&nbsp; 🧾 Billing visits: 1,011 <span class="warn">⚠️</span></div>
+          <div>🤖 Machine verdict: both valid 😵 <span style="color:var(--ink-soft);font-size:12px">(definition fight, not a data bug)</span></div>
+          <div style="margin-top:6px;font-weight:700">⏳ What happens if you ignore this:</div>
+          <ul>
+            <li>📤 Finance ships "1,024" to execs</li>
+            <li>📤 Billing ships "1,011" to Ops</li>
+            <li>📊 BI publishes both (by accident)</li>
+            <li>📸 Someone screenshots the mismatch in Slack</li>
+            <li>🎉 Congratulations: you just scheduled a 90-minute "who's lying" meeting</li>
+          </ul>
+        </div>
+        <div class="cast">
+          <div style="font-weight:700">🥊 Who fights who:</div>
+          <ul>
+            <li>💰 Finance Lead: "Visits = posted revenue events"</li>
+            <li>🧾 Billing Lead: "Visits = billable encounters"</li>
+            <li>📊 Data Lead: "Please stop redefining reality in Google Sheets"</li>
+            <li>⚖️ Compliance (walks in late): "Which one is in the audit report?"</li>
+          </ul>
+          <div style="font-weight:700;margin-top:6px">📡 blast radar:</div>
+          <ul>
+            <li>🎯 Patient Count KPI (exec dashboard)</li>
+            <li>🏥 ER Census (ops)</li>
+            <li>🔍 Downstream RAG "patient lookup" confidence (counts stop matching)</li>
+          </ul>
+        </div>
+      </div>
+      <div class="resolve">
+        <div style="font-weight:700;margin-bottom:6px">🛠 Fix it in 3 moves <span style="font-weight:400;color:var(--ink-soft);font-size:12px">— each step has a button</span></div>
+        <div class="step"><span class="snum">1</span><div><b>🏆 Pick the winning definition</b> (or publish both, clearly labelled, like civilized people)<div class="lks"><a class="lk" href="#" onclick="return false">⚖️ Compare both definitions</a><a class="lk" href="#" onclick="return false">📊 Open recon query</a></div></div></div>
+        <div class="step"><span class="snum">2</span><div><b>📜 Write it down as a KPI contract</b> (one paragraph, not a novel)<div class="lks"><a class="lk" href="#" onclick="return false">✍️ Open contract draft</a><a class="lk" href="#" onclick="return false">📖 Open KPI definitions</a></div></div></div>
+        <div class="step"><span class="snum">3</span><div><b>🔒 Enforce it in dbt</b> (tests + semantic layer) so this argument can't respawn next week<div class="lks"><a class="lk" href="#" onclick="return false">🧬 Open dbt model</a><a class="lk" href="#" onclick="return false">📐 Open semantic metric</a></div></div></div>
+        <div class="cta">👉 <b>Decision owner:</b> Data Lead &nbsp;·&nbsp; <a class="lk" href="#" onclick="return false">👤 Assign owner</a><a class="lk" href="#" onclick="return false">📝 Open decision log</a><a class="lk" href="#" onclick="return false">💬 Start Slack thread</a></div>
+      </div>
+    </div>
+
+    <div class="trace"><span>traces to:</span>
+      <span class="crumb">/api/trust-room <span class="ok">200</span></span>
+      <span class="crumb">trust_metrics_spec.yml</span>
+      <span class="crumb">evidence_links.md</span>
+    </div>
+  </section>
+
+  <!-- ===================== A3 DATA MARKETPLACE ===================== -->
+  <section class="panel" id="a3">
+    <div class="box solid ctr">
+      <div class="title" style="justify-content:center">🛒 A3 DATA MARKETPLACE — Mart Catalog + dbt Lineage</div>
+      <div class="q ctr" style="margin-bottom:6px">Can humans + AI pick the right dataset without join hell?</div>
+      <div style="font-weight:700;font-size:12px;color:var(--ink-soft)">dbt + SQL · Gold Layer · BI / AI ready</div>
+    </div>
+
+    <div class="box">
+      <div class="title">🛒 MART CATALOG <span style="font-weight:400;color:var(--ink-soft);font-size:12px">— ready-to-query data products</span></div>
+      <div class="cols">
+        <div class="box" style="margin:0">
+          <div class="title" style="font-size:14px">📦 mart_er_triage</div>
+          <div class="mlabel">ER ops / census / triage</div>
+          <div class="row"><span class="k">Grain</span><span class="fill"></span><span class="v">1 row = 1 ER visit</span></div>
+          <div class="row"><span class="k">Consumers</span><span class="fill"></span><span class="v">BI + AI + Ops</span></div>
+          <div class="flags"><span>✅ precomputed</span><span>✅ prejoined</span><span>✅ precleaned</span><span>✅ preaggregated</span></div>
+          <div class="codeline"><span class="kw">SELECT</span> * <span class="kw">FROM</span> mart_er_triage;</div>
+        </div>
+        <div class="box" style="margin:0">
+          <div class="title" style="font-size:14px">📦 mart_patient_summary</div>
+          <div class="mlabel">patient lookup / repeat visits</div>
+          <div class="row"><span class="k">Grain</span><span class="fill"></span><span class="v">1 row = 1 patient</span></div>
+          <div class="row"><span class="k">Consumers</span><span class="fill"></span><span class="v">BI + AI</span></div>
+          <div class="flags"><span>✅ precomputed</span><span>✅ prejoined</span><span>✅ precleaned</span><span>✅ preaggregated</span></div>
+          <div class="codeline"><span class="kw">SELECT</span> * <span class="kw">FROM</span> mart_patient_summary;</div>
+        </div>
+        <div class="box" style="margin:0">
+          <div class="title" style="font-size:14px">📦 mart_claims_summary</div>
+          <div class="mlabel">billing / recon</div>
+          <div class="row"><span class="k">Grain</span><span class="fill"></span><span class="v">1 row = 1 claim</span></div>
+          <div class="row"><span class="k">Consumers</span><span class="fill"></span><span class="v">Fin + Ops</span></div>
+          <div class="flags"><span>✅ precomputed</span><span>✅ prejoined</span><span>✅ precleaned</span><span>✅ preaggregated</span></div>
+          <div class="codeline"><span class="kw">SELECT</span> * <span class="kw">FROM</span> mart_claims_summary;</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="box">
+      <div class="title">🧬 LINEAGE PREVIEW <span style="font-weight:400;color:var(--ink-soft);font-size:12px">— where mart_er_triage comes from</span></div>
+      <div class="dag">
+        <div class="lvl"><div class="node ingest"><span class="nm">raw_ehr_visit</span></div></div>
+        <div class="conn"><span class="ar">▼</span></div>
+        <div class="lvl"><div class="node"><span class="nm">stg_visit</span></div></div>
+        <div class="conn"><span class="ar">▼</span></div>
+        <div class="lvl"><div class="node build"><span class="nm">fct_patient_encounters</span></div></div>
+        <div class="conn"><span class="ar">▼</span></div>
+        <div class="lvl"><div class="node mart"><span class="nm">mart_er_triage</span></div></div>
+        <div class="conn"><span class="lab">consumed by</span><span class="ar">▼</span></div>
+        <div class="lvl"><div class="node api"><span class="nm">📊 Executive Dashboard</span></div><div class="node cons"><span class="nm">🤖 AI Retrieval</span></div></div>
+      </div>
+      <div class="lks" style="margin-top:10px"><a class="lk" href="#" onclick="return false">Open dbt lineage</a><a class="lk" href="#" onclick="return false">Open model_map.md</a><a class="lk" href="#" onclick="return false">Open sample_queries.sql</a></div>
+    </div>
+
+    <div class="box">
+      <div class="title">📜 CONTRACT SNAPSHOT <span style="font-weight:400;color:var(--ink-soft);font-size:12px">— do we agree what the mart means?</span></div>
+      <div class="row"><span class="k">visit = completed care encounter</span><span class="fill"></span><span class="v">PASS <span class="d g"></span></span></div>
+      <div class="row"><span class="k">ER census = active ER encounters in reporting window</span><span class="fill"></span><span class="v">PASS <span class="d g"></span></span></div>
+      <div class="row"><span class="k">patient = unique human receiving care</span><span class="fill"></span><span class="v">PASS <span class="d g"></span></span></div>
+      <div class="row"><span class="k">claim = billable / reimbursable event</span><span class="fill"></span><span class="v">PASS <span class="d g"></span></span></div>
+      <div class="note">💡 <b>Main message:</b> precomputed + prejoined + precleaned + preaggregated so humans can <code>SELECT * FROM mart_</code> instead of writing join hell.</div>
+    </div>
+
+    <div class="trace"><span>traces to:</span>
+      <span class="crumb">mart_catalog_ascii.md</span>
+      <span class="crumb">lineage_ascii.md</span>
+      <span class="crumb">sample_queries.sql</span>
+    </div>
+  </section>
+
+  <!-- ===================== A4 PIPELINE OPS DAG ===================== -->
+  <section class="panel" id="a4">
+    <div class="box solid ctr">
+      <div class="title" style="justify-content:center">🔄 A4 PIPELINE OPERATIONS DAG</div>
+      <div class="q ctr" style="margin-bottom:6px">What runs first? What depends on what? What breaks downstream?</div>
+      <div style="font-weight:700;font-size:12px;color:var(--ink-soft)">tech: Airflow + Python + dbt + GitHub Actions</div>
+    </div>
+
+    <div class="box">
+      <div class="dag">
+        <div class="lvl"><div class="node ingest"><div><span class="nn">1</span><span class="nm">data/raw/</span></div><div class="sub" style="text-align:center;display:block">source healthcare data</div></div></div>
+        <div class="conn"><span class="ar">▼</span></div>
+        <div class="lvl"><div class="node"><div><span class="nn">2</span><span class="nm">ingest_raw.py</span></div><div class="sub" style="text-align:center;display:block">validate / load raw</div></div></div>
+        <div class="conn"><span class="ar">▼</span></div>
+        <div class="lvl">
+          <div class="node"><div><span class="nn">3</span><span class="nm">identity_resolver.py</span></div><div class="sub" style="text-align:center;display:block">patient_identity_map.json</div></div>
+          <div class="node"><div><span class="nn">4</span><span class="nm">provider_cleaning.py</span></div><div class="sub" style="text-align:center;display:block">provider reference data</div></div>
+        </div>
+        <div class="conn"><span class="lab">both must finish</span><span class="ar">▼</span></div>
+        <div class="lvl"><div class="node build"><div><span class="nn">5</span><span class="nm">dbt build</span></div><div class="sub" style="text-align:center;display:block">bronze → silver → gold</div></div></div>
+        <div class="conn"><span class="ar">▼</span></div>
+        <div class="lvl">
+          <div class="node test"><div><span class="nn">6</span><span class="nm">dbt tests</span></div><div class="sub" style="text-align:center;display:block">not_null / unique</div></div>
+          <div class="node test"><div><span class="nn">7</span><span class="nm">schema checks</span></div><div class="sub" style="text-align:center;display:block">contracts valid</div></div>
+          <div class="node test"><div><span class="nn">8</span><span class="nm">recon checks</span></div><div class="sub" style="text-align:center;display:block">finance vs billing</div></div>
+        </div>
+        <div class="conn"><span class="lab">all must pass</span><span class="ar">▼</span></div>
+        <div class="lvl"><div class="node gate"><div><span class="nn">9</span><span class="nm">quality_gate.py</span></div><div class="gateflag"><span class="pass">PASS → publish</span><br><span class="fail">FAIL → block + alert</span></div></div></div>
+        <div class="conn"><span class="ar">▼</span></div>
+        <div class="lvl">
+          <div class="node mart"><div><span class="nn">10</span><span class="nm">mart_patient</span></div><div class="sub" style="text-align:center;display:block">precomputed mart</div></div>
+          <div class="node mart"><div><span class="nn">11</span><span class="nm">mart_visit</span></div><div class="sub" style="text-align:center;display:block">prejoined mart</div></div>
+          <div class="node mart"><div><span class="nn">12</span><span class="nm">mart_claims</span></div><div class="sub" style="text-align:center;display:block">finance mart</div></div>
+        </div>
+        <div class="conn"><span class="lab">marts published together</span><span class="ar">▼</span></div>
+        <div class="lvl"><div class="node api"><div><span class="nn">13</span><span class="nm">api_refresh</span></div><div class="sub" style="text-align:center;display:block">FastAPI / OpenAPI</div></div></div>
+        <div class="conn"><span class="lab">portfolio/ = consumers only, not pipeline</span><span class="ar">▼</span></div>
+        <div class="lvl">
+          <div class="node cons" style="cursor:pointer" onclick="go('a1')"><div><span class="nn">14</span><span class="nm">A1 dashboard</span></div><div class="sub" style="text-align:center;display:block">executive cockpit</div></div>
+          <div class="node cons" style="cursor:pointer" onclick="go('a2')"><div><span class="nn">15</span><span class="nm">A2 trust view</span></div><div class="sub" style="text-align:center;display:block">quality cockpit</div></div>
+          <div class="node cons"><div><span class="nn">16</span><span class="nm">AI consumers</span></div><div class="sub" style="text-align:center;display:block">RAG / agents</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="box">
+      <div class="title">🔗 DEPENDENCY RULES</div>
+      <div class="deprule">
+        <span><b>1</b> → 2</span><span><b>2</b> → 3, 4</span><span><b>3, 4</b> → 5</span><span><b>5</b> → 6, 7, 8</span>
+        <span><b>6, 7, 8</b> → 9</span><span><b>9</b> → 10, 11, 12</span><span><b>10, 11, 12</b> → 13</span><span><b>13</b> → 14, 15, 16</span>
+      </div>
+    </div>
+
+    <div class="box">
+      <div class="title">💥 BLAST RADIUS EXAMPLES</div>
+      <div class="blast"><div class="bh">If (3) identity_resolver.py fails:</div>
+        <div class="casc">patient_identity_map.json fails<br>↓ dbt build may still run, but trust quality drops<br>↓ A2 Trust Dashboard turns yellow / red</div></div>
+      <div class="blast"><div class="bh">If (6) dbt tests fail:</div>
+        <div class="casc">quality_gate.py blocks publish<br>↓ marts do not refresh<br>↓ API / dashboard serve last-known-good snapshot</div></div>
+      <div class="blast"><div class="bh">If (9) quality_gate.py fails:</div>
+        <div class="casc">mart_patient / mart_visit / mart_claims blocked<br>↓ A1 Executive Dashboard shows degraded mode<br>↓ AI consumers do not receive bad data</div></div>
+    </div>
+
+    <div class="box">
+      <div class="title">✅ WHAT A4 PROVES</div>
+      <div class="proves">
+        <div class="p"><h4>🕒 Freshness</h4><span>data arrives + refreshes on schedule</span></div>
+        <div class="p"><h4>🔁 Reliability</h4><span>tasks run in dependency order</span></div>
+        <div class="p"><h4>🧯 Recovery</h4><span>failed jobs retry, or block publish safely</span></div>
+        <div class="p"><h4>💥 Blast radius</h4><span>you know exactly what breaks downstream</span></div>
+      </div>
+    </div>
+
+    <div class="trace"><span>traces to:</span>
+      <span class="crumb">dag_ascii.md</span>
+      <span class="crumb">runbook.md</span>
+    </div>
+  </section>
+
+  <!-- ===================== A5 WAREHOUSE EXPLORER ===================== -->
+  <section class="panel" id="a5">
+    <div class="box solid ctr">
+      <div class="title" style="justify-content:center">🏭 A5 WAREHOUSE EXPLORER</div>
+      <div class="q ctr" style="margin-bottom:6px">Do the tables exist — and are they modelled so every join is safe?</div>
+      <div style="font-weight:700;font-size:12px;color:var(--ink-soft)">dataset: healthcare_dw · BigQuery (dbt core models)</div>
+    </div>
+
+    <div class="storybar">Real tables → <b>modelled as a star schema</b> → <b>integrity enforced by dbt tests</b> → every number traces back to SQL.</div>
+
+    <div class="box">
+      <div class="title">🩺 WAREHOUSE AT A GLANCE</div>
+      <div class="glance">
+        <div class="g1"><b id="a5datasets">1</b> dataset</div>
+        <div class="g1"><b id="a5tables">11</b> tables</div>
+        <div class="g1"><b id="a5gold">8</b> gold models</div>
+        <div class="g1"><b id="a5views">0</b> views</div>
+        <div class="g1">last refresh <b id="a5refresh">12:51</b></div>
+        <div class="g1">health <b id="a5health">Healthy 🟢</b></div>
+        <div class="g1"><b id="a5rows">497</b> encounters</div>
+      </div>
+    </div>
+
+    <div class="box">
+      <div class="title">⭐ THE STAR SCHEMA <span style="font-weight:400;color:var(--ink-soft);font-size:12px">— 7 conformed dimensions → 1 fact</span></div>
+      <div class="dims">
+        <div class="node"><span class="nm">dim_patient</span></div>
+        <div class="node"><span class="nm">dim_doctor</span></div>
+        <div class="node"><span class="nm">dim_hospital</span></div>
+        <div class="node"><span class="nm">dim_diagnosis</span></div>
+        <div class="node"><span class="nm">dim_insurance</span></div>
+        <div class="node"><span class="nm">dim_medication</span></div>
+        <div class="node"><span class="nm">dim_date</span></div>
+      </div>
+      <div class="conn"><span class="lab">7 FK relationships → 1 fact</span><span class="ar">▼</span></div>
+      <div style="display:flex;justify-content:center"><div class="factnode"><div class="nm">⭐ fact_patient_encounters</div><div class="sub">1 row = 1 encounter · 7 surrogate FKs + 8 measures</div></div></div>
+    </div>
+
+    <div class="box">
+      <div class="title">🥉🥈🥇 MEDALLION PATH <span style="font-weight:400;color:var(--ink-soft);font-size:12px">— where the star comes from</span></div>
+      <div class="dag">
+        <div class="lvl"><div class="node ingest"><span class="nm">🥉 raw/healthcare_dataset.csv</span></div></div>
+        <div class="conn"><span class="ar">▼</span></div>
+        <div class="lvl"><div class="node"><span class="nm">🥈 stg_healthcare</span></div></div>
+        <div class="conn"><span class="ar">▼</span></div>
+        <div class="lvl">
+          <div class="node"><span class="nm">int_encounters_enriched</span></div>
+          <div class="node"><span class="nm">int_readmissions</span></div>
+        </div>
+        <div class="conn"><span class="ar">▼</span></div>
+        <div class="lvl"><div class="node build"><span class="nm">🥇 gold star schema</span><div class="sub" style="text-align:center;display:block">8 models</div></div></div>
+      </div>
+    </div>
+
+    <div class="box">
+      <div class="title">🔒 INTEGRITY ENFORCED <span style="font-weight:400;color:var(--ink-soft);font-size:12px">— dbt tests that gate every build</span></div>
+      <div class="chk"><span class="box-tick">✅</span><span><b>encounter_id</b> — not_null + unique → no duplicate or ghost encounters</span></div>
+      <div class="chk"><span class="box-tick">✅</span><span><b>7 FK relationships</b> (patient/doctor/hospital/diagnosis/insurance/medication/date keys) → joins can't silently drop rows</span></div>
+      <div class="chk"><span class="box-tick">✅</span><span><b>accepted_values</b> on is_emergency / is_readmission [0,1] → clinical flags can't go dirty</span></div>
+      <div class="note">🧪 <b>These run on <code>dbt test</code> and gate <code>dbt build</code>.</b> Honest scope: row-shape integrity (the cheap tests that stop silent FK drops) — not semantic clinical validation.</div>
+    </div>
+
+    <div class="box">
+      <div class="title">🔎 PROOF QUERY <span style="font-weight:400;color:var(--ink-soft);font-size:12px">— verified against the real dbt model</span></div>
+      <div class="codeline"><span class="kw">SELECT</span> medical_condition, <span class="kw">COUNT</span>(*) <span class="kw">AS</span> encounters
+<span class="kw">FROM</span> fact_patient_encounters
+<span class="kw">GROUP BY</span> 1
+<span class="kw">ORDER BY</span> encounters <span class="kw">DESC</span>;</div>
+      <div class="lks" style="margin-top:9px"><a class="lk" href="#" onclick="return false">🟢 Open SQL</a><a class="lk" href="#" onclick="return false">📈 Open Lineage</a><a class="lk" href="#" onclick="return false">👁 Preview Data</a></div>
+    </div>
+
+    <div class="note">📏 <b>497 encounters</b> (synthetic dataset). The star schema + enforced FKs are the skill — they hold the same at 497 rows or 497M. Row count isn't the flex; the modelling is.</div>
+
+    <div class="trace"><span>traces to:</span>
+      <span class="crumb">/api/warehouse-room <span class="ok">200</span></span>
+      <span class="crumb">dbt-project/models/marts/core/</span>
+      <span class="crumb">warehouse_room_payload.json</span>
+    </div>
+  </section>
+
+  <!-- ===================== A6 ARCHITECTURE ===================== -->
+  <section class="panel" id="a6">
+    <div class="box solid ctr">
+      <div class="title" style="justify-content:center">🏗 A6 SYSTEM ARCHITECTURE</div>
+      <div class="q ctr">How does the whole machine connect? (the 10-second version)</div>
+    </div>
+
+    <div class="box">
+      <div class="dag">
+        <div class="lvl"><div class="node ingest"><span class="nm">📥 Sources</span><div class="sub" style="text-align:center;display:block">EHR · claims · providers</div></div></div>
+        <div class="conn"><span class="ar">▼</span></div>
+        <div class="lvl"><div class="node build"><span class="nm">⚙️ dbt → 🏭 BigQuery</span><div class="sub" style="text-align:center;display:block">transform + test → trusted marts</div></div></div>
+        <div class="conn"><span class="ar">▼</span></div>
+        <div class="lvl"><div class="node api"><span class="nm">🔌 API on Cloud Run</span><div class="sub" style="text-align:center;display:block">serves the room payloads</div></div></div>
+        <div class="conn"><span class="ar">▼</span></div>
+        <div class="lvl">
+          <div class="node cons" style="cursor:pointer" onclick="go('a1')"><span class="nm">👁 Humans</span><div class="sub" style="text-align:center;display:block">A1 / A2 cockpit</div></div>
+          <div class="node cons"><span class="nm">🤖 Agents</span><div class="sub" style="text-align:center;display:block">RAG · agent-allowed only</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="box">
+      <div class="title">🔌 API surface <span style="font-weight:400;color:var(--ink-soft);font-size:12px">— what Cloud Run serves</span></div>
+      <div><span class="ep">/api/control-room</span><span class="ep">/api/trust-room</span><span class="ep">/api/warehouse-room</span><span class="ep">/api/retrieve</span><span class="ep">/api/ask</span></div>
+    </div>
+
+    <div class="box">
+      <div class="title">🤖 L2 grounded agent <span style="font-weight:400;color:var(--ink-soft);font-size:12px">— answers grounded on trusted marts, every claim cites [doc N]</span></div>
+      <div class="note" style="margin:6px 0 10px">BM25 retrieves top-K from the redacted enriched corpus → Gemini answers <b>only</b> from that evidence. No raw PII indexed.</div>
+      <div style="display:flex;gap:7px;flex-wrap:wrap">
+        <input id="askq" placeholder="e.g. which patients show cardiac red flags?" style="flex:1;min-width:240px;font-family:var(--mono);font-size:13px;padding:9px 11px;border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink)">
+        <span class="open" onclick="askDemo()">[Ask grounded agent →]</span>
+      </div>
+      <div id="askout" style="margin-top:11px;font-size:13px;line-height:1.55"></div>
+    </div>
+
+    <div class="note">▲ <b>Why Cloud Run:</b> stateless API, scales to zero when idle, one container, deploys from the same repo CI already guards.</div>
+    <div class="trace"><span>traces to:</span>
+      <span class="crumb">architecture.mmd</span>
+      <span class="crumb">dependency_map.mmd</span>
+    </div>
+  </section>
+
+  <footer>L1 trust → L2 action · every number traces to a test, not a vibe</footer>
+</div>
+
+<script>
+  function go(p){
+    document.querySelectorAll('.panel').forEach(el=>el.classList.remove('show'));
+    document.querySelectorAll('.tab').forEach(el=>el.classList.remove('active'));
+    document.getElementById(p).classList.add('show');
+    var t=document.querySelector('.tab[data-p="'+p+'"]'); if(t)t.classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  document.getElementById('nav').addEventListener('click',e=>{
+    const t=e.target.closest('.tab'); if(t) go(t.dataset.p);
+  });
+
+  /* ---- live data: pull real values from the API ---- */
+  /* same-origin when served by Cloud Run (any project); absolute fallback when opened as a local file */
+  const API=location.protocol.startsWith('http')?'':'https://healthcare-ai-data-819957310168.us-west1.run.app';
+  const norm=t=>(t||'').replace(/[^a-z0-9]/gi,'').toLowerCase();
+  const dotClass=s=>s.includes('🔴')?'r':s.includes('🟡')?'a':s.includes('🟢')?'g':'g';
+  const stripDot=s=>s.replace(/[🟢🟡🔴]/g,'').trim();
+  function setVal(el,disp){ if(!el||!disp)return; el.innerHTML=stripDot(disp)+' <span class="d '+dotClass(disp)+'"></span>'; }
+  function lookup(map,key){ if(map[key])return map[key]; for(const k in map){ if(k.startsWith(key)||key.startsWith(k))return map[k]; } return null; }
+
+  /* ---- wire cockpit [Open …] buttons to real repo files on GitHub ---- */
+  /* Source of truth = click_audit.resolved[] in the room payloads. Labels   */
+  /* with a resolved target become real GitHub blob links; everything else   */
+  /* loses its clickable styling so nothing looks clickable-but-dead.         */
+  const GH_BLOB='https://github.com/anix-lynch/healthcare-ai-data-engineer/blob/main/';
+  const CLICK_AUDIT={
+    'a1executivedashboard':'portfolio/A1_executive_dashboard/README.md',
+    'a3datamarketplace':'portfolio/A3_dbt_documentation/README.md',
+    'a4pipelineoperations':'portfolio/A4_airflow_dag/README.md',
+    'opena2':'portfolio/A2_trust_dashboard/README.md',
+    'opena3':'portfolio/A3_dbt_documentation/README.md',
+    'opena4':'portfolio/A4_airflow_dag/README.md',
+    'opena5':'portfolio/A5_bigquery_dataset/README.md',
+    'opena6':'portfolio/A6_architecture_diagram/README.md',
+    'opendashboardlink':'portfolio/A2_trust_dashboard/screenshots/trust_dashboard.png',
+    'opendatacontract':'docs/contracts.md',
+    'opendbttest':'dbt-project/tests/assert_valid_readmission_logic.sql',
+    'opendbttests':'dbt-project/tests/assert_valid_readmission_logic.sql',
+    'opendecisionlog':'ROADMAP.md',
+    'opendiff':'ROADMAP.md',
+    'openduplicatekeysquery':'scripts/checkpoint.py',
+    'openfailingrows':'data/derived/patient_identity_map.json',
+    'openincidentthread':'ROADMAP.md',
+    'openjoblog':'.github/workflows/quality.yml',
+    'openkpidefinitions':'portfolio/A2_trust_dashboard/trust_metrics_spec.yml',
+    'openlineage':'docs/dag.md',
+    'openlineagegaps':'docs/dag.md',
+    'openmanifestjson':'portfolio/manifest.json',
+    'openmodel':'dbt-project/models/marts/core/schema.yml',
+    'openmodelowners':'docs/contracts.md',
+    'openorphanrecordsquery':'scripts/checkpoint.py',
+    'openowner':'portfolio/A2_trust_dashboard/evidence_links.md',
+    'openquery':'scripts/checkpoint.py',
+    'openreconquery':'scripts/checkpoint.py',
+    'openrefreshjob':'.github/workflows/quality.yml',
+    'openrelationshiptest':'tests/test_checkpoint.py',
+    'openretrylogs':'.github/workflows/quality.yml',
+    'openrollbackplan':'portfolio/A4_airflow_dag/runbook.md',
+    'openrunbook':'portfolio/A4_airflow_dag/runbook.md',
+    'openrunresultsjson':'.github/workflows/quality.yml',
+    'opensnapshotid':'portfolio/A2_trust_dashboard/trust_room_payload.json',
+    'opensql':'portfolio/A5_bigquery_dataset/sample_queries.sql',
+    'openticket':'ROADMAP.md',
+    'openupstreamjob':'.github/workflows/quality.yml',
+    'openupstreamowner':'README.md',
+    'previewdata':'dbt-project/models/marts/core/fact_patient_encounters.sql',
+    'shownulloffendersquery':'scripts/checkpoint.py',
+    'showrows':'data/raw/healthcare_dataset_enriched.csv',
+    'showsamplerows':'data/raw/healthcare_dataset_enriched.csv',
+    'showvalidation':'tests/test_checkpoint.py',
+    /* cockpit labels that name a real file but word it differently from the payload */
+    'opennulloffendersquery':'scripts/checkpoint.py',
+    'opendbtmodel':'dbt-project/models/marts/core/fact_patient_encounters.sql',
+    'opendbtlineage':'docs/dag.md',
+    'opensamplequeriessql':'portfolio/A5_bigquery_dataset/sample_queries.sql'
+  };
+  function wireLinks(){
+    document.querySelectorAll('a.lk').forEach(a=>{
+      const target=lookup(CLICK_AUDIT,norm(a.textContent));
+      if(target){
+        a.href=GH_BLOB+target;
+        a.target='_blank'; a.rel='noopener';
+        a.onclick=null;
+        a.title=target;
+      }else{
+        a.classList.add('dead');       // styled non-clickable, never a dead link
+        a.removeAttribute('href');
+        a.onclick=null;
+      }
+    });
+  }
+  wireLinks();
+
+  /* ---- A6 live grounded-agent demo (/api/ask) ---- */
+  async function askDemo(){
+    const q=(document.getElementById('askq').value||'').trim();
+    const out=document.getElementById('askout');
+    if(q.length<2){ out.textContent='Type a question first.'; return; }
+    out.innerHTML='<span style="color:var(--ink-soft)">…retrieving evidence + grounding answer…</span>';
+    try{
+      const r=await fetch(API+'/api/ask?q='+encodeURIComponent(q)+'&k=5').then(r=>r.json());
+      const cited=(r.sources||[]).map(s=>'[doc '+s.doc+'] '+(s.condition||'')+' · ESI '+(s.esi_tier_truth||'?')+' · score '+s.score).join('<br>');
+      const badge=r.grounded?'<span class="d g"></span> grounded · '+(r.model||''):'<span class="d a"></span> retrieval-only';
+      out.innerHTML='<div style="margin-bottom:8px">'+badge+'</div>'
+        +'<div style="padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--paper)">'+(r.answer||'')+'</div>'
+        +'<div style="margin-top:8px;font-family:var(--mono);font-size:11px;color:var(--ink-soft)">sources ('+r.corpus+'):<br>'+cited+'</div>';
+    }catch(e){
+      out.innerHTML='<span class="d a"></span> grounded endpoint unreachable (try the live Cloud Run URL).';
+    }
+  }
+
+  function syncA1(p){
+    const m={}; (p.sections||[]).forEach(s=>(s.metrics||[]).forEach(x=>{m[norm(x.label)]=x.display_value;}));
+    document.querySelectorAll('#a1 .row').forEach(row=>{
+      const k=row.querySelector('.k'), v=row.querySelector('.v'); if(!k||!v)return;
+      const disp=lookup(m,norm(k.textContent)); if(disp) setVal(v,disp);
+    });
+  }
+  function syncA2(p){
+    const vm={}; (p.trust_vitals||[]).forEach(x=>{vm[norm(x.label)]=x.display_value;});
+    document.querySelectorAll('#a2 .vital').forEach(vt=>{
+      const nm=vt.querySelector('.name'), vl=vt.querySelector('.val'); if(!nm||!vl)return;
+      const disp=lookup(vm,norm(nm.textContent)); if(disp) setVal(vl,disp);
+    });
+    if(p.current_status){
+      const box=document.querySelector('#a2 .status');
+      if(box){ const lines=box.querySelectorAll('.sline');
+        if(lines[0]) lines[0].innerHTML='<span class="d '+dotClass(p.current_status.traffic_light||'🟡')+'"></span> '+(p.current_status.headline||'');
+        if(lines[1]) lines[1].innerHTML='<span class="d g"></span> '+(p.current_status.detail||''); }
+    }
+  }
+  function syncA5(p){
+    const w=p.warehouse_summary||{}, t=p.table_details||{};
+    const set=(id,val)=>{const e=document.getElementById(id); if(e&&val!=null)e.textContent=val;};
+    set('a5datasets',w.datasets); set('a5tables',w.tables); set('a5gold',w.gold_models);
+    set('a5views',w.views); set('a5refresh',w.last_refresh); set('a5health',w.warehouse_health);
+    set('a5rows',t.rows);
+  }
+  async function liveSync(){
+    const pill=document.getElementById('livepill');
+    try{
+      const [a1,a2,a5]=await Promise.all([
+        fetch(API+'/api/control-room').then(r=>r.json()),
+        fetch(API+'/api/trust-room').then(r=>r.json()),
+        fetch(API+'/api/warehouse-room').then(r=>r.json())
+      ]);
+      syncA1(a1); syncA2(a2); syncA5(a5);
+      const t=(a1.header&&a1.header.updated_at)||'';
+      pill.innerHTML='<span class="d g live"></span> live · PROD · updated '+t;
+    }catch(e){
+      pill.innerHTML='<span class="d a"></span> static snapshot (offline)';
+    }
+  }
+  liveSync();
+</script>
+</body>
+</html>

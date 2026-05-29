@@ -8,21 +8,61 @@ Dataset: 55,500 patient encounters (2019-2024)
 
 from fastapi import FastAPI, Query, HTTPException, Body
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from typing import Optional, List
 import pandas as pd
 from datetime import datetime
 import os
+from pathlib import Path
 
 try:
-    from .retrieval import get_retriever
-    from .classifier import classify_esi
+    from .control_room import build_control_room_payload
 except ImportError:
-    # Direct script load (importlib spec loader, no parent package)
     import sys
     from pathlib import Path
     sys.path.insert(0, str(Path(__file__).resolve().parent))
-    from retrieval import get_retriever  # type: ignore
-    from classifier import classify_esi  # type: ignore
+    from control_room import build_control_room_payload  # type: ignore
+
+try:
+    from .trust_room import build_trust_room_payload
+except ImportError:
+    import sys
+    from pathlib import Path
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from trust_room import build_trust_room_payload  # type: ignore
+
+try:
+    from .warehouse_room import build_warehouse_room_payload
+except ImportError:
+    import sys
+    from pathlib import Path
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from warehouse_room import build_warehouse_room_payload  # type: ignore
+
+try:
+    from .retrieval import get_retriever
+except Exception:
+    try:
+        from retrieval import get_retriever  # type: ignore
+    except Exception:
+        get_retriever = None  # type: ignore
+
+try:
+    from .classifier import classify_esi
+except Exception:
+    try:
+        from classifier import classify_esi  # type: ignore
+    except Exception:
+        classify_esi = None  # type: ignore
+
+try:
+    from .ask import answer as grounded_answer
+except Exception:
+    try:
+        from ask import answer as grounded_answer  # type: ignore
+    except Exception:
+        grounded_answer = None  # type: ignore
 
 # Typed response contracts live in api/app/schemas.py.
 # They are reference contracts (publishable as OpenAPI components manually if
@@ -42,6 +82,10 @@ app = FastAPI(
     redoc_url="/redoc"
 )
 
+BASE_DIR = Path(__file__).resolve().parents[2]
+WEB_DIR = BASE_DIR / "web"
+PORTFOLIO_DIR = BASE_DIR / "portfolio"
+
 # Enable CORS (allow all origins for demo API)
 app.add_middleware(
     CORSMiddleware,
@@ -50,6 +94,12 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Human UI layer (single artifact app): static UI + portfolio assets.
+if WEB_DIR.exists():
+    app.mount("/ui", StaticFiles(directory=str(WEB_DIR), html=True), name="ui")
+if PORTFOLIO_DIR.exists():
+    app.mount("/portfolio-assets", StaticFiles(directory=str(PORTFOLIO_DIR)), name="portfolio-assets")
 
 # Load dataset
 DATA_PATH = os.path.join(os.path.dirname(__file__), "../../data/raw/healthcare_dataset.csv")
@@ -92,6 +142,15 @@ def root():
         "docs": "/docs",
         "github": "https://github.com/anix-lynch/healthcare-analytics"
     }
+
+
+@app.get("/app")
+def app_shell():
+    """Serve the human cockpit UI shell."""
+    index_path = WEB_DIR / "index.html"
+    if not index_path.exists():
+        raise HTTPException(status_code=404, detail="UI not built")
+    return FileResponse(index_path)
 
 
 @app.get("/api/encounters")
@@ -364,6 +423,42 @@ def get_statistics():
     }
 
 
+@app.get("/api/control-room")
+def get_control_room():
+    """Return the display payload used by the A1 operational dashboard mock."""
+    return build_control_room_payload()
+
+
+@app.get("/api/portfolio/a1")
+def get_portfolio_a1():
+    """Alias for the A1 control-room payload."""
+    return build_control_room_payload()
+
+
+@app.get("/api/trust-room")
+def get_trust_room():
+    """Return the display payload used by the A2 trust dashboard mock."""
+    return build_trust_room_payload()
+
+
+@app.get("/api/portfolio/a2")
+def get_portfolio_a2():
+    """Alias for the A2 trust-investigation payload."""
+    return build_trust_room_payload()
+
+
+@app.get("/api/warehouse-room")
+def get_warehouse_room():
+    """Return the display payload used by the A5 warehouse explorer."""
+    return build_warehouse_room_payload()
+
+
+@app.get("/api/portfolio/a5")
+def get_portfolio_a5():
+    """Alias for the A5 warehouse-explorer payload."""
+    return build_warehouse_room_payload()
+
+
 @app.get("/api/search")
 def search(
     q: str = Query(..., min_length=2, description="Search query"),
@@ -417,6 +512,8 @@ async def retrieve(
 
     Test against data/quality/golden_retrieval_set.json (20 queries).
     """
+    if get_retriever is None:
+        raise HTTPException(status_code=503, detail="retriever unavailable in this environment")
     results = get_retriever().search(q, k=k)
     return {
         "query": q,
@@ -449,10 +546,31 @@ async def classify(payload: dict = Body(...)):
 
     Output: { esi_tier, rules_fired[], confidence, human_review_required }
     """
+    if classify_esi is None:
+        raise HTTPException(status_code=503, detail="classifier unavailable in this environment")
     return classify_esi(payload)
+
+
+@app.get("/api/ask")
+async def ask(
+    q: str = Query(..., min_length=2, description="Free-form clinical question"),
+    k: int = Query(5, ge=1, le=10, description="Top-K evidence rows to ground on"),
+):
+    """
+    L2 grounded answer: BM25 retrieves top-K rows from the enriched corpus,
+    then Gemini answers ONLY from that evidence with [doc N] citations.
+
+    Grounds exclusively on the redacted enriched narratives
+    (enriched_use_397.jsonl) — never the raw PII table. If Vertex is
+    unavailable the retrieval sources still return (grounded=false).
+
+    Example: /api/ask?q=which%20patients%20show%20cardiac%20red%20flags
+    """
+    if grounded_answer is None:
+        raise HTTPException(status_code=503, detail="ask path unavailable in this environment")
+    return grounded_answer(q, k=k)
 
 
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000, reload=True)
-

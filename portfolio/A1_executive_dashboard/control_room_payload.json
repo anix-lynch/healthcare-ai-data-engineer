@@ -1,0 +1,290 @@
+{
+  "artifact": "A1_executive_dashboard",
+  "display_mode": "control-room-mock",
+  "generated_at": "2026-05-29T15:28:03-07:00",
+  "source_truth": {
+    "checkpoint_report": "data/quality/l1_checkpoint_report.json",
+    "identity_map": "data/derived/patient_identity_map.json",
+    "openapi_snapshot": "openapi_snapshot.json"
+  },
+  "header": {
+    "title": "\ud83d\udcca EXECUTIVE CONTROL ROOM",
+    "subtitle": "Can humans, dashboards, apps, and AI trust hospital data right now?",
+    "status": "PROD \ud83d\udfe2",
+    "updated_at": "12:51",
+    "truth_updated_at": "2026-05-29T12:51:59"
+  },
+  "panic": {
+    "title": "\ud83d\ude42 SHOULD WE PANIC TODAY?",
+    "state": "\ud83d\udfe2 Nope.",
+    "messages": [
+      "No fake patients.",
+      "No broken feeds.",
+      "No critical quality failures.",
+      "Doctors can keep doctoring.",
+      "Data team can keep pretending everything is under control."
+    ]
+  },
+  "sections": [
+    {
+      "title": "\u2764\ufe0f CAN WE TRUST THE NUMBERS?",
+      "button": "[Open A2]",
+      "button_targets": [
+        {
+          "label": "Open A2",
+          "target": "portfolio/A2_trust_dashboard/README.md"
+        }
+      ],
+      "metrics": [
+        {
+          "label": "QC passed?",
+          "display_value": "100.0% \ud83d\udfe2",
+          "truth_value": "7/7 PASS",
+          "evidence": "data/quality/l1_checkpoint_report.json"
+        },
+        {
+          "label": "Missing keys?",
+          "display_value": "0.12% \ud83d\udfe2",
+          "truth_value": "47/40235 unresolved patient ids",
+          "evidence": "data/derived/patient_identity_map.json"
+        },
+        {
+          "label": "Duplicate visits?",
+          "display_value": "0.00% \ud83d\udfe2",
+          "truth_value": "0 duplicate keys",
+          "evidence": "data/quality/l1_checkpoint_report.json"
+        },
+        {
+          "label": "Fake patients?",
+          "display_value": "47 flagged \ud83d\udfe1",
+          "truth_value": "47 unresolved identities",
+          "evidence": "data/quality/l1_checkpoint_report.json"
+        }
+      ]
+    },
+    {
+      "title": "\u23f1 IS THE DATA FRESH?",
+      "button": "[Open A4]",
+      "button_targets": [
+        {
+          "label": "Open A4",
+          "target": "portfolio/A4_airflow_dag/README.md"
+        }
+      ],
+      "metrics": [
+        {
+          "label": "Latest ingest",
+          "display_value": "12:51 \ud83d\udfe1",
+          "truth_value": "2026-05-29T12:51:59",
+          "evidence": "data/quality/l1_checkpoint_report.json"
+        },
+        {
+          "label": "Data delay",
+          "display_value": "156m \ud83d\udfe1",
+          "truth_value": "generated_at - scanned_at",
+          "evidence": "data/quality/l1_checkpoint_report.json"
+        },
+        {
+          "label": "Stale alert",
+          "display_value": "ON \ud83d\udd34",
+          "truth_value": "freshness gate: <=60m means no stale alert",
+          "evidence": "data/quality/l1_checkpoint_report.json"
+        },
+        {
+          "label": "SLA met",
+          "display_value": "100.0% \ud83d\udfe2",
+          "truth_value": "quality gate pass rate 7/7",
+          "evidence": "data/quality/l1_checkpoint_report.json"
+        }
+      ]
+    },
+    {
+      "title": "\ud83d\udd27 IS THE PLATFORM ALIVE?",
+      "button": "[Open A4]",
+      "button_targets": [
+        {
+          "label": "Open A4",
+          "target": "portfolio/A4_airflow_dag/README.md"
+        }
+      ],
+      "metrics": [
+        {
+          "label": "Uptime",
+          "display_value": "100.0% \ud83d\udfe2",
+          "truth_value": "proxy from checkpoint pass rate",
+          "evidence": "api/app/main.py"
+        },
+        {
+          "label": "Jobs OK",
+          "display_value": "100.0% \ud83d\udfe2",
+          "truth_value": "checkpoint checks passed",
+          "evidence": ".github/workflows/quality.yml"
+        },
+        {
+          "label": "MTTR",
+          "display_value": "n/a \ud83d\udfe1",
+          "truth_value": "not tracked in current repo telemetry",
+          "evidence": "scripts/checkpoint.py"
+        },
+        {
+          "label": "Silent fails",
+          "display_value": "0 \ud83d\udfe2",
+          "truth_value": "0 critical failures",
+          "evidence": "data/quality/l1_checkpoint_report.json"
+        }
+      ]
+    },
+    {
+      "title": "\ud83e\uddec CAN PEOPLE + SYSTEMS USE THIS?",
+      "button": "[Open A3] [Open A5]",
+      "button_targets": [
+        {
+          "label": "Open A3",
+          "target": "portfolio/A3_dbt_documentation/README.md"
+        },
+        {
+          "label": "Open A5",
+          "target": "portfolio/A5_bigquery_dataset/README.md"
+        }
+      ],
+      "metrics": [
+        {
+          "label": "Star schema",
+          "display_value": "PASS \ud83d\udfe2",
+          "truth_value": "dbt models exist",
+          "evidence": "dbt-project/models/"
+        },
+        {
+          "label": "Contracts",
+          "display_value": "PASS \ud83d\udfe2",
+          "truth_value": "11 API paths documented",
+          "evidence": "docs/contracts.md"
+        },
+        {
+          "label": "Query marts ready",
+          "display_value": "YES \ud83d\udfe2",
+          "truth_value": "fact + dim models published",
+          "evidence": "dbt-project/models/marts/core/"
+        },
+        {
+          "label": "Agent-ready views",
+          "display_value": "YES \ud83d\udfe2",
+          "truth_value": "A2/A5 payloads expose machine-readable trust surfaces",
+          "evidence": "portfolio/manifest.json"
+        }
+      ]
+    },
+    {
+      "title": "\ud83d\udd10 WILL COMPLIANCE YELL TODAY?",
+      "button": "[Open A2] [Open A6]",
+      "button_targets": [
+        {
+          "label": "Open A2",
+          "target": "portfolio/A2_trust_dashboard/README.md"
+        },
+        {
+          "label": "Open A6",
+          "target": "portfolio/A6_architecture_diagram/README.md"
+        }
+      ],
+      "metrics": [
+        {
+          "label": "PII scan",
+          "display_value": "PASS \ud83d\udfe2",
+          "truth_value": "0 raw-name leaks",
+          "evidence": "data/quality/l1_checkpoint_report.json"
+        },
+        {
+          "label": "PII-safe views",
+          "display_value": "PASS \ud83d\udfe2",
+          "truth_value": "agent-facing slices do not contain raw-name leakage",
+          "evidence": "api/app/trust_room.py"
+        },
+        {
+          "label": "Audit lineage",
+          "display_value": "ON \ud83d\udfe2",
+          "truth_value": "audit_lineage_status complete",
+          "evidence": "data/quality/l1_checkpoint_report.json"
+        },
+        {
+          "label": "HIPAA tagging",
+          "display_value": "PASS \ud83d\udfe2",
+          "truth_value": "checkpoint passed=True",
+          "evidence": "README.md"
+        }
+      ]
+    }
+  ],
+  "routing": [
+    {
+      "label": "Trust issue",
+      "target": "Open A2",
+      "target_path": "portfolio/A2_trust_dashboard/README.md"
+    },
+    {
+      "label": "Modeling / contract issue",
+      "target": "Open A3",
+      "target_path": "portfolio/A3_dbt_documentation/README.md"
+    },
+    {
+      "label": "Freshness / pipeline issue",
+      "target": "Open A4",
+      "target_path": "portfolio/A4_airflow_dag/README.md"
+    },
+    {
+      "label": "Warehouse / query issue",
+      "target": "Open A5",
+      "target_path": "portfolio/A5_bigquery_dataset/README.md"
+    },
+    {
+      "label": "Architecture / ownership",
+      "target": "Open A6",
+      "target_path": "portfolio/A6_architecture_diagram/README.md"
+    }
+  ],
+  "notes": [
+    "Display values are computed from repo evidence artifacts, not hardcoded numbers.",
+    "Every metric includes an evidence path for click-through traceability.",
+    "Dataset evidence row count: 497"
+  ],
+  "link_targets": {
+    "Open A2": "portfolio/A2_trust_dashboard/README.md",
+    "Open A3": "portfolio/A3_dbt_documentation/README.md",
+    "Open A4": "portfolio/A4_airflow_dag/README.md",
+    "Open A5": "portfolio/A5_bigquery_dataset/README.md",
+    "Open A6": "portfolio/A6_architecture_diagram/README.md"
+  },
+  "click_audit": {
+    "resolved_count": 5,
+    "unresolved_count": 0,
+    "coverage_pct": 100.0,
+    "resolved": [
+      {
+        "label": "Open A2",
+        "target": "portfolio/A2_trust_dashboard/README.md",
+        "exists": true
+      },
+      {
+        "label": "Open A3",
+        "target": "portfolio/A3_dbt_documentation/README.md",
+        "exists": true
+      },
+      {
+        "label": "Open A4",
+        "target": "portfolio/A4_airflow_dag/README.md",
+        "exists": true
+      },
+      {
+        "label": "Open A5",
+        "target": "portfolio/A5_bigquery_dataset/README.md",
+        "exists": true
+      },
+      {
+        "label": "Open A6",
+        "target": "portfolio/A6_architecture_diagram/README.md",
+        "exists": true
+      }
+    ],
+    "unresolved": []
+  }
+}

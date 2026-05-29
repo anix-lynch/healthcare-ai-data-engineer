@@ -1,7 +1,7 @@
-# Roadmap — Incremental Population from Monorepo
+# Roadmap — Incremental Population of the Canonical Backbone
 
-Source of truth: [`healthcare-genai-fullstack`](https://github.com/anix-lynch/healthcare-genai-fullstack).
-This file tracks what landed in this AI Data Engineer view, in small commits.
+This file tracks how the canonical healthcare data backbone landed in this repo,
+in small commits, with the evidence artifacts that shipped at each phase.
 
 **Sequencing principle:** data backbone FIRST, then quality gate + identity
 bridge, then operational polish + CI. The repo should run `make checkpoint`
@@ -70,7 +70,7 @@ healthcare-ai-data-engineer/
 
 ---
 
-## Why this order (mirrors the GenAI Engineer playbook)
+## Why this order
 
 ```
 WRONG ORDER                          RIGHT ORDER
@@ -83,15 +83,14 @@ recruiter: "where's the gate?"       recruiter: "show me the report"
                                         (5-second skim → unlock)
 ```
 
-The L1 quality gate is the AI Data Engineer equivalent of the GenAI
-Engineer's `/ask` vertical slice — the one thing that demonstrates the
-data layer is real, not just architectural.
+The L1 quality gate is the proof that the data layer is real, not just
+architectural. The rest of the repo should make that proof easy to find.
 
 ---
 
 ## Anti-overbuild reminders
 
-- Recycle from monorepo. Do not rewrite.
+- Recycle from existing artifacts. Do not rewrite what already has evidence.
 - Honest scope. dbt is real but ML pipeline is scaffold-only — say so.
 - Quality gate over impressive-looking dashboards.
 - Phase order = dependency. No calendar implication. Ship in one sitting.

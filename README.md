@@ -1,27 +1,173 @@
 # healthcare-ai-data-engineer
 
-> **Healthcare data backbone** — dbt medallion (bronze/silver/gold) + FastAPI 11 endpoints over 55,500 synthetic encounters + LLM-augmented enrichment (Vertex AI) + patient identity resolver + lightweight L1 quality gate. The data layer GenAI applications consume without hallucinating their way out of garbage input.
+Trusted healthcare data backbone for AI Data Engineer work — with an L2
+grounded-agent layer that answers questions **only** from the trusted marts,
+and a human cockpit where every displayed number links to the file that proves it.
+
+![Python](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-data%20surface-009688?logo=fastapi&logoColor=white)
+![dbt](https://img.shields.io/badge/dbt-medallion%20marts-FF694B?logo=dbt&logoColor=white)
+![Vertex AI](https://img.shields.io/badge/Vertex%20AI-grounded%20Gemini-4285F4?logo=googlecloud&logoColor=white)
+![Cloud Run](https://img.shields.io/badge/Cloud%20Run-live-4285F4?logo=googlecloud&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-green)
+
+This repo is the canonical source of truth for the data layer: it publishes
+quality-gated, lineage-aware, identity-resolved artifacts that downstream
+GenAI and delivery layers consume. Analytics engineering is here too, but it
+is the supporting act, not the headline.
 
 ![Demo](demo.gif)
 
-🔗 **Live:** https://healthcare-ai-data-2ihyeqmb6q-uw.a.run.app/docs
+**Live cockpit (A1–A6):** https://healthcare-ai-data-819957310168.us-west1.run.app/app
+&nbsp;·&nbsp; **API docs:** [/docs](https://healthcare-ai-data-819957310168.us-west1.run.app/docs)
+&nbsp;·&nbsp; **Grounded agent:** [`/api/ask?q=…`](https://healthcare-ai-data-819957310168.us-west1.run.app/api/ask?q=which%20patients%20show%20cardiac%20red%20flags)
 
-**Built for:** healthcare AI/data teams who need a trusted L1 layer before their RAG/agent stack lands on top. Patterns scale from this 55K demo to 50M+ row production via incremental dbt + Airflow-friendly idempotent scripts (each script in `scripts/` is checkpoint-driven and rerunnable without manual cleanup).
+Built for hiring managers who want proof, not adjectives. **Every number on the
+cockpit traces to a test or a committed artifact — not a vibe.**
 
-[![data-quality](https://github.com/anix-lynch/healthcare-ai-data-engineer/actions/workflows/quality.yml/badge.svg)](https://github.com/anix-lynch/healthcare-ai-data-engineer/actions/workflows/quality.yml)
+---
 
-```
-55K raw encounters
-  ↓ dbt bronze → silver → gold (medallion + tests)
-  ↓ 497-row enriched subset (Vertex AI: CC/HPI/vitals/labs/ESI ground-truth)
-  ↓ patient_identity_map (55K encounters → 40K unique patients)
-  ↓ scripts/checkpoint.py — 7 quality checks before mart release
-  ↓ FastAPI surface — /api/encounters · /api/patients · /api/stats · /docs
+## Architecture
+
+![Architecture](portfolio/A6_architecture_diagram/architecture.png)
+
+Raw synthetic data → identity + enrichment → **L1 quality gate** → dbt medallion
+marts → FastAPI on Cloud Run → consumed by **humans** (A1/A2 cockpit) and
+**agents** (BM25 retrieval + grounded Gemini, redacted surfaces only).
+
+---
+
+## 60-Second Read
+
+- 55,500 synthetic encounters modeled through dbt bronze/silver/gold layers.
+- 497-row enriched slice shipped with a passing L1 quality gate.
+- 55,500 encounters resolved into 40,235 unique patient identities.
+- Published contracts and frozen OpenAPI snapshot keep the surface stable.
+- FastAPI exposes the data product as reusable endpoints, not a pile of scripts.
+- **L2 grounded agent** (`/api/ask`): BM25 retrieves top-K from the redacted
+  enriched corpus, then Gemini answers with `[doc N]` citations — no raw PII indexed.
+
+If you open only three files, open these:
+
+- [data/quality/l1_checkpoint_report.json](data/quality/l1_checkpoint_report.json)
+- [data/derived/patient_identity_map.json](data/derived/patient_identity_map.json)
+- [docs/contracts.md](docs/contracts.md)
+
+---
+
+## Artifact Map
+
+The repo reads cleanest when you start from artifact, then work backward to proof.
+
+| Artifact | What it proves | Code that creates it | Who cares |
+| --- | --- | --- | --- |
+| [docs/contracts.md](docs/contracts.md) | Stable L1 outputs for downstream consumers | `dbt-project/` + API schemas | GenAI and warehouse teams |
+| [data/quality/l1_checkpoint_report.json](data/quality/l1_checkpoint_report.json) | Trust gate passed: schema, nulls, duplicates, temporal sanity, PII leakage, identity resolution, lineage | `scripts/checkpoint.py` | Hiring manager, data platform, auditors |
+| [data/derived/patient_identity_map.json](data/derived/patient_identity_map.json) | Encounters can be rolled up to stable patient identities | `scripts/patient_identity.py` | Modeling, dedupe, entity resolution |
+| [docs/dag.md](docs/dag.md) | Bronze -> silver -> gold lineage is explicit | `dbt-project/models/` | Analytics engineering, data modeling |
+| [openapi_snapshot.json](openapi_snapshot.json) | Public API surface is frozen and documented | `api/app/main.py` + `api/app/schemas.py` | Consumer teams, integration owners |
+| [dbt-project/](dbt-project/) | The warehouse model is real, testable, and modular | staging, intermediate, marts, tests | Analytics engineers, warehouse reviewers |
+
+For the recruiter-facing cockpit layer, start here:
+[portfolio/README.md](portfolio/README.md)
+
+For machine-readable navigation, use:
+- [portfolio/manifest.json](portfolio/manifest.json)
+- [portfolio/PROMPT_FOR_AGENT.md](portfolio/PROMPT_FOR_AGENT.md)
+
+---
+
+## What This Repo Publishes
+
+### Trust layer
+
+- A 7-check L1 gate committed in [data/quality/l1_checkpoint_report.json](data/quality/l1_checkpoint_report.json).
+- Explicit failure modes for schema drift, nulls, duplicates, temporal sanity, PII leakage, identity mapping, and lineage completeness.
+- Honest scope: this is a synthetic lab/demo corpus, not a HIPAA-compliant production system.
+
+### Identity resolution
+
+- A stable encounter-to-patient mapping in [data/derived/patient_identity_map.json](data/derived/patient_identity_map.json).
+- Deterministic short patient identifiers so repeated encounters collapse cleanly.
+- Synthetic edge cases are flagged instead of hand-waved away.
+
+### Lineage and modeling
+
+- dbt medallion modeling in [dbt-project/](dbt-project/): staging -> intermediate -> marts.
+- Gold models include `fact_patient_encounters` plus seven dimensions.
+- Tests in `dbt-project/tests/` make the DAG verifiable, not decorative.
+
+### Contracted data products
+
+- Stable contracts in [docs/contracts.md](docs/contracts.md):
+  - `canonical_patient_context`
+  - `retrieval_corpus_view`
+  - `feature_view`
+  - `eval_holdout_view`
+  - `audit_lineage_view`
+- Frozen API surface in [openapi_snapshot.json](openapi_snapshot.json).
+- FastAPI endpoints documented in [api/README.md](api/README.md).
+
+---
+
+## Proof Snapshot
+
+```text
+quality gate
+  497 enriched rows scanned
+  7/7 checks passed
+  0 critical failures
+
+identity resolution
+  55,500 encounters
+  40,235 unique patients
+  47 unresolved synthetic edges flagged
+
+API surface
+  /app                cockpit UI (A1–A6, links every number to its proof file)
+  /api/control-room   A1 executive trust overview
+  /api/trust-room     A2 quality + evidence
+  /api/warehouse-room A5 warehouse explorer
+  /api/retrieve       BM25 retrieval over the enriched corpus
+  /api/ask            L2 grounded Gemini answer (cites [doc N])
+  /api/classify       rule-based ESI triage with safety floors
+  /api/encounters /api/patients /api/doctors /api/hospitals
+  /api/conditions /api/medications /api/insurance /api/stats /api/search
+  /docs
 ```
 
 ---
 
-## Quick demo (no server needed)
+## Bridge To Downstream Repos
+
+This repo is the backbone. The other repos consume its outputs.
+
+- **L1 Fabric repo**: the warehouse-backed implementation of the same trust story. Same contract shape, different warehouse flavor.
+- **L2 GenAI repo**: consumes `canonical_patient_context`, `retrieval_corpus_view`, and the holdout/eval artifacts to prove retrieval, grounding, evaluation, and safe generation on trusted data.
+- **FDE repo**: consumes the L2 system and packages deployment, integration, runbook, acceptance tests, and handoff.
+
+Short version: this repo publishes the data product; downstream repos prove they can use it.
+
+---
+
+## Repo Layout
+
+```text
+api/                 FastAPI data surface over the synthetic corpus
+dbt-project/         dbt staging, intermediate, marts, and tests
+data/raw/            raw synthetic data plus enriched slices and splits
+data/derived/        identity resolution outputs
+data/quality/        L1 checkpoint evidence
+docs/                lineage and contract docs
+scripts/             enrichment, sampling, identity, checkpoint pipelines
+tests/               pytest coverage for checkpoint, identity, API, retrieval
+demo/quickstart.sh   one-command sanity flow
+openapi_snapshot.json frozen API contract
+```
+
+---
+
+## Quick Start
 
 ```bash
 git clone https://github.com/anix-lynch/healthcare-ai-data-engineer
@@ -30,271 +176,52 @@ make install
 bash demo/quickstart.sh
 ```
 
-Output (live, just run it):
-
-```
-── 1) L1 quality checkpoint ───────────────────────
-L1 checkpoint @ 2026-05-17T...
-  input:  data/raw/healthcare_dataset_enriched.csv
-  rows:   497
-  ✅  schema_drift
-  ✅  critical_nulls
-  ✅  duplicate_encounters
-  ✅  temporal_sanity
-  ✅  pii_in_narrative
-  ✅  patient_identity
-  ✅  audit_lineage
-
-PASS — no critical failures.
-
-── 2) Patient identity map ────────────────────────
-  encounters:    55,500
-  patients:      40,235
-  avg per pt:    1.379
-  top repeater:  24 encounters
-```
-
-Then start the FastAPI surface:
+Then run the API:
 
 ```bash
-make serve   # uvicorn on :8000
+make serve
 curl localhost:8000/api/stats | jq
 ```
 
 ---
 
-## What's inside
-
-```
-api/                 FastAPI 11 endpoints over the 55K corpus
-                       /api/encounters · /api/patients · /api/doctors ·
-                       /api/hospitals · /api/conditions · /api/medications ·
-                       /api/insurance · /api/stats · /api/search · /docs
-                       (auto-generated OpenAPI at /docs)
-
-dbt-project/         medallion architecture: bronze → silver → gold
-                       staging/stg_healthcare.sql
-                       intermediate/int_encounters_enriched.sql · int_readmissions.sql
-                       marts/core/fact_patient_encounters.sql + 7 dim_*.sql
-                       tests/ + sources.yml + dbt_project.yml
-
-data/raw/            55K row source CSV + 497 LLM-enriched rows (CC/HPI/vitals/labs/ESI)
-                     + 397-row training subset + 100-row eval holdout
-                     (holdout NEVER feeds training/index)
-data/derived/        patient_identity_map.json (55K encounters → 40K patients)
-data/quality/        l1_checkpoint_report.json (latest gate run)
-
-scripts/
-   enrich_clinical_narrative.py     Vertex gemini-2.5-flash + JSON schema
-   enrich_parallel.py                x6 ThreadPoolExecutor + retry + checkpoint
-   stratified_sampler.py             condition × admission × age × gender cube
-   split_holdout.py                  stratified 397 use / 100 holdout (seed=42)
-   patient_identity.py               SHA256 short-id resolver
-   checkpoint.py                      7-check L1 data quality gate (exit 1 on fail)
-   edge_cases.json                    47 hand-picked scenarios (STEMI/sepsis/etc.)
-
-tests/               pytest — checkpoint integrity · identity map shape ·
-                       FastAPI endpoint smoke · patient_id determinism
-docs/
-   L1_HARDENING.md     real-world ingestion realism roadmap (Phase B/C/D)
-                        + Crystal Ball ceiling analysis (what L2 patterns need
-                          from L1 to lift their confidence cap)
-   contracts.md         frozen L1 output contracts (canonical / retrieval /
-                        feature / eval-holdout / audit views)
-
-demo/quickstart.sh   3-step sanity in 30 seconds (checkpoint + identity + OpenAPI)
-
-Makefile · requirements.txt · openapi_snapshot.json
-```
-
----
-
-## Quality gate (committed at `data/quality/l1_checkpoint_report.json`)
-
-```
-✅ schema_drift            29 columns present · enriched cols complete
-✅ critical_nulls          Name · Age · Gender · Condition · dates all populated
-✅ duplicate_encounters    0 dups in 451 unique encounter keys
-✅ temporal_sanity         discharge ≥ admission · LoS within [0, 365]
-✅ pii_in_narrative        0 SSN/phone/email/CC patterns in CC/HPI/notes
-✅ patient_identity        40,235 patients resolved · 47 synthetic edges flagged
-✅ audit_lineage           complete · source_system + ingest_ts + row_hash + pii_redaction_status on every row
-
-PASS — 7/7 checks · 0 critical failures
-```
-
-The gate runs in CI on every PR (`.github/workflows/quality.yml`) +
-locally via `make checkpoint`. Honest scope: this is the floor that catches
-the dumb-but-pipeline-killing failures (duplicate encounter ids, PII leaks
-into narrative fields, discharge-before-admission, schema drift). NOT HIPAA
-compliance. NOT Great Expectations replacement.
-
-See [`scripts/checkpoint.py`](scripts/checkpoint.py) for the seven check
-implementations and their failure semantics.
-
----
-
-## dbt DAG (lineage view)
-
-```
-SOURCE              SILVER             INTERMEDIATE             GOLD MARTS
-─────────────       ──────────────     ────────────────         ──────────────────────────
-healthcare.         stg_healthcare ──> int_encounters_enriched  ┌──> dim_patient
- raw_healthcare_     │ clean             │                       ├──> dim_doctor
- data (33 cols       │ hash PII          ├──> int_readmissions   ├──> dim_hospital
-  incl. 4 audit)     │ cast dates        │                       ├──> dim_diagnosis
-                                          │                       ├──> dim_medication
-                                          │                       ├──> dim_insurance
-                                          │                       ├──> dim_date
-                                          └──────────────────────►└──> fact_patient_encounters
-                                                                       (1 row per encounter,
-                                                                        FK to all 7 dims +
-                                                                        8 measures)
-```
-
-Full DAG + per-model lineage rules: [`docs/dag.md`](docs/dag.md).
-For interactive HTML: `dbt docs generate && dbt docs serve` against a live warehouse.
-
----
-
-## Vertex enrichment run (497 rows, gemini-2.5-flash)
-
-```
-cost                $0.25 total · $0.0005 per row
-runtime             789s wallclock with x6 parallel workers
-throughput          ~37 rows/min sustained
-per-row p50         ~9s   (single Vertex call w/ JSON schema enforced)
-per-row p99         ~25s  (rare retry cycles)
-retry rate          ~3% (response_schema eliminates most JSON parse failures)
-schema-fail rate    0% (Pydantic-via-JSON-Schema enforced by Vertex)
-success rate        100% (497/497, no failed-rows.jsonl entries)
-
-GCP $900 credit absorbed the entire run.
-Same pipeline scales to 55K rows ≈ $27 · or 1M rows ≈ $500.
-```
-
-Reproduce: `scripts/enrich_parallel.py` (full source + retry logic + checkpoint).
-
----
-
-## Sample API output
+## Common Commands
 
 ```bash
-curl 'http://localhost:8000/api/stats' | jq
-```
-
-```json
-{
-  "total_encounters": 55500,
-  "date_range": {"earliest": "2019-01-01", "latest": "2024-05-08"},
-  "by_condition": {
-    "Diabetes": 9241,
-    "Hypertension": 9245,
-    "Cancer": 9227,
-    "Obesity": 9279,
-    "Asthma": 9275,
-    "Arthritis": 9233
-  },
-  "by_admission_type": {
-    "Emergency": 18534,
-    "Urgent": 18558,
-    "Elective": 18408
-  }
-}
-```
-
-Full endpoint reference + 14 more curl recipes: [`api/README.md`](api/README.md).
-
-**Production swap path:** `api/app/main.py` loads the CSV into pandas at cold
-start (fine for ≤100K rows). For 1M+ rows: drop in DuckDB (`pip install duckdb`
-+ `con.execute('SELECT ... FROM read_csv_auto(...)')`) or point at a cloud
-warehouse (BigQuery / Snowflake / Fabric). The response shape is
-documented as Pydantic reference contracts in [`api/app/schemas.py`](api/app/schemas.py),
-so either backend swap preserves the API surface.
-
----
-
-## L1 OUTPUT CONTRACTS (frozen — what Layer 2 patterns consume)
-
-The point of this layer is **trusted, AI-ready data** with stable contracts.
-Five views downstream patterns import:
-
-```
-canonical_patient_context    one row per encounter — Rachel / Mad Lib grounding
-retrieval_corpus_view         doc_text + source_id + patient_id for RAG indexing
-feature_view                  predicted_los / readmission / mortality features
-eval_holdout_view             100 stratified rows — NEVER fed to training/index
-audit_lineage_view            source_system + ingest_ts + row_hash + pii_redaction_status (live · every gold row)
-```
-
-Full schema spec: [`docs/contracts.md`](docs/contracts.md).
-
----
-
-## Common commands
-
-```bash
-make install      # pip install requirements + api/requirements
-make serve        # uvicorn api/app on :8000 (or `python api/app/main.py`)
-make checkpoint   # run L1 quality gate (7 checks, exit 1 on failure)
-make patient-id   # (re)build encounter→patient identity map
-make enrich-sample # enrich 5 rows via Vertex (needs GCP_PROJECT_ID env)
-make test         # pytest tests/
-make clean        # remove __pycache__ + .pytest_cache
+make install       # install repo requirements
+make serve         # run FastAPI on :8000
+make checkpoint    # run the 7-check L1 quality gate
+make patient-id    # rebuild encounter -> patient identity map
+make test          # run pytest
+make clean         # remove caches
 ```
 
 ---
 
-## Honest scope
+## Honest Scope
 
-```
-WHAT THIS REPO IS                     WHAT IT'S NOT
-─────────────────────────────────────────────────────────────────────
-✅ dbt medallion star schema           ❌ HIPAA-compliant production system
-✅ 55K synthetic patient corpus        ❌ real EHR data (Kaggle synthetic)
-✅ Vertex AI LLM enrichment shipped    ❌ full clinical narrative dataset
-✅ Patient identity bridge             ❌ MRN-based MDM (uses name hash)
-✅ 7-check L1 quality gate             ❌ Great Expectations / Soda replacement
-✅ FastAPI 11 endpoints                ❌ auth / rate limiting / multi-tenant
-```
-
-See [`docs/L1_HARDENING.md`](docs/L1_HARDENING.md) for the upgrade roadmap:
-Phase B (small ingestion realism via PDF/CSV/SharePoint), Phase C (PII at
-ingest + Charlson comorbidity + real outcome labels), Phase D (deferred FHIR/
-HL7 + MRN-based MDM).
+| This repo is | This repo is not |
+| --- | --- |
+| Synthetic healthcare data backbone | HIPAA-compliant production system |
+| dbt medallion model with tests | Enterprise MDM or real EHR integration |
+| Identity-resolution proof | Production MRN matching |
+| Stable API and published contracts | Authenticated multi-tenant SaaS |
+| Proof-backed artifact catalog | A vague "AI platform" claim |
 
 ---
 
-## Record your own demo (asciinema)
+## Related Repos
 
-```bash
-brew install asciinema    # one-time
-asciinema rec demo.cast
-# inside the recording:
-bash demo/quickstart.sh
-# Ctrl-D to stop
-asciinema upload demo.cast   # free public link
-```
-
-Plain-text `.cast` file embeds cleanly in any markdown reader.
+- [healthcare-genai-engineer](https://github.com/anix-lynch/healthcare-genai-engineer) - L2 GenAI consumer layer
+- [healthcare-forward-deployed-engineer](https://github.com/anix-lynch/healthcare-forward-deployed-engineer) - FDE delivery layer
+- [healthcare-genai-fullstack](https://github.com/anix-lynch/healthcare-genai-fullstack) - full three-layer system
+- [healthcare-api](https://github.com/anix-lynch/healthcare-api) - richer mirror with more script history
 
 ---
 
 ## Roadmap
 
-See [ROADMAP.md](ROADMAP.md) for the phase-ordered audit trail (Phase 1 → 3,
-each with the commit hash that shipped it).
-
----
-
-## Related repos
-
-- [healthcare-genai-engineer](https://github.com/anix-lynch/healthcare-genai-engineer) — Layer 2 GenAI runtime (RAG + evals + guardrails + FastAPI)
-- [healthcare-forward-deployed-engineer](https://github.com/anix-lynch/healthcare-forward-deployed-engineer) — customer-deployment package (integrations + runbook + acceptance tests + Docker)
-- [healthcare-genai-fullstack](https://github.com/anix-lynch/healthcare-genai-fullstack) — full 3-layer monorepo
-- [healthcare-api](https://github.com/anix-lynch/healthcare-api) — richer L1 mirror with full scripts/data history
-
----
+See [ROADMAP.md](ROADMAP.md) for the phase-ordered audit trail and commit history.
 
 ## License
 

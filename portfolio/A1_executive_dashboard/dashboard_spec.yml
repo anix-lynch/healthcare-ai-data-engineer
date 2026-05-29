@@ -1,0 +1,31 @@
+artifact: A1_executive_dashboard
+title: Executive Dashboard
+question: Can we trust the hospital data today?
+tech:
+  - Looker Studio
+  - BigQuery summary views
+audience:
+  - hiring_manager
+  - data_platform_lead
+  - analytics_engineer
+kpis:
+  total_encounters:
+    good: ">= 50000"
+    strong: ">= 55000"
+    proof: data/derived/patient_identity_map.json
+  unique_patients:
+    good: ">= 35000"
+    strong: ">= 40000"
+    proof: data/derived/patient_identity_map.json
+  l1_checkpoint_status:
+    good: "PASS"
+    strong: "PASS"
+    proof: data/quality/l1_checkpoint_report.json
+  audit_lineage:
+    good: "complete"
+    strong: "complete"
+    proof: data/quality/l1_checkpoint_report.json
+  api_surface:
+    good: "documented"
+    strong: "frozen snapshot"
+    proof: openapi_snapshot.json

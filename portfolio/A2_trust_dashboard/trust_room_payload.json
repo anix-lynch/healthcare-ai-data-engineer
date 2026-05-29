@@ -1,0 +1,446 @@
+{
+  "artifact": "A2_trust_dashboard",
+  "display_mode": "trust-investigation-room",
+  "generated_at": "2026-05-29T15:28:03-07:00",
+  "source_truth": {
+    "checkpoint_report": "data/quality/l1_checkpoint_report.json",
+    "identity_map": "data/derived/patient_identity_map.json"
+  },
+  "header": {
+    "title": "\u2764\ufe0f TRUST INVESTIGATION ROOM",
+    "subtitle": "Can we trust the patient and visit numbers?",
+    "status": "PROD \ud83d\udfe2",
+    "updated_at": "12:51",
+    "truth_updated_at": "2026-05-29T12:51:59"
+  },
+  "current_status": {
+    "headline": "Mostly healthy \u2014 1 issue needs attention (not patient-facing yet)",
+    "detail": "No fake patients detected",
+    "traffic_light": "\ud83d\udfe1"
+  },
+  "trust_vitals": [
+    {
+      "rank": 1,
+      "label": "QC passed?",
+      "value": 100.0,
+      "display_value": "100.0% \ud83d\udfe2",
+      "benchmark": "good >95 | strong >99",
+      "evidence": [
+        "data/quality/l1_checkpoint_report.json",
+        "tests/test_checkpoint.py",
+        ".github/workflows/quality.yml"
+      ],
+      "nudges": [
+        "Open dbt tests",
+        "Open run_results.json",
+        "Open job log"
+      ]
+    },
+    {
+      "rank": 2,
+      "label": "Missing key fields?",
+      "value": 0.117,
+      "display_value": "0.12% \ud83d\udfe1",
+      "benchmark": "good <1 | strong <0.1",
+      "evidence": [
+        "data/quality/l1_checkpoint_report.json",
+        "data/derived/patient_identity_map.json"
+      ],
+      "nudges": [
+        "Show null offenders query",
+        "Show sample rows",
+        "Open lineage"
+      ]
+    },
+    {
+      "rank": 3,
+      "label": "Duplicate visits?",
+      "value": 0.0,
+      "display_value": "0.00% \ud83d\udfe2",
+      "benchmark": "good <1 | strong =0",
+      "evidence": [
+        "data/quality/l1_checkpoint_report.json"
+      ],
+      "nudges": [
+        "Open duplicate keys query",
+        "Show validation"
+      ]
+    },
+    {
+      "rank": 4,
+      "label": "Fake patients?",
+      "value": 99.883,
+      "display_value": "99.88% \ud83d\udfe1",
+      "benchmark": "good >=99 | strong =100",
+      "evidence": [
+        "data/derived/patient_identity_map.json",
+        "data/quality/l1_checkpoint_report.json"
+      ],
+      "nudges": [
+        "Open orphan records query",
+        "Open relationship test",
+        "Open upstream job"
+      ]
+    },
+    {
+      "rank": 5,
+      "label": "Can we trace every number?",
+      "value": 100.0,
+      "display_value": "100.0% \ud83d\udfe2",
+      "benchmark": "good >=90 | strong >=95",
+      "evidence": [
+        "data/quality/l1_checkpoint_report.json",
+        "portfolio/manifest.json",
+        "docs/contracts.md"
+      ],
+      "nudges": [
+        "Open manifest.json",
+        "Open lineage gaps",
+        "Open model owners"
+      ]
+    },
+    {
+      "rank": 6,
+      "label": "Do systems agree?",
+      "value": 100.0,
+      "display_value": "100.00% \ud83d\udfe2",
+      "benchmark": "good >=99 | strong >=99.9",
+      "evidence": [
+        "data/quality/l1_checkpoint_report.json",
+        "tests/test_checkpoint.py"
+      ],
+      "nudges": [
+        "Open recon query",
+        "Open KPI definitions",
+        "Open decision log"
+      ]
+    }
+  ],
+  "evidence_proof": [
+    {
+      "title": "visit \u2194 patient relationship",
+      "score": 99.88,
+      "display_value": "99.88% \ud83d\udfe1",
+      "benchmark": "expected =100",
+      "proof_clicks": [
+        "Open query",
+        "Open failing rows",
+        "Open dbt test",
+        "Open job log",
+        "Open owner"
+      ],
+      "blast_radar": [
+        "impacts: Patient Count KPI, ER Census, RAG patient lookup",
+        "scope: clinical marts only",
+        "patient-facing dashboards: not impacted (yet)"
+      ],
+      "evidence": [
+        "data/derived/patient_identity_map.json",
+        "data/quality/l1_checkpoint_report.json"
+      ]
+    },
+    {
+      "title": "MRN null spike",
+      "score": 0.12,
+      "display_value": "0.12% \ud83d\udfe1",
+      "benchmark": "strong <0.10",
+      "proof_clicks": [
+        "Show rows",
+        "Open query",
+        "Open lineage",
+        "Open model",
+        "Open owner"
+      ],
+      "blast_radar": [
+        "impacts: reporting only (for now)",
+        "risk: if it grows -> identity risk"
+      ],
+      "evidence": [
+        "data/quality/l1_checkpoint_report.json"
+      ]
+    },
+    {
+      "title": "duplicate visit_id",
+      "score": 0.0,
+      "display_value": "0.00% \ud83d\udfe2",
+      "benchmark": "required =0",
+      "proof_clicks": [
+        "Show validation"
+      ],
+      "blast_radar": [
+        "none"
+      ],
+      "evidence": [
+        "data/quality/l1_checkpoint_report.json"
+      ]
+    }
+  ],
+  "triage": [
+    {
+      "issue": "Broken visit + patient join",
+      "owner": "Data Platform (on-call)",
+      "eta": "< 1h",
+      "action": "Page on-call",
+      "runbook": [
+        "Open runbook",
+        "Open rollback plan",
+        "Open incident thread"
+      ]
+    },
+    {
+      "issue": "MRN null spike",
+      "owner": "Analytics Engineer",
+      "eta": "next sprint",
+      "action": "Create ticket",
+      "runbook": [
+        "Open ticket",
+        "Open data contract",
+        "Open upstream owner"
+      ]
+    }
+  ],
+  "auto_mitigations": [
+    {
+      "item": "Retried failed dbt job (success)",
+      "links": [
+        "Open retry logs"
+      ]
+    },
+    {
+      "item": "Refreshed affected marts",
+      "links": [
+        "Open refresh job"
+      ]
+    },
+    {
+      "item": "Switched dashboard to last-known-good snapshot",
+      "links": [
+        "Open snapshot id",
+        "Open diff"
+      ]
+    },
+    {
+      "item": "Added warning banner (degraded mode)",
+      "links": [
+        "Open dashboard link"
+      ]
+    },
+    {
+      "item": "Notified owner",
+      "links": [
+        "Open incident thread"
+      ]
+    },
+    {
+      "item": "Result: Doctors still see numbers. Nobody treating ghost patients today.",
+      "links": []
+    }
+  ],
+  "human_in_the_loop": {
+    "title": "GOOD LUCK HUMAN \u2014 HITL your turn now",
+    "summary": {
+      "finance_visits": 497,
+      "billing_visits": 497,
+      "machine_verdict": "both valid",
+      "notes": "definition fight, not a data bug"
+    },
+    "who_fights_who": [
+      "Finance Lead vs Billing Lead",
+      "Data Lead + Compliance",
+      "Patient Count KPI (exec dashboard) vs ER Census (ops) vs Downstream RAG patient lookup"
+    ],
+    "human_tasks": [
+      "Pick winning definition",
+      "Write it down as KPI contract",
+      "Enforce in dbt tests + semantic layer"
+    ],
+    "links": [
+      "Open KPI definitions",
+      "Open recon query",
+      "Open decision log"
+    ]
+  },
+  "notes": [
+    "Traffic lights are computed from checkpoint + identity evidence.",
+    "PII raw-name leaks detected: 0.",
+    "Blast radar lines are nudges to where to fix first."
+  ],
+  "click_audit": {
+    "resolved_count": 34,
+    "unresolved_count": 0,
+    "coverage_pct": 100.0,
+    "resolved": [
+      {
+        "label": "Open KPI definitions",
+        "target": "portfolio/A2_trust_dashboard/trust_metrics_spec.yml",
+        "exists": true
+      },
+      {
+        "label": "Open dashboard link",
+        "target": "portfolio/A2_trust_dashboard/screenshots/trust_dashboard.png",
+        "exists": true
+      },
+      {
+        "label": "Open data contract",
+        "target": "docs/contracts.md",
+        "exists": true
+      },
+      {
+        "label": "Open dbt test",
+        "target": "dbt-project/tests/assert_valid_readmission_logic.sql",
+        "exists": true
+      },
+      {
+        "label": "Open dbt tests",
+        "target": "dbt-project/tests/assert_valid_readmission_logic.sql",
+        "exists": true
+      },
+      {
+        "label": "Open decision log",
+        "target": "ROADMAP.md",
+        "exists": true
+      },
+      {
+        "label": "Open diff",
+        "target": "ROADMAP.md",
+        "exists": true
+      },
+      {
+        "label": "Open duplicate keys query",
+        "target": "scripts/checkpoint.py",
+        "exists": true
+      },
+      {
+        "label": "Open failing rows",
+        "target": "data/derived/patient_identity_map.json",
+        "exists": true
+      },
+      {
+        "label": "Open incident thread",
+        "target": "ROADMAP.md",
+        "exists": true
+      },
+      {
+        "label": "Open job log",
+        "target": ".github/workflows/quality.yml",
+        "exists": true
+      },
+      {
+        "label": "Open lineage",
+        "target": "docs/dag.md",
+        "exists": true
+      },
+      {
+        "label": "Open lineage gaps",
+        "target": "docs/dag.md",
+        "exists": true
+      },
+      {
+        "label": "Open manifest.json",
+        "target": "portfolio/manifest.json",
+        "exists": true
+      },
+      {
+        "label": "Open model",
+        "target": "dbt-project/models/marts/core/schema.yml",
+        "exists": true
+      },
+      {
+        "label": "Open model owners",
+        "target": "docs/contracts.md",
+        "exists": true
+      },
+      {
+        "label": "Open orphan records query",
+        "target": "scripts/checkpoint.py",
+        "exists": true
+      },
+      {
+        "label": "Open owner",
+        "target": "portfolio/A2_trust_dashboard/evidence_links.md",
+        "exists": true
+      },
+      {
+        "label": "Open query",
+        "target": "scripts/checkpoint.py",
+        "exists": true
+      },
+      {
+        "label": "Open recon query",
+        "target": "scripts/checkpoint.py",
+        "exists": true
+      },
+      {
+        "label": "Open refresh job",
+        "target": ".github/workflows/quality.yml",
+        "exists": true
+      },
+      {
+        "label": "Open relationship test",
+        "target": "tests/test_checkpoint.py",
+        "exists": true
+      },
+      {
+        "label": "Open retry logs",
+        "target": ".github/workflows/quality.yml",
+        "exists": true
+      },
+      {
+        "label": "Open rollback plan",
+        "target": "portfolio/A4_airflow_dag/runbook.md",
+        "exists": true
+      },
+      {
+        "label": "Open run_results.json",
+        "target": ".github/workflows/quality.yml",
+        "exists": true
+      },
+      {
+        "label": "Open runbook",
+        "target": "portfolio/A4_airflow_dag/runbook.md",
+        "exists": true
+      },
+      {
+        "label": "Open snapshot id",
+        "target": "portfolio/A2_trust_dashboard/trust_room_payload.json",
+        "exists": true
+      },
+      {
+        "label": "Open ticket",
+        "target": "ROADMAP.md",
+        "exists": true
+      },
+      {
+        "label": "Open upstream job",
+        "target": ".github/workflows/quality.yml",
+        "exists": true
+      },
+      {
+        "label": "Open upstream owner",
+        "target": "README.md",
+        "exists": true
+      },
+      {
+        "label": "Show null offenders query",
+        "target": "scripts/checkpoint.py",
+        "exists": true
+      },
+      {
+        "label": "Show rows",
+        "target": "data/raw/healthcare_dataset_enriched.csv",
+        "exists": true
+      },
+      {
+        "label": "Show sample rows",
+        "target": "data/raw/healthcare_dataset_enriched.csv",
+        "exists": true
+      },
+      {
+        "label": "Show validation",
+        "target": "tests/test_checkpoint.py",
+        "exists": true
+      }
+    ],
+    "unresolved": []
+  }
+}

@@ -20,3 +20,6 @@ dist/
 # Local-only outreach scratch — NEVER commit to public repo
 _outreach/
 **/.syncthing.*.tmp
+
+# Internal build prompt — not for public showroom
+CLAUDE_CODE_PROMPT.md

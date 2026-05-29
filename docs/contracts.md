@@ -75,5 +75,5 @@ pii_redaction_status   str       cleared | partial | needs_review
 
 ## Source of truth
 
-This contract is mirrored from the master monorepo at
-`layer1-data-backbone/L1_HARDENING.md`. When in doubt, the monorepo wins.
+This contract is published from this repo and should be treated as the stable
+L1 surface until a versioned contract update lands here.

@@ -1,0 +1,16 @@
+flowchart TD
+  raw["Raw synthetic healthcare data"]
+  resolver["Identity + enrichment scripts"]
+  checkpoint["L1 quality gate"]
+  dbt["dbt medallion models"]
+  api["API surface"]
+  portal["Portfolio cockpit"]
+  consumers["Downstream consumers"]
+
+  raw --> resolver --> checkpoint --> dbt --> api --> portal --> consumers
+
+  checkpoint -. "evidence" .-> quality["data/quality/l1_checkpoint_report.json"]
+  resolver -. "evidence" .-> identity["data/derived/patient_identity_map.json"]
+  dbt -. "evidence" .-> dag["docs/dag.md"]
+  api -. "evidence" .-> openapi["openapi_snapshot.json"]
+  portal -. "evidence" .-> manifest["portfolio/manifest.json"]

@@ -3,6 +3,11 @@ uvicorn[standard]>=0.27
 pydantic>=2.0
 pandas>=2.0
 rank_bm25>=0.2.2
+
+# Grounded RAG answer path (/api/ask) — Gemini via Vertex AI.
+# Runtime auth = Cloud Run service identity (Vertex AI User); local = SA key / ADC.
+vertexai>=1.60
+google-cloud-aiplatform>=1.60
 # fastapi>=0.115 + starlette>=0.40 required: newer httpx 0.28+ TestClient
 # uses ASGITransport(app=...) instead of TestClient(app=...) — older fastapi
 # versions break with the new httpx signature.

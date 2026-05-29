@@ -1,4 +1,4 @@
-.PHONY: install serve checkpoint enrich-sample patient-id eval-checkpoint clean help
+.PHONY: install serve checkpoint enrich-sample patient-id portfolio-snapshot eval-checkpoint clean help
 
 help:
 	@echo "Targets:"
@@ -6,6 +6,7 @@ help:
 	@echo "  serve              uvicorn api/app on :8000"
 	@echo "  checkpoint         run L1 data quality gate (7 checks)"
 	@echo "  patient-id         (re)build encounter→patient identity map"
+	@echo "  portfolio-snapshot generate A1 control-room payload"
 	@echo "  enrich-sample      enrich 5 rows via Vertex (needs GCP_PROJECT_ID env)"
 	@echo "  test               pytest tests/"
 	@echo "  clean              remove __pycache__ + .pytest_cache"
@@ -21,6 +22,9 @@ checkpoint:
 
 patient-id:
 	python scripts/patient_identity.py
+
+portfolio-snapshot:
+	python scripts/build_portfolio_snapshot.py
 
 # Enrich 5 rows as smoke (needs GCP_PROJECT_ID + ADC). Honest scope:
 # the real run is enrich_parallel.py with --rows 500.
