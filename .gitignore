@@ -28,3 +28,7 @@ dbt-project/target/
 dbt-project/dbt_packages/
 dbt-project/logs/
 dbt-project/.user.yml
+feature-store/.feast-venv/
+.feast-venv/
+feature-store/*.db
+feature-store/**/__pycache__/

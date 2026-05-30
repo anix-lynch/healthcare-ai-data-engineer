@@ -1,0 +1,13 @@
+project: healthcare_l125
+# L1.25 Feature layer — machine-ready features built on L1 gold marts.
+provider: gcp
+registry: registry.db
+offline_store:
+  type: bigquery
+  project_id: bchan-genai-lab
+  dataset: healthcare_analytics
+  location: US
+online_store:
+  type: sqlite
+  path: online_store.db
+entity_key_serialization_version: 3
