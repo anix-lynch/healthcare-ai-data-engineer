@@ -1,5 +1,7 @@
 # healthcare-ai-data-engineer
 
+> 🟥 **L1 Truth + 🟧 L1.25 Context** part of the [L1→L3 healthcare AI platform](https://gozeroshot.dev) — Truth → Features → Signals → Actions → Human adoption. This repo = the trusted warehouse + Feast feature store everything downstream consumes.
+
 Trusted healthcare data backbone for AI Data Engineer work — with an L2
 grounded-agent layer that answers questions **only** from the trusted marts,
 and a human cockpit where every displayed number links to the file that proves it.
