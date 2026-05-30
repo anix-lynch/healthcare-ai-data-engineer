@@ -7,3 +7,5 @@ rank_bm25>=0.2.2
 # /api/ask grounded answer path — Gemini via Vertex AI (runtime SA auth).
 vertexai>=1.60
 google-cloud-aiplatform>=1.60
+# A5 warehouse-room live overlay — reads the dbt-built BigQuery warehouse.
+google-cloud-bigquery>=3.20
