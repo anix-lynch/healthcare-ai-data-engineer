@@ -2,7 +2,7 @@ artifact: A1_executive_dashboard
 title: Executive Dashboard
 question: Can we trust the hospital data today?
 tech:
-  - Looker Studio
+  - FastAPI cockpit (Cloud Run)
   - BigQuery summary views
 audience:
   - hiring_manager

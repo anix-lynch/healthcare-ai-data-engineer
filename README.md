@@ -96,7 +96,6 @@ healthcare-ai-data-engineer/
 ├── openapi_snapshot.json             ✅ frozen public API surface
 ├── Makefile                          ✅ test · feast-apply · serve · checkpoint
 ├── requirements*.txt                 ✅ app deps (deploy split out, leaner image)
-├── LOOKER_STUDIO.md · *.md           📖 BI / setup notes
 └── demo.gif · README.md              🖼️📖 the 10-second story
 ```
 

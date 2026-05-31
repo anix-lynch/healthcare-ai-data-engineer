@@ -2,7 +2,7 @@ artifact: A2_trust_dashboard
 title: Trust Dashboard
 question: Can we trust the patient and visit numbers?
 tech:
-  - Looker Studio
+  - FastAPI cockpit (Cloud Run)
   - BigQuery
   - dbt tests
 quality_rules:
