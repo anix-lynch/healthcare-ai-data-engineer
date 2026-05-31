@@ -13,13 +13,16 @@ Out:  great_expectations/ (suite + config) + Data Docs HTML, exit 1 on failure.
 
 from __future__ import annotations
 
+import os
 import sys
 from pathlib import Path
 
 import great_expectations as gx
 
 REPO = Path(__file__).resolve().parent.parent
-CSV = REPO / "data" / "raw" / "healthcare_dataset_enriched.csv"
+# Relative on purpose — GX persists this string into great_expectations.yml, so an
+# absolute /Users/... path would leak into the public repo. Resolved via chdir(REPO).
+CSV = "data/raw/healthcare_dataset_enriched.csv"
 GE_ROOT = REPO / "gx"
 SUITE = "l1_data_quality"
 
@@ -45,9 +48,10 @@ ALLOWED = {
 
 
 def main() -> int:
+    os.chdir(REPO)  # so the relative CSV path resolves AND gets stored relative
     context = gx.get_context(project_root_dir=str(REPO))
     ds = context.sources.add_or_update_pandas("healthcare_l1")
-    asset = ds.add_csv_asset("enriched_encounters", filepath_or_buffer=str(CSV))
+    asset = ds.add_csv_asset("enriched_encounters", filepath_or_buffer=CSV)
     context.add_or_update_expectation_suite(SUITE)
     validator = context.get_validator(
         batch_request=asset.build_batch_request(), expectation_suite_name=SUITE

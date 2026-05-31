@@ -102,8 +102,7 @@ fluent_datasources:
     assets:
       enriched_encounters:
         type: csv
-        filepath_or_buffer: 
-          /Users/anixlynch/dev/healthcare-ai-data-engineer/data/raw/healthcare_dataset_enriched.csv
+        filepath_or_buffer: data/raw/healthcare_dataset_enriched.csv
 notebooks:
 include_rendered_content:
   globally: false
