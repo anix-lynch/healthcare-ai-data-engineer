@@ -1,0 +1,6 @@
+# Great Expectations data-quality layer (standard column contract + Data Docs).
+# Kept separate from the API deploy image — the runtime service never runs GE.
+#   python -m venv .ge-venv && .ge-venv/bin/pip install -r scripts/requirements-quality.txt
+#   .ge-venv/bin/python scripts/run_ge.py   (or: make ge)
+great_expectations==0.18.22
+pandas

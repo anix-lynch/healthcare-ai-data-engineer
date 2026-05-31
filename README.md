@@ -121,6 +121,21 @@ proof — *not* a HIPAA-compliant production EHR or authenticated multi-tenant S
 
 ---
 
+## Data Quality — two layers (deliberate split)
+
+Not everything belongs in the same tool. This repo uses the right one for each job:
+
+| Layer | Tool | Owns | Run |
+|---|---|---|---|
+| **Standard column contract** | **Great Expectations** | schema (33 cols) · not-null · value ranges (vitals/ESI) · allowed sets · `row_hash` uniqueness — **21 expectations, rendered as Data Docs HTML** | `make ge` |
+| **Healthcare-specific guards** | custom Python (`scripts/checkpoint.py`) | PII regex over free-text clinical notes · encounter→patient identity resolution · temporal sanity — things GE can't express | `make checkpoint` |
+
+GE handles the standard tabular contract a reviewer expects; the custom gate covers the domain
+checks an off-the-shelf tool can't. The suite is committed at
+[`gx/expectations/l1_data_quality.json`](gx/expectations/l1_data_quality.json).
+
+---
+
 ## Quick Start
 
 ```bash

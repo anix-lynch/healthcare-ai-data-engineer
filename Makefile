@@ -43,3 +43,8 @@ test:
 clean:
 	find . -type d -name __pycache__ -prune -exec rm -rf {} +
 	rm -rf .pytest_cache
+
+# Great Expectations: standard column contract (schema/null/range/set/unique)
+# + Data Docs HTML. Domain checks (PII, identity) stay in `make checkpoint`.
+ge:
+	.ge-venv/bin/python scripts/run_ge.py

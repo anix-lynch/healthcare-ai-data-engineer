@@ -35,3 +35,4 @@ feature-store/**/__pycache__/
 
 # internal scaffolding — not for public showroom
 _private/
+.ge-venv/
