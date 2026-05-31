@@ -1,7 +1,7 @@
 {
   "checkpoint_version": 1,
   "scanned_at": "2026-05-29T15:37:31",
-  "input_file": "/Users/anixlynch/dev/healthcare-ai-data-engineer/data/raw/healthcare_dataset_enriched.csv",
+  "input_file": "healthcare-ai-data-engineer/data/raw/healthcare_dataset_enriched.csv",
   "n_rows": 497,
   "checks": {
     "schema_drift": {
