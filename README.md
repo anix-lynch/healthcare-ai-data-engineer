@@ -39,6 +39,27 @@ marts → FastAPI on Cloud Run → consumed by **humans** (A1/A2 cockpit) and
 
 ---
 
+## Repo Map
+
+What lives where, at a glance:
+
+```
+healthcare-ai-data-engineer/
+├── api/             ✅ the live service — FastAPI serving /api/ask + the A1–A6 cockpit
+├── dbt-project/     ✅ 14 medallion SQL models (raw → clean → gold) + data tests
+├── feature-store/   ✅ L1.25 Feast features the signal layer consumes (unit-tested)
+├── scripts/         ✅ one-shot pipeline jobs — enrich · load BigQuery · patient identity
+├── tests/           ✅ pytest — proves the API and feature definitions actually work
+├── data/            ✅ synthetic raw + derived artifacts the pipeline reads
+├── docs/            📖 architecture, data contracts, lineage (the "why")
+├── portfolio/       🖼️  A1–A6 cockpit screenshots + diagrams (proof the work is real)
+├── web/ · deploy/   ✅ static cockpit + Dockerfile / Cloud Run config
+├── demo.gif         🖼️  the app running end to end
+└── Makefile         ✅ one-line entry points: test · feast-apply · serve · checkpoint
+```
+
+---
+
 ## 60-Second Read
 
 - 55,500 synthetic encounters modeled through dbt bronze/silver/gold layers.
