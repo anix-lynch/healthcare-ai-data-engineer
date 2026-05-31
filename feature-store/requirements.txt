@@ -1,0 +1,5 @@
+# L1.25 feature layer — kept separate from the API deploy image (the runtime
+# API never imports feast). Install only when working the feature store:
+#   python -m venv .feast-venv && .feast-venv/bin/pip install -r feature-store/requirements.txt
+feast[gcp]==0.63.0
+pytest>=7.4

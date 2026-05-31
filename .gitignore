@@ -32,3 +32,6 @@ feature-store/.feast-venv/
 .feast-venv/
 feature-store/*.db
 feature-store/**/__pycache__/
+
+# internal scaffolding — not for public showroom
+_private/

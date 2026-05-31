@@ -1,4 +1,4 @@
-.PHONY: install serve checkpoint enrich-sample patient-id portfolio-snapshot eval-checkpoint clean help
+.PHONY: install serve checkpoint enrich-sample patient-id portfolio-snapshot feast-apply eval-checkpoint clean help
 
 help:
 	@echo "Targets:"
@@ -7,6 +7,7 @@ help:
 	@echo "  checkpoint         run L1 data quality gate (7 checks)"
 	@echo "  patient-id         (re)build encounter→patient identity map"
 	@echo "  portfolio-snapshot generate A1 control-room payload"
+	@echo "  feast-apply        register L1.25 feature definitions (needs BigQuery)"
 	@echo "  enrich-sample      enrich 5 rows via Vertex (needs GCP_PROJECT_ID env)"
 	@echo "  test               pytest tests/"
 	@echo "  clean              remove __pycache__ + .pytest_cache"
@@ -30,6 +31,11 @@ portfolio-snapshot:
 # the real run is enrich_parallel.py with --rows 500.
 enrich-sample:
 	python scripts/enrich_clinical_narrative.py --rows 5 --out /tmp/enrich_sample.csv
+
+# Register the L1.25 feature definitions with the BigQuery offline store.
+# Definitions are unit-tested offline by `make test`; this is the live apply.
+feast-apply:
+	cd feature-store && GOOGLE_CLOUD_PROJECT=bchan-genai-lab feast apply
 
 test:
 	pytest tests/ -v

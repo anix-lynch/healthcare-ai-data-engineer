@@ -67,7 +67,7 @@ The repo reads cleanest when you start from artifact, then work backward to proo
 | [data/quality/l1_checkpoint_report.json](data/quality/l1_checkpoint_report.json) | Trust gate passed: schema, nulls, duplicates, temporal sanity, PII leakage, identity resolution, lineage | `scripts/checkpoint.py` | Hiring manager, data platform, auditors |
 | [data/derived/patient_identity_map.json](data/derived/patient_identity_map.json) | Encounters can be rolled up to stable patient identities | `scripts/patient_identity.py` | Modeling, dedupe, entity resolution |
 | [docs/dag.md](docs/dag.md) | Bronze -> silver -> gold lineage is explicit | `dbt-project/models/` | Analytics engineering, data modeling |
-| [openapi_snapshot.json](openapi_snapshot.json) | Public API surface is frozen and documented | `api/app/main.py` + `api/app/schemas.py` | Consumer teams, integration owners |
+| [openapi_snapshot.json](openapi_snapshot.json) | Public API surface is frozen and documented | `api/app/main.py` | Consumer teams, integration owners |
 | [dbt-project/](dbt-project/) | The warehouse model is real, testable, and modular | staging, intermediate, marts, tests | Analytics engineers, warehouse reviewers |
 
 For the recruiter-facing cockpit layer, start here:
