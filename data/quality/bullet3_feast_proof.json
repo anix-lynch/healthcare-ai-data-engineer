@@ -1,0 +1,60 @@
+{
+  "proof": "bullet3_feast_real_openfda",
+  "claim_phrase": "discoverable Feast features",
+  "source": "data/feast/openfda_drug_features.parquet (300 real openFDA reports from BQ fact)",
+  "discovery": {
+    "feature_view": "openfda_drug_features",
+    "features": [
+      "primary_drug",
+      "prior_reports_for_drug",
+      "is_serious",
+      "n_reactions"
+    ],
+    "pit_correct_feature": "prior_reports_for_drug"
+  },
+  "historical_retrieval": {
+    "requested_keys": 5,
+    "returned_rows": 5,
+    "sample": [
+      {
+        "safetyreportid": "26219541",
+        "primary_drug": "DUPIXENT",
+        "prior_reports_for_drug": 25,
+        "is_serious": 0
+      },
+      {
+        "safetyreportid": "26219605",
+        "primary_drug": "DUPIXENT",
+        "prior_reports_for_drug": 26,
+        "is_serious": 0
+      },
+      {
+        "safetyreportid": "26219550",
+        "primary_drug": "DUPIXENT",
+        "prior_reports_for_drug": 27,
+        "is_serious": 0
+      }
+    ]
+  },
+  "online_retrieval": {
+    "served_keys": 3,
+    "sample": [
+      {
+        "safetyreportid": "26219550",
+        "primary_drug": "DUPIXENT",
+        "prior_reports_for_drug": 27
+      },
+      {
+        "safetyreportid": "26219605",
+        "primary_drug": "DUPIXENT",
+        "prior_reports_for_drug": 26
+      },
+      {
+        "safetyreportid": "26219541",
+        "primary_drug": "DUPIXENT",
+        "prior_reports_for_drug": 25
+      }
+    ]
+  },
+  "verdict": "GREEN \u2014 Feast registry discovers openFDA features; historical + online retrieval run"
+}
