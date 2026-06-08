@@ -1,0 +1,86 @@
+{
+  "engine": "great_expectations",
+  "ge_version": "1.18.0",
+  "suite": "openfda_data_quality",
+  "n_rows": 300,
+  "expectations_total": 15,
+  "expectations_passed": 15,
+  "success": true,
+  "results": [
+    {
+      "expectation": "expect_table_columns_to_match_set",
+      "column": "<table>",
+      "success": true
+    },
+    {
+      "expectation": "expect_column_values_to_not_be_null",
+      "column": "safetyreportid",
+      "success": true
+    },
+    {
+      "expectation": "expect_column_values_to_be_unique",
+      "column": "safetyreportid",
+      "success": true
+    },
+    {
+      "expectation": "expect_column_values_to_not_be_null",
+      "column": "row_hash",
+      "success": true
+    },
+    {
+      "expectation": "expect_column_values_to_be_unique",
+      "column": "row_hash",
+      "success": true
+    },
+    {
+      "expectation": "expect_column_values_to_not_be_null",
+      "column": "source_system",
+      "success": true
+    },
+    {
+      "expectation": "expect_column_values_to_be_in_set",
+      "column": "source_system",
+      "success": true
+    },
+    {
+      "expectation": "expect_column_values_to_not_be_null",
+      "column": "receivedate",
+      "success": true
+    },
+    {
+      "expectation": "expect_column_value_lengths_to_equal",
+      "column": "receivedate",
+      "success": true
+    },
+    {
+      "expectation": "expect_column_values_to_not_be_null",
+      "column": "ingest_ts",
+      "success": true
+    },
+    {
+      "expectation": "expect_column_values_to_be_in_set",
+      "column": "serious",
+      "success": true
+    },
+    {
+      "expectation": "expect_column_values_to_be_in_set",
+      "column": "seriousnessdeath",
+      "success": true
+    },
+    {
+      "expectation": "expect_column_values_to_be_in_set",
+      "column": "patient_sex",
+      "success": true
+    },
+    {
+      "expectation": "expect_column_values_to_be_between",
+      "column": "n_drugs",
+      "success": true
+    },
+    {
+      "expectation": "expect_column_values_to_be_between",
+      "column": "n_reactions",
+      "success": true
+    }
+  ]
+}

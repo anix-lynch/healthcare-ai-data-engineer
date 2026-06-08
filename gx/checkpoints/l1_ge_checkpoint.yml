@@ -1,0 +1,30 @@
+name: l1_ge_checkpoint
+config_version: 1.0
+template_name:
+module_name: great_expectations.checkpoint
+class_name: Checkpoint
+run_name_template:
+expectation_suite_name:
+batch_request: {}
+action_list:
+  - name: store_validation_result
+    action:
+      class_name: StoreValidationResultAction
+  - name: store_evaluation_params
+    action:
+      class_name: StoreEvaluationParametersAction
+  - name: update_data_docs
+    action:
+      class_name: UpdateDataDocsAction
+evaluation_parameters: {}
+runtime_configuration: {}
+validations:
+  - batch_request:
+      datasource_name: healthcare_l1
+      data_asset_name: enriched_encounters
+      options: {}
+      batch_slice:
+    expectation_suite_name: l1_data_quality
+profilers: []
+ge_cloud_id:
+expectation_suite_ge_cloud_id:
