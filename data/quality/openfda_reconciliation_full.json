@@ -1,0 +1,21 @@
+{
+  "generated_at": "2026-06-08T17:46:36Z",
+  "accounting": {
+    "fetched_from_api": 300,
+    "rejected_null": 0,
+    "rejected_duplicate": 0,
+    "accepted": 300,
+    "quarantined": 0,
+    "good_clean": 300,
+    "warehouse_window": 300,
+    "missing_after_backfill": 0,
+    "replayed_exactly_once": 0
+  },
+  "legs": {
+    "ingestion_balance": true,
+    "quarantine_balance": true,
+    "warehouse_window_match": true,
+    "no_missing_after_backfill": true
+  },
+  "reconciles": true
+}

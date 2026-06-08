@@ -1,0 +1,64 @@
+{
+  "generated_at": "2026-06-08T17:47:21Z",
+  "git_commit": "d306990829a98956050703d9cd629a7ec22d711e",
+  "bullet": "Engineered batch and real-time ingestion pipelines for openFDA healthcare data, using idempotent BigQuery merges, record-level quarantine, Great Expectations and dbt quality gates, and source-to-warehouse reconciliation to safely process duplicate, malformed, revised, late-arriving, and missing records.",
+  "phrases": [
+    {
+      "phrase": "batch ingestion pipeline",
+      "proof": "openfda_pipeline_run.json",
+      "pass": true
+    },
+    {
+      "phrase": "real-time ingestion pipeline (native Pub/Sub->BigQuery)",
+      "proof": "openfda_streaming_proof.json",
+      "pass": true
+    },
+    {
+      "phrase": "idempotent BigQuery merges",
+      "proof": "openfda_reconciliation.json + streaming converge",
+      "pass": true
+    },
+    {
+      "phrase": "record-level quarantine",
+      "proof": "openfda_quarantine_tests.json",
+      "pass": true
+    },
+    {
+      "phrase": "Great Expectations + dbt quality gates",
+      "proof": "openfda_ge_validation.json + run_results.json + failclose",
+      "pass": true
+    },
+    {
+      "phrase": "source-to-warehouse reconciliation",
+      "proof": "openfda_reconciliation_full.json",
+      "pass": true
+    },
+    {
+      "phrase": "safely process DUPLICATE",
+      "proof": "openfda_reconciliation.json (net_new=0)",
+      "pass": true
+    },
+    {
+      "phrase": "safely process MALFORMED",
+      "proof": "openfda_quarantine_tests.json + streaming DLQ",
+      "pass": true
+    },
+    {
+      "phrase": "safely process REVISED",
+      "proof": "openfda_late_arriving.json (revised_updated_not_duplicated)",
+      "pass": true
+    },
+    {
+      "phrase": "safely process LATE-ARRIVING",
+      "proof": "openfda_late_arriving.json (late_new_inserted)",
+      "pass": true
+    },
+    {
+      "phrase": "safely process MISSING",
+      "proof": "openfda_backfill_test.json",
+      "pass": true
+    }
+  ],
+  "unsupported": [],
+  "verdict": "CLAIM APPROVED \u2014 every phrase backed by a generated proof file"
+}

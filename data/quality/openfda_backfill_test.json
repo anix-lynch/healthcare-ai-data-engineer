@@ -1,0 +1,18 @@
+{
+  "ran_at": "2026-06-08T17:46:36Z",
+  "warehouse_before": 300,
+  "after_loss": 295,
+  "lost": 5,
+  "missing_detected": 5,
+  "after_backfill": 300,
+  "still_missing": 0,
+  "dup_pks": 0,
+  "checks": {
+    "loss_simulated": true,
+    "missing_detected": true,
+    "backfill_restored": true,
+    "no_missing_after": true,
+    "no_duplicate_pks": true
+  },
+  "passed": true
+}
