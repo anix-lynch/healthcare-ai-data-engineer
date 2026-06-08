@@ -1,0 +1,14 @@
+{
+  "test": "fail_closed_end_to_end",
+  "exit_codes": {
+    "A_corrupt_gate": 1,
+    "B_clean_gate": 0,
+    "B_clean_ge": 0
+  },
+  "checks": {
+    "A_corrupt_fixture_fails_closed": true,
+    "B_clean_gate_passes": true,
+    "B_clean_ge_passes": true
+  },
+  "passed": true
+}

@@ -13,7 +13,7 @@ Usage:
     python ingestion/bq_load.py            # uses GCP_PROJECT_ID / BQ_DATASET env
 """
 from __future__ import annotations
-import os, sys
+import json, os, sys
 from pathlib import Path
 
 from google.cloud import bigquery
@@ -55,38 +55,68 @@ def main():
     client = bigquery.Client(project=PROJECT)
     target = f"{PROJECT}.{DATASET}.{TARGET}"
     stage = f"{PROJECT}.{DATASET}._stg_{TARGET}"
+    JOB = bigquery.QueryJobConfig(maximum_bytes_billed=100 * 1024 * 1024)  # 100MB cap (cost guard; ~$0)
+
+    def count(tbl):
+        try:
+            return list(client.query(f"SELECT COUNT(*) c FROM `{tbl}`", job_config=JOB).result())[0].c
+        except Exception:
+            return 0
+
+    before = count(target)
 
     # 1. stage the canonical batch (truncate-load — deterministic)
-    job = client.load_table_from_json(
+    client.load_table_from_json(
         rows, stage,
-        job_config=bigquery.LoadJobConfig(
-            schema=SCHEMA, write_disposition="WRITE_TRUNCATE"),
-    )
-    job.result()
+        job_config=bigquery.LoadJobConfig(schema=SCHEMA, write_disposition="WRITE_TRUNCATE"),
+    ).result()
     print(f"[stage] loaded {len(rows)} canonical rows -> {stage}")
 
     # 2. ensure target exists, then MERGE (idempotent upsert on safetyreportid)
-    client.query(
-        f"CREATE TABLE IF NOT EXISTS `{target}` "
-        f"AS SELECT * FROM `{stage}` WHERE 1=0"
-    ).result()
+    client.query(f"CREATE TABLE IF NOT EXISTS `{target}` AS SELECT * FROM `{stage}` WHERE 1=0",
+                 job_config=JOB).result()
     set_clause = ", ".join(f"T.{c}=S.{c}" for c in COLS if c != "safetyreportid")
-    insert_cols = ", ".join(COLS)
-    insert_vals = ", ".join(f"S.{c}" for c in COLS)
-    merge = client.query(f"""
-        MERGE `{target}` T
-        USING `{stage}` S
-        ON T.safetyreportid = S.safetyreportid
+    insert_cols, insert_vals = ", ".join(COLS), ", ".join(f"S.{c}" for c in COLS)
+    client.query(f"""
+        MERGE `{target}` T USING `{stage}` S ON T.safetyreportid = S.safetyreportid
         WHEN MATCHED AND S.ingest_ts >= T.ingest_ts THEN UPDATE SET {set_clause}
         WHEN NOT MATCHED THEN INSERT ({insert_cols}) VALUES ({insert_vals})
-    """)
-    merge.result()
-    n = list(client.query(f"SELECT COUNT(*) c FROM `{target}`").result())[0].c
-    print(f"[merge] target `{target}` now has {n} rows "
-          f"(canonical {idem['canonical_rows']} from {idem['raw_rows']} raw, "
-          f"{idem['cross_pull_collapsed']} collapsed)")
-    client.query(f"DROP TABLE `{stage}`").result()
-    return 0
+    """, job_config=JOB).result()
+
+    after = count(target)
+    inserted = after - before
+    matched = len(rows) - inserted          # already existed → updated or unchanged
+    client.query(f"DROP TABLE `{stage}`", job_config=JOB).result()
+
+    # 3. reconciliation report (leg a: API→accepted from manifest · leg b: accepted→warehouse)
+    man = json.loads((REPO / "data" / "freshness" / "ingest_manifest.json").read_text())
+    rec_a = man.get("reconciliation", {})
+    report = {
+        "generated_at": man.get("last_successful_ingest"),
+        "source_url": man.get("source_url"), "window": man.get("window"),
+        "leg_a_source_to_accepted": {
+            **rec_a,
+            "note": "fetched = accepted + rejected_null_key + rejected_duplicate_in_pull",
+        },
+        "leg_b_accepted_to_warehouse": {
+            "canonical_rows_across_pulls": idem["canonical_rows"],
+            "raw_rows_all_pulls": idem["raw_rows"],
+            "cross_pull_collapsed": idem["cross_pull_collapsed"],
+            "warehouse_before": before, "warehouse_after": after,
+            "merge_inserted": inserted, "merge_matched_updated_or_unchanged": matched,
+            "net_new_rows": inserted,
+        },
+        "reconciles": (
+            rec_a.get("balances", False)
+            and idem["canonical_rows"] == after
+            and matched + inserted == len(rows)
+        ),
+    }
+    out = REPO / "data" / "quality" / "openfda_reconciliation.json"
+    out.write_text(json.dumps(report, indent=2))
+    print(f"[merge] {target}: before={before} after={after} inserted={inserted} "
+          f"matched={matched} | reconciles={report['reconciles']} -> {out.relative_to(REPO)}")
+    return 0 if report["reconciles"] else 1
 
 
 if __name__ == "__main__":

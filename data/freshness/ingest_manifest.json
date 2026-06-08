@@ -1,13 +1,21 @@
 {
   "source_system": "openfda_faers",
-  "last_successful_ingest": "2026-06-08T02:26:41Z",
+  "source_url": "https://api.fda.gov/drug/event.json",
+  "last_successful_ingest": "2026-06-08T16:27:45Z",
   "window": {
     "since": "20260101",
     "until": "20260608"
   },
+  "reconciliation": {
+    "fetched_from_api": 300,
+    "rejected_null_key": 0,
+    "rejected_duplicate_in_pull": 0,
+    "accepted": 300,
+    "balances": true
+  },
   "records_landed": 300,
   "total_matching_source": 310100,
   "null_key_rate": 0.0,
-  "ingest_latency_seconds": 4.2,
-  "output": "data/raw/openfda/ingest_date=2026-06-08/openfda_20260608T022641Z.jsonl"
+  "ingest_latency_seconds": 2.1,
+  "output": "data/raw/openfda/ingest_date=2026-06-08/openfda_20260608T162745Z.jsonl"
 }

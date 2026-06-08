@@ -1,18 +1,29 @@
 {
-  "scanned_at": "2026-06-08T08:58:55",
+  "scanned_at": "2026-06-08T09:39:03",
   "n_rows": 300,
   "idempotency": {
-    "files_loaded": 1,
-    "raw_rows": 300,
+    "files_loaded": 2,
+    "raw_rows": 600,
     "canonical_rows": 300,
-    "cross_pull_collapsed": 0,
+    "cross_pull_collapsed": 300,
     "within_pull_dupes": 0,
-    "duplicate_rate": 0.0,
+    "duplicate_rate": 0.5,
     "note": "canonical = latest row per safetyreportid (MERGE); re-runs collapse, no false dup-fail"
   },
   "checks": {
     "null_key": {
       "fail": 0,
+      "critical": false
+    },
+    "null_rate": {
+      "critical_field_nulls": 0,
+      "critical_fields": [
+        "safetyreportid",
+        "row_hash",
+        "source_system",
+        "receivedate",
+        "ingest_ts"
+      ],
       "critical": false
     },
     "duplicate_key": {
@@ -33,10 +44,72 @@
       "critical": false
     }
   },
+  "null_profile": {
+    "safetyreportid": {
+      "nulls": 0,
+      "null_rate": 0.0,
+      "critical": true
+    },
+    "row_hash": {
+      "nulls": 0,
+      "null_rate": 0.0,
+      "critical": true
+    },
+    "source_system": {
+      "nulls": 0,
+      "null_rate": 0.0,
+      "critical": true
+    },
+    "receivedate": {
+      "nulls": 0,
+      "null_rate": 0.0,
+      "critical": true
+    },
+    "ingest_ts": {
+      "nulls": 0,
+      "null_rate": 0.0,
+      "critical": true
+    },
+    "serious": {
+      "nulls": 25,
+      "null_rate": 0.0833,
+      "critical": false
+    },
+    "seriousnessdeath": {
+      "nulls": 25,
+      "null_rate": 0.0833,
+      "critical": false
+    },
+    "occurcountry": {
+      "nulls": 12,
+      "null_rate": 0.04,
+      "critical": false
+    },
+    "patient_sex": {
+      "nulls": 45,
+      "null_rate": 0.15,
+      "critical": false
+    },
+    "patient_age": {
+      "nulls": 84,
+      "null_rate": 0.28,
+      "critical": false
+    },
+    "primary_drug": {
+      "nulls": 0,
+      "null_rate": 0.0,
+      "critical": false
+    },
+    "reactions": {
+      "nulls": 0,
+      "null_rate": 0.0,
+      "critical": false
+    }
+  },
   "reconciliation": {
     "records_landed": 300,
-    "source_total_in_window": 310100,
-    "note": "landed = documented sampled slice of source window (not silent truncation)"
+    "source_window_population": 310100,
+    "note": "real mass-balance reconciliation lives in data/quality/openfda_reconciliation.json (fetched=accepted+rejected; accepted=warehouse). source_window_population is the FDA window size, a sampling denominator \u2014 NOT a reconciliation target."
   },
   "critical_failures": [],
   "passed": true,

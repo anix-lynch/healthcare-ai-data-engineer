@@ -6,9 +6,43 @@ models:
       - { name: received_date, tests: [not_null] }
       - name: serious_flag
         tests: [{ accepted_values: { values: ['1', '2'] } }]
+
   - name: fact_adverse_events
     description: Star-schema fact, grain = one adverse-event report.
     columns:
       - { name: safetyreportid, tests: [not_null, unique] }
       - { name: received_date, tests: [not_null] }
       - { name: is_serious, tests: [not_null] }
+      - name: primary_drug
+        tests:
+          - relationships:
+              to: ref('dim_drug')
+              field: drug_name
+              config: { where: "primary_drug is not null" }
+
+  - name: dim_reaction
+    description: Reaction dimension (normalized from the real multi-valued reactions list).
+    columns:
+      - { name: reaction_id, tests: [not_null, unique] }
+      - { name: reaction_name, tests: [not_null] }
+
+  - name: dim_drug
+    description: Primary-drug dimension.
+    columns:
+      - { name: drug_id, tests: [not_null, unique] }
+      - { name: drug_name, tests: [not_null] }
+
+  - name: bridge_report_reaction
+    description: >-
+      Many-to-many report-to-reaction bridge. The two relationships tests ARE the
+      referential-integrity proof: every bridge row must resolve to a parent in
+      both fact_adverse_events (report) and dim_reaction (reaction).
+    columns:
+      - name: safetyreportid
+        tests:
+          - not_null
+          - relationships: { to: ref('fact_adverse_events'), field: safetyreportid }
+      - name: reaction_id
+        tests:
+          - not_null
+          - relationships: { to: ref('dim_reaction'), field: reaction_id }

@@ -86,8 +86,28 @@ def main():
             bad_dates += 1
     bad_serious = sum(1 for r in rows if r.get("serious") not in ("1", "2", 1, 2, None))
 
+    # Per-field null profile. CRITICAL fields must be complete (block on any null);
+    # OPTIONAL FDA fields (age/country/sex often absent in real FAERS) are profiled,
+    # never required — nulls there are expected, not a quality failure.
+    CRITICAL = ["safetyreportid", "row_hash", "source_system", "receivedate", "ingest_ts"]
+    OPTIONAL = ["serious", "seriousnessdeath", "occurcountry", "patient_sex",
+                "patient_age", "primary_drug", "reactions"]
+    n = len(rows)
+    null_profile = {
+        f: {"nulls": sum(1 for r in rows if r.get(f) in (None, "")),
+            "null_rate": round(sum(1 for r in rows if r.get(f) in (None, "")) / max(n, 1), 4),
+            "critical": f in CRITICAL}
+        for f in CRITICAL + OPTIONAL
+    }
+    critical_field_nulls = sum(v["nulls"] for f, v in null_profile.items() if v["critical"])
+
     checks = {
         "null_key": {"fail": null_keys, "critical": null_keys > 0},
+        "null_rate": {  # critical fields complete; optional FDA fields profiled not required
+            "critical_field_nulls": critical_field_nulls,
+            "critical_fields": CRITICAL,
+            "critical": critical_field_nulls > 0,
+        },
         # within-pull dups = genuine source defect (pull dedup broke) → critical.
         # cross-pull re-lands are collapsed by canonical upsert, NOT a failure.
         "duplicate_key": {
@@ -110,10 +130,13 @@ def main():
             "note": "canonical = latest row per safetyreportid (MERGE); re-runs collapse, no false dup-fail",
         },
         "checks": checks,
+        "null_profile": null_profile,
         "reconciliation": {
             "records_landed": len(rows),
-            "source_total_in_window": manifest.get("total_matching_source"),
-            "note": "landed = documented sampled slice of source window (not silent truncation)",
+            "source_window_population": manifest.get("total_matching_source"),
+            "note": "real mass-balance reconciliation lives in data/quality/openfda_reconciliation.json "
+                    "(fetched=accepted+rejected; accepted=warehouse). source_window_population is the FDA "
+                    "window size, a sampling denominator — NOT a reconciliation target.",
         },
         "critical_failures": critical,
         "passed": not critical,

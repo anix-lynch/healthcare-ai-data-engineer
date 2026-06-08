@@ -69,21 +69,29 @@ def main():
     args.out.mkdir(parents=True, exist_ok=True)
     (REPO / "data" / "freshness").mkdir(parents=True, exist_ok=True)
 
+    # reconciliation counters (mass balance: fetched = accepted + rejected)
     rows, seen, skip, limit, total = [], set(), 0, min(100, args.max), 0
+    fetched = dedup_dropped = null_rejected = 0
     t0 = time.time()
     while len(rows) < args.max:
         batch, total = _fetch(args.since, args.until, skip, min(limit, args.max - len(rows)))
         if not batch:
             break
         for rec in batch:
+            fetched += 1
             rid = rec.get("safetyreportid")
-            if rid in seen:
+            if not rid:                 # rejected: null key (documented rejection rule)
+                null_rejected += 1
+                continue
+            if rid in seen:             # rejected: duplicate id within this pull window
+                dedup_dropped += 1
                 continue
             seen.add(rid)
             rows.append(_normalize(rec, ingest_ts))
         skip += len(batch)
         if len(batch) < limit or skip >= 25000:
             break
+    accepted = len(rows)
 
     part = args.out / f"ingest_date={ingest_ts[:10]}"
     part.mkdir(parents=True, exist_ok=True)
@@ -92,12 +100,20 @@ def main():
         for r in rows:
             f.write(json.dumps(r) + "\n")
 
-    null_rate = sum(1 for r in rows if not r["safetyreportid"]) / max(len(rows), 1)
+    null_rate = null_rejected / max(fetched, 1)
     manifest = {
         "source_system": SOURCE,
+        "source_url": API,
         "last_successful_ingest": ingest_ts,
         "window": {"since": args.since, "until": args.until},
-        "records_landed": len(rows),
+        "reconciliation": {                       # leg a→b: API fetch → accepted after rules
+            "fetched_from_api": fetched,
+            "rejected_null_key": null_rejected,
+            "rejected_duplicate_in_pull": dedup_dropped,
+            "accepted": accepted,
+            "balances": fetched == accepted + null_rejected + dedup_dropped,
+        },
+        "records_landed": accepted,
         "total_matching_source": total,
         "null_key_rate": round(null_rate, 4),
         "ingest_latency_seconds": round(time.time() - t0, 1),

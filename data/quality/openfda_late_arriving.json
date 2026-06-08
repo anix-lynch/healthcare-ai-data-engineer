@@ -1,0 +1,23 @@
+{
+  "test": "late_arriving_and_revision",
+  "target": "bchan-genai-lab.healthcare_analytics.raw_openfda_events",
+  "counts": {
+    "before": 300,
+    "after_late_insert": 301,
+    "after_revision": 301,
+    "after_stale_replay": 301,
+    "after_cleanup": 300
+  },
+  "serious_value": {
+    "after_insert": "1",
+    "after_revise": "2",
+    "after_stale": "2"
+  },
+  "checks": {
+    "late_new_inserted": true,
+    "revised_updated_not_duplicated": true,
+    "stale_replay_ignored": true,
+    "cleanup_restored": true
+  },
+  "passed": true
+}
