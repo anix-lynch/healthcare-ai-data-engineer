@@ -5,13 +5,16 @@ Critical checks (exit 1 on any failure): null key, duplicate key, schema drift,
 temporal sanity, value domain. Plus reconciliation vs the source total.
 """
 from __future__ import annotations
-import argparse, json, sys
+import argparse, json, os, sys
 from collections import Counter
 from datetime import datetime
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
 REQUIRED = {"safetyreportid", "receivedate", "serious", "source_system", "ingest_ts", "row_hash"}
+# All stages read the dataset from here. Quarantine sets OPENFDA_DATA_DIR to the
+# CLEAN partition so downstream sees only good records; unset = raw (back-compat).
+DATA_DIR = Path(os.environ.get("OPENFDA_DATA_DIR", str(REPO / "data" / "raw" / "openfda")))
 
 
 def _load(part_dir):
@@ -62,7 +65,7 @@ def _load(part_dir):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
-    ap.add_argument("--data", type=Path, default=REPO / "data" / "raw" / "openfda")
+    ap.add_argument("--data", type=Path, default=DATA_DIR)
     ap.add_argument("--strict", action="store_true")
     args = ap.parse_args()
 

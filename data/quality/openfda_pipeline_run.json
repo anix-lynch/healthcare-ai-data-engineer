@@ -1,30 +1,35 @@
 {
-  "ran_at": "2026-06-08T17:28:22Z",
+  "ran_at": "2026-06-08T17:36:52Z",
   "stages": [
     {
       "stage": "pull",
       "exit": 0,
-      "seconds": 3.5
+      "seconds": 3.8
     },
     {
-      "stage": "gate",
+      "stage": "quarantine",
       "exit": 0,
       "seconds": 0.1
     },
     {
+      "stage": "gate",
+      "exit": 0,
+      "seconds": 0.0
+    },
+    {
       "stage": "bq_load",
       "exit": 0,
-      "seconds": 10.4
+      "seconds": 11.5
     },
     {
       "stage": "ge",
       "exit": 0,
-      "seconds": 2.0
+      "seconds": 1.9
     },
     {
       "stage": "dbt_build",
       "exit": 0,
-      "seconds": 21.4
+      "seconds": 32.6
     },
     {
       "stage": "freshness",
@@ -32,8 +37,8 @@
       "seconds": 0.1
     }
   ],
-  "stages_total": 6,
-  "stages_passed": 6,
+  "stages_total": 7,
+  "stages_passed": 7,
   "failed_stage": null,
   "stages_ok": true,
   "verification": {

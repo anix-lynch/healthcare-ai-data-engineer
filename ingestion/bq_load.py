@@ -21,7 +21,7 @@ from google.cloud import bigquery
 
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "ingestion"))
-from openfda_gate import _load  # reuse canonical dedup — one source of truth
+from openfda_gate import _load, DATA_DIR  # reuse canonical dedup + clean/raw switch
 
 PROJECT = os.environ.get("GCP_PROJECT_ID", "bchan-genai-lab")
 DATASET = os.environ.get("BQ_DATASET", "healthcare_analytics")
@@ -47,7 +47,7 @@ COLS = [f.name for f in SCHEMA]
 
 
 def main():
-    rows, idem = _load(REPO / "data" / "raw" / "openfda")
+    rows, idem = _load(DATA_DIR)
     if not rows:
         print("ERROR: no landed openFDA data to load", file=sys.stderr)
         return 1

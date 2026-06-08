@@ -28,21 +28,27 @@ PY = sys.executable
 GE_PY = os.environ.get("GE_PY", str(REPO / ".ge-venv" / "bin" / "python"))
 DBT = os.environ.get("DBT", str(REPO / ".venv" / "bin" / "dbt"))
 
+# Downstream stages read the CLEAN partition (quarantine isolates malformed records
+# first, so good records still flow). quarantine itself reads raw (default).
+CLEAN = str(REPO / "data" / "clean")
+DOWN = {"OPENFDA_DATA_DIR": CLEAN}
 STAGES = [
-    ("pull",      [PY, "ingestion/openfda_pull.py", "--since", "20260101", "--max", "300"], REPO),
-    ("gate",      [PY, "ingestion/openfda_gate.py", "--strict"], REPO),
-    ("bq_load",   [PY, "ingestion/bq_load.py"], REPO),
-    ("ge",        [GE_PY, "ingestion/ge_validate.py", "--strict"], REPO),
-    ("dbt_build", [DBT, "build", "--profiles-dir", "."], REPO / "dbt-project"),
-    ("freshness", [PY, "ingestion/freshness_check.py", "--strict"], REPO),
+    ("pull",       [PY, "ingestion/openfda_pull.py", "--since", "20260101", "--max", "300"], REPO, {}),
+    ("quarantine", [PY, "ingestion/quarantine.py"], REPO, {}),
+    ("gate",       [PY, "ingestion/openfda_gate.py", "--strict"], REPO, DOWN),
+    ("bq_load",    [PY, "ingestion/bq_load.py"], REPO, DOWN),
+    ("ge",         [GE_PY, "ingestion/ge_validate.py", "--strict"], REPO, DOWN),
+    ("dbt_build",  [DBT, "build", "--profiles-dir", "."], REPO / "dbt-project", {}),
+    ("freshness",  [PY, "ingestion/freshness_check.py", "--strict"], REPO, DOWN),
 ]
 
 
 def main():
     results, failed = [], None
-    for name, cmd, cwd in STAGES:
+    for name, cmd, cwd, env_extra in STAGES:
         t0 = time.time()
-        rc = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True).returncode
+        rc = subprocess.run(cmd, cwd=cwd, env={**os.environ, **env_extra},
+                            capture_output=True, text=True).returncode
         results.append({"stage": name, "exit": rc, "seconds": round(time.time() - t0, 1)})
         print(f"  {'✅' if rc == 0 else '❌'} {name} (exit {rc})")
         if rc != 0:                       # fail-closed: stop at first critical failure

@@ -1,0 +1,12 @@
+{
+  "scanned_at": "2026-06-08T10:36:04",
+  "total": 300,
+  "good": 300,
+  "quarantined": 0,
+  "quarantine_rate": 0.0,
+  "threshold": 0.1,
+  "balances": true,
+  "reasons": {},
+  "widespread_escalation": false,
+  "decision": "isolate_and_continue"
+}

@@ -21,7 +21,7 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "ingestion"))
-from openfda_gate import _load
+from openfda_gate import _load, DATA_DIR
 
 MANIFEST = REPO / "data" / "freshness" / "ingest_manifest.json"
 RECON = REPO / "data" / "quality" / "openfda_reconciliation.json"
@@ -48,7 +48,7 @@ def main():
     status = "fresh" if ingestion_latency_h < warn else ("warn" if ingestion_latency_h < err else "stale")
 
     # clock 1 — source freshness (age of NEWEST FDA record held; no more "fresh 0h" lie)
-    rows, _ = _load(REPO / "data" / "raw" / "openfda")
+    rows, _ = _load(DATA_DIR)
     recv = [str(r.get("receivedate")) for r in rows if r.get("receivedate")]
     source = {}
     if recv:

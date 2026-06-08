@@ -1,0 +1,11 @@
+{
+  "ran_at": "2026-06-08T17:35:46Z",
+  "quarantined_examined": 1,
+  "still_malformed": 0,
+  "newly_replayed": 0,
+  "already_replayed_skipped": 1,
+  "warehouse_before": 301,
+  "warehouse_after": 301,
+  "net_new_rows": 0,
+  "exactly_once": true
+}

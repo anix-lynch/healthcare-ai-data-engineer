@@ -26,7 +26,7 @@ from great_expectations import expectations as gxe
 
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "ingestion"))
-from openfda_gate import _load  # same canonical dedup as the gate — one source of truth
+from openfda_gate import _load, DATA_DIR  # same canonical dedup + clean/raw switch
 
 COLUMNS = [
     "safetyreportid", "receivedate", "serious", "seriousnessdeath", "occurcountry",
@@ -65,7 +65,7 @@ def main():
     ap.add_argument("--strict", action="store_true")
     args = ap.parse_args()
 
-    rows, idem = _load(REPO / "data" / "raw" / "openfda")
+    rows, idem = _load(DATA_DIR)
     df = pd.DataFrame([{c: r.get(c) for c in COLUMNS} for r in rows])
 
     ctx = gx.get_context(mode="ephemeral")
