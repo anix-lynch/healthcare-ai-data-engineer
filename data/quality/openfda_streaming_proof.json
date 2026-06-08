@@ -1,0 +1,23 @@
+{
+  "ran_at": "2026-06-08T17:41:12Z",
+  "steps": {
+    "subscription_created": true,
+    "published": 5,
+    "landed_in_bq_stream": 5
+  },
+  "checks": {
+    "p3_native_pubsub_to_bq": true,
+    "p4_converged_no_dup_pk": true,
+    "p5_malformed_to_dlq_valid_unblocked": true
+  },
+  "detail": {
+    "published": 5,
+    "landed": 5,
+    "valid_processed": 4,
+    "dlq_count": 1,
+    "dup_pks_in_main": 0,
+    "stream_ids_in_main": 3
+  },
+  "passed": true,
+  "cleanup": "topic/subscription/stream+dlq tables/stream rows deleted"
+}
