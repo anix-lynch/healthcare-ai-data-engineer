@@ -1,0 +1,21 @@
+version: 2
+sources:
+  - name: openfda
+    description: Live FDA adverse-event reports (FAERS) landed by ingestion/openfda_pull.py.
+    schema: "{{ env_var('BQ_DATASET', 'healthcare_analytics') }}"
+    loaded_at_field: ingest_ts
+    freshness:
+      warn_after: { count: 24, period: hour }
+      error_after: { count: 48, period: hour }
+    tables:
+      - name: raw_openfda_events
+        identifier: raw_openfda_events
+        columns:
+          - { name: safetyreportid, tests: [not_null, unique] }
+          - { name: receivedate }
+          - { name: serious }
+          - { name: primary_drug }
+          - { name: reactions }
+          - { name: source_system }
+          - { name: ingest_ts }
+          - { name: row_hash, tests: [unique] }

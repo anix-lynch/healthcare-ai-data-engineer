@@ -1,0 +1,17 @@
+.git
+.gitignore
+.venv
+__pycache__
+**/__pycache__
+*.pyc
+.DS_Store
+.pytest_cache
+demo/
+notebooks/
+outputs/
+Makefile
+docker-compose.yml
+deploy/cloudrun.sh
+# Drop bulky derived data — keep only files the API actually serves.
+# enriched_use_397.jsonl IS served (BM25 retrieval over CC+HPI+notes).
+data/raw/enriched_holdout_100.jsonl

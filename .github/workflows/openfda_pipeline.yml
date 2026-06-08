@@ -1,0 +1,37 @@
+name: openfda-pipeline
+# Orchestration (Reliability branch): scheduled ingest with retry + freshness gate.
+on:
+  schedule:
+    - cron: "0 6 * * *"
+  workflow_dispatch: {}
+  push:
+    paths: ["ingestion/**", ".github/workflows/openfda_pipeline.yml"]
+jobs:
+  ingest-and-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - name: Pull openFDA (retry up to 3x = retry recovery)
+        run: |
+          n=0
+          until python ingestion/openfda_pull.py --since 20260101 --max 500; do
+            n=$((n+1)); [ $n -ge 3 ] && echo "::error::ingest failed after 3 retries" && exit 1
+            echo "retry $n"; sleep $((n*10))
+          done
+      - name: Quality gate (fail-closed)
+        run: python ingestion/openfda_gate.py --strict
+      - name: Freshness gate (stale alert)
+        run: python ingestion/freshness_check.py --strict
+      - name: Point-in-time feature leak guard
+        run: python ingestion/openfda_features.py
+      - name: Upload run artifacts (uptime / success evidence)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: openfda-run-${{ github.run_number }}
+          path: |
+            data/freshness/ingest_manifest.json
+            data/freshness/freshness_report.json
+            data/quality/openfda_gate_report.json

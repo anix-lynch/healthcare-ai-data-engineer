@@ -1,0 +1,7 @@
+{
+  "source_system": "openfda_faers",
+  "warn_after_h": 24,
+  "error_after_h": 48,
+  "refresh_cadence": "daily",
+  "note": "FAERS publishes ~quarterly; daily pull demonstrates the freshness gate machinery"
+}

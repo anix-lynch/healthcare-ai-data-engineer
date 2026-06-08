@@ -1,0 +1,1202 @@
+[
+  {
+    "safetyreportid": "10067080",
+    "primary_drug": "LUCENTIS",
+    "receivedate": "20260119",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219463",
+    "primary_drug": "XOFLUZA",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219643",
+    "primary_drug": "XOFLUZA",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219464",
+    "primary_drug": "SODIUM ZIRCONIUM CYCLOSILICATE",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219465",
+    "primary_drug": "ACTEMRA ACTPEN",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219466",
+    "primary_drug": "LEUPROLIDE",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219467",
+    "primary_drug": "SKYRIZI",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219508",
+    "primary_drug": "SKYRIZI",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219516",
+    "primary_drug": "SKYRIZI",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219563",
+    "primary_drug": "SKYRIZI",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219566",
+    "primary_drug": "SKYRIZI",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219568",
+    "primary_drug": "SKYRIZI",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219576",
+    "primary_drug": "SKYRIZI",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219603",
+    "primary_drug": "SKYRIZI",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219674",
+    "primary_drug": "SKYRIZI",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219677",
+    "primary_drug": "SKYRIZI",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219468",
+    "primary_drug": "PREDNISONE",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219469",
+    "primary_drug": "HERCEPTIN",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219754",
+    "primary_drug": "HERCEPTIN",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219470",
+    "primary_drug": "LITHIUM CARBONATE",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219471",
+    "primary_drug": "DUPIXENT",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219473",
+    "primary_drug": "DUPIXENT",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219474",
+    "primary_drug": "DUPIXENT",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219475",
+    "primary_drug": "DUPIXENT",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219478",
+    "primary_drug": "DUPIXENT",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219491",
+    "primary_drug": "DUPIXENT",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219492",
+    "primary_drug": "DUPIXENT",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219493",
+    "primary_drug": "DUPIXENT",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219502",
+    "primary_drug": "DUPIXENT",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219522",
+    "primary_drug": "DUPIXENT",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219537",
+    "primary_drug": "DUPIXENT",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219540",
+    "primary_drug": "DUPIXENT",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219541",
+    "primary_drug": "DUPIXENT",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219547",
+    "primary_drug": "DUPIXENT",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219550",
+    "primary_drug": "DUPIXENT",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219551",
+    "primary_drug": "DUPIXENT",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219582",
+    "primary_drug": "DUPIXENT",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219583",
+    "primary_drug": "DUPIXENT",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219586",
+    "primary_drug": "DUPIXENT",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219592",
+    "primary_drug": "DUPIXENT",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219604",
+    "primary_drug": "DUPIXENT",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219605",
+    "primary_drug": "DUPIXENT",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219606",
+    "primary_drug": "DUPIXENT",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219607",
+    "primary_drug": "DUPIXENT",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219611",
+    "primary_drug": "DUPIXENT",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219616",
+    "primary_drug": "DUPIXENT",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219658",
+    "primary_drug": "DUPIXENT",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219659",
+    "primary_drug": "DUPIXENT",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219661",
+    "primary_drug": "DUPIXENT",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219662",
+    "primary_drug": "DUPIXENT",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219663",
+    "primary_drug": "DUPIXENT",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219664",
+    "primary_drug": "DUPIXENT",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219665",
+    "primary_drug": "DUPIXENT",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219666",
+    "primary_drug": "DUPIXENT",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219705",
+    "primary_drug": "DUPIXENT",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219707",
+    "primary_drug": "DUPIXENT",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219738",
+    "primary_drug": "DUPIXENT",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219741",
+    "primary_drug": "DUPIXENT",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219742",
+    "primary_drug": "DUPIXENT",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219472",
+    "primary_drug": "DAPAGLIFLOZIN",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219575",
+    "primary_drug": "DAPAGLIFLOZIN",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219629",
+    "primary_drug": "DAPAGLIFLOZIN",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219755",
+    "primary_drug": "DAPAGLIFLOZIN",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219476",
+    "primary_drug": "OCREVUS",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219717",
+    "primary_drug": "OCREVUS",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219479",
+    "primary_drug": "MABTHERA",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219480",
+    "primary_drug": "ENBREL",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219481",
+    "primary_drug": "MOUNJARO",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219556",
+    "primary_drug": "MOUNJARO",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219482",
+    "primary_drug": "ERIVEDGE",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219485",
+    "primary_drug": "TALQUETAMAB",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219486",
+    "primary_drug": "LUTATHERA",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219487",
+    "primary_drug": "ACTEMRA",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219499",
+    "primary_drug": "ACTEMRA",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219489",
+    "primary_drug": "ELOCTATE",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219490",
+    "primary_drug": "NEMLUVIO",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219505",
+    "primary_drug": "NEMLUVIO",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219517",
+    "primary_drug": "NEMLUVIO",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219527",
+    "primary_drug": "NEMLUVIO",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219608",
+    "primary_drug": "NEMLUVIO",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219621",
+    "primary_drug": "NEMLUVIO",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219634",
+    "primary_drug": "NEMLUVIO",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219759",
+    "primary_drug": "NEMLUVIO",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219494",
+    "primary_drug": "BENLYSTA",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219728",
+    "primary_drug": "BENLYSTA",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219496",
+    "primary_drug": "REPATHA",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219701",
+    "primary_drug": "REPATHA",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219497",
+    "primary_drug": "ADVAIR DISKUS",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219498",
+    "primary_drug": "ARAVA",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219500",
+    "primary_drug": "TALVEY",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219609",
+    "primary_drug": "TALVEY",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219501",
+    "primary_drug": "DARBEPOETIN ALFA",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219514",
+    "primary_drug": "DARBEPOETIN ALFA",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219503",
+    "primary_drug": "TYSABRI",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219610",
+    "primary_drug": "TYSABRI",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219504",
+    "primary_drug": "REVLIMID",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219640",
+    "primary_drug": "REVLIMID",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219657",
+    "primary_drug": "REVLIMID",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219737",
+    "primary_drug": "REVLIMID",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219740",
+    "primary_drug": "REVLIMID",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219763",
+    "primary_drug": "REVLIMID",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219506",
+    "primary_drug": "CREON",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219507",
+    "primary_drug": "RINVOQ",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219515",
+    "primary_drug": "RINVOQ",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219684",
+    "primary_drug": "RINVOQ",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219509",
+    "primary_drug": "POMALYST",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219542",
+    "primary_drug": "POMALYST",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219630",
+    "primary_drug": "POMALYST",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219696",
+    "primary_drug": "POMALYST",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219723",
+    "primary_drug": "POMALYST",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219724",
+    "primary_drug": "POMALYST",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219735",
+    "primary_drug": "POMALYST",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219518",
+    "primary_drug": "RIBOCICLIB",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219519",
+    "primary_drug": "AVONEX",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219520",
+    "primary_drug": "CERTOLIZUMAB PEGOL",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219521",
+    "primary_drug": "RITUXIMAB",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219633",
+    "primary_drug": "RITUXIMAB",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219730",
+    "primary_drug": "RITUXIMAB",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219756",
+    "primary_drug": "RITUXIMAB",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219761",
+    "primary_drug": "RITUXIMAB",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219770",
+    "primary_drug": "RITUXIMAB",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219523",
+    "primary_drug": "BIMZELX",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219524",
+    "primary_drug": "FENFLURAMINE HYDROCHLORIDE",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219526",
+    "primary_drug": "PLEGRIDY",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219528",
+    "primary_drug": "PLUVICTO",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219543",
+    "primary_drug": "PLUVICTO",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219548",
+    "primary_drug": "PLUVICTO",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219599",
+    "primary_drug": "PLUVICTO",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219692",
+    "primary_drug": "PLUVICTO",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219529",
+    "primary_drug": "TECVAYLI",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219533",
+    "primary_drug": "CIMZIA",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219536",
+    "primary_drug": "RISANKIZUMAB",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219538",
+    "primary_drug": "TYVASO",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219620",
+    "primary_drug": "TYVASO",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219539",
+    "primary_drug": "TYVASO DPI",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219585",
+    "primary_drug": "TYVASO DPI",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219544",
+    "primary_drug": "TRELEGY ELLIPTA",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219729",
+    "primary_drug": "TRELEGY ELLIPTA",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219545",
+    "primary_drug": "IMDELLTRA",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219546",
+    "primary_drug": "PEGFILGRASTIM",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219554",
+    "primary_drug": "PEGFILGRASTIM",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219549",
+    "primary_drug": "LOVENOX",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219552",
+    "primary_drug": "ZEPOSIA",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219570",
+    "primary_drug": "ZEPOSIA",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219553",
+    "primary_drug": "QULIPTA",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219579",
+    "primary_drug": "QULIPTA",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219597",
+    "primary_drug": "QULIPTA",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219602",
+    "primary_drug": "QULIPTA",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219557",
+    "primary_drug": "ZEPBOUND",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219639",
+    "primary_drug": "ZEPBOUND",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219558",
+    "primary_drug": "FLUOROURACIL",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219559",
+    "primary_drug": "AMBRISENTAN",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219560",
+    "primary_drug": "TECENTRIQ",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219714",
+    "primary_drug": "TECENTRIQ",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219718",
+    "primary_drug": "TECENTRIQ",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219561",
+    "primary_drug": "LINZESS",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219577",
+    "primary_drug": "LINZESS",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219562",
+    "primary_drug": "CELECOXIB",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219565",
+    "primary_drug": "CELECOXIB",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219564",
+    "primary_drug": "GABAPENTIN",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219749",
+    "primary_drug": "GABAPENTIN",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219567",
+    "primary_drug": "FOSCARBIDOPA\\FOSLEVODOPA",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219573",
+    "primary_drug": "FOSCARBIDOPA\\FOSLEVODOPA",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219574",
+    "primary_drug": "FOSCARBIDOPA\\FOSLEVODOPA",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219649",
+    "primary_drug": "FOSCARBIDOPA\\FOSLEVODOPA",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219727",
+    "primary_drug": "FOSCARBIDOPA\\FOSLEVODOPA",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219569",
+    "primary_drug": "TRAMADOL",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219571",
+    "primary_drug": "ZOLEDRONIC ACID",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219681",
+    "primary_drug": "ZOLEDRONIC ACID",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219572",
+    "primary_drug": "LEQVIO",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219578",
+    "primary_drug": "UBRELVY",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219580",
+    "primary_drug": "AMOXICILLIN\\CLAVULANIC ACID",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219721",
+    "primary_drug": "AMOXICILLIN\\CLAVULANIC ACID",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219581",
+    "primary_drug": "MYCOPHENOLATE MOFETIL",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219767",
+    "primary_drug": "MYCOPHENOLATE MOFETIL",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219584",
+    "primary_drug": "ATORVASTATIN",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219683",
+    "primary_drug": "ATORVASTATIN",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219587",
+    "primary_drug": "AMOXICILLIN\\CLAVULANATE POTASSIUM",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219588",
+    "primary_drug": "AVASTIN",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219690",
+    "primary_drug": "AVASTIN",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219712",
+    "primary_drug": "AVASTIN",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219589",
+    "primary_drug": "AVIBACTAM\\AZTREONAM",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219590",
+    "primary_drug": "VIBERZI",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219591",
+    "primary_drug": "GLIVEC",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219614",
+    "primary_drug": "GLIVEC",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219631",
+    "primary_drug": "GLIVEC",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219706",
+    "primary_drug": "GLIVEC",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219748",
+    "primary_drug": "GLIVEC",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219593",
+    "primary_drug": "LEVOFLOXACIN",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219594",
+    "primary_drug": "ARIPIPRAZOLE",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219638",
+    "primary_drug": "ARIPIPRAZOLE",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219595",
+    "primary_drug": "REMODULIN",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219679",
+    "primary_drug": "REMODULIN",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219596",
+    "primary_drug": "HIZENTRA",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219598",
+    "primary_drug": "TUBERSOL",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219600",
+    "primary_drug": "AMPICILLIN",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219601",
+    "primary_drug": "VENETOCLAX",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219612",
+    "primary_drug": "ALLOPURINOL",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219746",
+    "primary_drug": "ALLOPURINOL",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  },
+  {
+    "safetyreportid": "26219613",
+    "primary_drug": "METFORMIN HYDROCHLORIDE",
+    "receivedate": "20260101",
+    "prior_reports_for_drug": 0
+  }
+]

@@ -1,0 +1,38 @@
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+.env
+.env.local
+*.log
+.DS_Store
+.idea/
+.vscode/
+.pytest_cache/
+*.egg-info/
+build/
+dist/
+
+# Syncthing temp files
+**/.syncthing.*.tmp
+
+# Local-only outreach scratch — NEVER commit to public repo
+_outreach/
+**/.syncthing.*.tmp
+
+# Internal build prompt — not for public showroom
+CLAUDE_CODE_PROMPT.md
+.dbt-venv/
+dbt-project/target/
+dbt-project/dbt_packages/
+dbt-project/logs/
+dbt-project/.user.yml
+feature-store/.feast-venv/
+.feast-venv/
+feature-store/*.db
+feature-store/**/__pycache__/
+
+# internal scaffolding — not for public showroom
+_private/
+.ge-venv/

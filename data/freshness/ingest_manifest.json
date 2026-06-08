@@ -1,0 +1,13 @@
+{
+  "source_system": "openfda_faers",
+  "last_successful_ingest": "2026-06-08T02:26:41Z",
+  "window": {
+    "since": "20260101",
+    "until": "20260608"
+  },
+  "records_landed": 300,
+  "total_matching_source": 310100,
+  "null_key_rate": 0.0,
+  "ingest_latency_seconds": 4.2,
+  "output": "data/raw/openfda/ingest_date=2026-06-08/openfda_20260608T022641Z.jsonl"
+}

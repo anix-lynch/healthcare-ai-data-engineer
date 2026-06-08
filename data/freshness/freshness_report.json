@@ -1,0 +1,12 @@
+{
+  "checked_at": "2026-06-08T02:26:45Z",
+  "last_successful_ingest": "2026-06-08T02:26:41Z",
+  "data_latency_hours": 0.0,
+  "sla": {
+    "warn_after_h": 24,
+    "error_after_h": 48
+  },
+  "sla_status": "fresh",
+  "records_landed": 300,
+  "stale_alert": false
+}

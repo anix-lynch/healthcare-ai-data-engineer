@@ -1,0 +1,14 @@
+version: 2
+models:
+  - name: stg_openfda_events
+    columns:
+      - { name: safetyreportid, tests: [not_null, unique] }
+      - { name: received_date, tests: [not_null] }
+      - name: serious_flag
+        tests: [{ accepted_values: { values: ['1', '2'] } }]
+  - name: fact_adverse_events
+    description: Star-schema fact, grain = one adverse-event report.
+    columns:
+      - { name: safetyreportid, tests: [not_null, unique] }
+      - { name: received_date, tests: [not_null] }
+      - { name: is_serious, tests: [not_null] }
