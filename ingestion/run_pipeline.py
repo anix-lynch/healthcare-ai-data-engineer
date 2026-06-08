@@ -23,7 +23,7 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "ingestion"))
-import verify_e2e
+import verify_e2e, ledger
 PY = sys.executable
 GE_PY = os.environ.get("GE_PY", str(REPO / ".ge-venv" / "bin" / "python"))
 DBT = os.environ.get("DBT", str(REPO / ".venv" / "bin" / "dbt"))
@@ -44,6 +44,8 @@ STAGES = [
 
 
 def main():
+    started_at = ledger.now_iso()
+    run_t0 = time.time()
     results, failed = [], None
     for name, cmd, cwd, env_extra in STAGES:
         t0 = time.time()
@@ -78,6 +80,16 @@ def main():
         (REPO / "data" / "freshness" / "last_successful_e2e.json").write_text(json.dumps({
             "completed_at": report["ran_at"], "stages_passed": report["stages_passed"],
             "verified": True}, indent=2))
+    # durable ledger: record EVERY primary run. Only success+verified advances the
+    # latest-verified watermark (the watchdog reads this from BigQuery, not repo JSON).
+    try:
+        ledger.record_run(
+            dag_type="primary", started_at=started_at, completed_at=report["ran_at"],
+            result="success" if report["passed"] else "fail", attempts=1,
+            recovery_state="na", final_verification=verified,
+            duration_seconds=round(time.time() - run_t0, 1))
+    except Exception as e:
+        print(f"  [warn] ledger record failed: {repr(e)[:120]}", file=sys.stderr)
     print(json.dumps({k: report[k] for k in ("stages_passed", "stages_total", "failed_stage", "passed")}, indent=2))
     print(f"  verification: {verification and {k: v for k, v in verification.items() if k != 'bq_dup_check_error'}}")
     return 0 if report["passed"] else 1

@@ -17,7 +17,7 @@
     "C_exhausted_recovery": {
       "attempts_made": 3,
       "final_state": "escalated",
-      "e2e_unchanged": true,
+      "watermark_unchanged": true,
       "pass": true
     },
     "D_unsafe_failure": {
@@ -29,5 +29,5 @@
   },
   "all_scenarios_pass": true,
   "self_healing_score": "green",
-  "git_commit": "6189872846931d150c0042506f78fdd89d1b3161"
+  "git_commit": "470c2990db112592f4b08fd77dc8a189de59d1a2"
 }

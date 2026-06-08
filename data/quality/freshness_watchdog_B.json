@@ -1,7 +1,8 @@
 {
   "scenario": "B",
-  "detected_at": "2026-06-08T17:27:43Z",
-  "last_e2e_before": "2026-06-08T17:27:40Z",
+  "detected_at": "2026-06-08T18:03:27Z",
+  "staleness_source": "bigquery_ledger.pipeline_run_history",
+  "last_verified_primary_before": "2026-06-08T18:03:17Z",
   "e2e_age_hours_at_detect": 0.0,
   "stale_detected": true,
   "max_attempts": 4,
@@ -37,7 +38,7 @@
     "all_passed": true
   },
   "final_state": "recovered",
-  "last_e2e_after": "2026-06-08T17:28:22Z",
-  "git_commit": "6189872846931d150c0042506f78fdd89d1b3161",
-  "mttr_seconds": 41.1
+  "last_verified_primary_after": "2026-06-08T18:04:06Z",
+  "git_commit": "470c2990db112592f4b08fd77dc8a189de59d1a2",
+  "mttr_seconds": 48.3
 }

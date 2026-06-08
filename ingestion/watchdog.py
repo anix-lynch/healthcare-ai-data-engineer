@@ -23,6 +23,7 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "ingestion"))
 from verify_e2e import verify   # canonical verification, shared with run_pipeline
+import ledger                    # durable BigQuery run-history (source of truth, not repo JSON)
 E2E = REPO / "data" / "freshness" / "last_successful_e2e.json"
 SLA = REPO / "config" / "freshness_sla.json"
 Q = REPO / "data" / "quality"
@@ -63,23 +64,28 @@ def main():
     sla = _load(SLA) or {}
     err_h = sla.get("error_after_h", 48)
     t0 = time.time()
+    started_at = _ts(_now())
 
-    before = _load(E2E)
-    before_ts = before.get("completed_at") if before else None
+    # SOURCE OF TRUTH = durable BigQuery ledger, NOT repo-local JSON (which evaporates
+    # on ephemeral CI runners). Staleness is measured from the latest VERIFIED primary run.
+    before_ts = ledger.latest_verified_primary()
     age = _age_hours(before_ts)
     stale = args.force_stale or age is None or age > err_h
     detected_at = _ts(_now())
 
     receipt = {"scenario": args.scenario, "detected_at": detected_at,
-               "last_e2e_before": before_ts, "e2e_age_hours_at_detect": round(age, 2) if age else None,
+               "staleness_source": "bigquery_ledger.pipeline_run_history",
+               "last_verified_primary_before": before_ts,
+               "e2e_age_hours_at_detect": round(age, 2) if age else None,
                "stale_detected": stale, "max_attempts": args.max_attempts,
                "attempts": [], "actions": [], "failure_classification": None,
-               "verification": None, "final_state": None, "last_e2e_after": None,
+               "verification": None, "final_state": None, "last_verified_primary_after": None,
                "git_commit": subprocess.run(["git", "rev-parse", "HEAD"], cwd=REPO,
                                             capture_output=True, text=True).stdout.strip()}
 
     if not stale:
         receipt["final_state"] = "ok_no_action"
+        _record_watchdog(receipt, started_at, t0)
         _write(receipt, t0)
         print(f"[watchdog] fresh ({age:.1f}h < {err_h}h) — no action")
         return 0
@@ -114,20 +120,36 @@ def main():
         if attempt < args.max_attempts and args.base_backoff > 0:
             time.sleep(args.base_backoff * (2 ** (attempt - 1)))
 
-    # CRITICAL: only a recovered+verified run refreshes the E2E timestamp.
-    after = _load(E2E)
-    receipt["last_e2e_after"] = after.get("completed_at") if after else None
+    # CRITICAL: only a recovered+verified primary run advances the ledger watermark.
+    after_ts = ledger.latest_verified_primary()
+    receipt["last_verified_primary_after"] = after_ts
     receipt["final_state"] = final
     if final == "escalated":
-        # the recovery target (run_pipeline) only writes E2E on full success, so an
-        # escalated run leaves before==after. Assert it to make the guarantee explicit.
-        receipt["e2e_timestamp_unchanged_on_escalation"] = (receipt["last_e2e_after"] == before_ts)
+        # an escalated recovery never produced a verified primary success, so the
+        # ledger watermark must be unchanged. Assert it explicitly.
+        receipt["latest_verified_unchanged_on_escalation"] = (after_ts == before_ts)
         esc = Q / f"freshness_escalation_{args.scenario}.json"
         esc.write_text(json.dumps(receipt, indent=2))
         receipt["escalation_artifact"] = str(esc.relative_to(REPO))
+    _record_watchdog(receipt, started_at, t0)
     _write(receipt, t0)
     print(f"[watchdog] {final.upper()} after {len(receipt['attempts'])} attempt(s)")
     return 0 if final == "recovered" else 1
+
+
+def _record_watchdog(receipt, started_at, t0):
+    """Append this watchdog run to the durable ledger."""
+    final = receipt["final_state"]
+    try:
+        ledger.record_run(
+            dag_type="watchdog", started_at=started_at, completed_at=_ts(_now()),
+            result="success" if final == "recovered" else ("na" if final == "ok_no_action" else "fail"),
+            attempts=len(receipt["attempts"]),
+            recovery_state=final if final in ("recovered", "escalated") else "na",
+            final_verification=bool(receipt.get("verification", {}) and receipt["verification"].get("all_passed")),
+            duration_seconds=round(time.time() - t0, 1))
+    except Exception as e:
+        receipt["ledger_warn"] = repr(e)[:120]
 
 
 def _write(receipt, t0):

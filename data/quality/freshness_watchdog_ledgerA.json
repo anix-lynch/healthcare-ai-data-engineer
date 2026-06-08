@@ -1,0 +1,17 @@
+{
+  "scenario": "ledgerA",
+  "detected_at": "2026-06-08T17:59:07Z",
+  "staleness_source": "bigquery_ledger.pipeline_run_history",
+  "last_verified_primary_before": "2026-06-08T17:59:02Z",
+  "e2e_age_hours_at_detect": 0.0,
+  "stale_detected": false,
+  "max_attempts": 3,
+  "attempts": [],
+  "actions": [],
+  "failure_classification": null,
+  "verification": null,
+  "final_state": "ok_no_action",
+  "last_verified_primary_after": null,
+  "git_commit": "470c2990db112592f4b08fd77dc8a189de59d1a2",
+  "mttr_seconds": 4.1
+}

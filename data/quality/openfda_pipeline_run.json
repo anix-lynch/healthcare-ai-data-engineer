@@ -1,10 +1,10 @@
 {
-  "ran_at": "2026-06-08T17:36:52Z",
+  "ran_at": "2026-06-08T18:04:06Z",
   "stages": [
     {
       "stage": "pull",
       "exit": 0,
-      "seconds": 3.8
+      "seconds": 2.8
     },
     {
       "stage": "quarantine",
@@ -19,17 +19,17 @@
     {
       "stage": "bq_load",
       "exit": 0,
-      "seconds": 11.5
+      "seconds": 9.5
     },
     {
       "stage": "ge",
       "exit": 0,
-      "seconds": 1.9
+      "seconds": 2.0
     },
     {
       "stage": "dbt_build",
       "exit": 0,
-      "seconds": 32.6
+      "seconds": 23.1
     },
     {
       "stage": "freshness",

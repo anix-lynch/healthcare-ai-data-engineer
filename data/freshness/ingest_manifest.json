@@ -1,7 +1,7 @@
 {
   "source_system": "openfda_faers",
   "source_url": "https://api.fda.gov/drug/event.json",
-  "last_successful_ingest": "2026-06-08T17:36:00Z",
+  "last_successful_ingest": "2026-06-08T18:03:28Z",
   "window": {
     "since": "20260101",
     "until": "20260608"
@@ -16,6 +16,6 @@
   "records_landed": 300,
   "total_matching_source": 310100,
   "null_key_rate": 0.0,
-  "ingest_latency_seconds": 3.8,
-  "output": "data/raw/openfda/ingest_date=2026-06-08/openfda_20260608T173600Z.jsonl"
+  "ingest_latency_seconds": 2.7,
+  "output": "data/raw/openfda/ingest_date=2026-06-08/openfda_20260608T180328Z.jsonl"
 }

@@ -14,15 +14,19 @@ import json, os, subprocess, sys
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
+# staleness/watermark now live in the durable ledger — use a throwaway table here
+os.environ["LEDGER_TABLE"] = "pipeline_run_history_wtest"
+os.environ.setdefault("GCP_PROJECT_ID", "bchan-genai-lab")
+os.environ.setdefault("BQ_DATASET", "healthcare_analytics")
 REPO = Path(__file__).resolve().parents[1]
-E2E = REPO / "data" / "freshness" / "last_successful_e2e.json"
 Q = REPO / "data" / "quality"
 PY = sys.executable
+sys.path.insert(0, str(REPO / "ingestion"))
+import ledger
 
 
 def watchdog(scenario, max_attempts, recovery_cmd, fault=None):
-    env = {**os.environ, "GCP_PROJECT_ID": "bchan-genai-lab", "BQ_DATASET": "healthcare_analytics",
-           "BQ_LOCATION": "US"}
+    env = {**os.environ, "BQ_LOCATION": "US"}
     if fault:
         env["FAULT_MODE"] = fault
     subprocess.run([PY, "ingestion/watchdog.py", "--scenario", scenario, "--force-stale",
@@ -32,9 +36,17 @@ def watchdog(scenario, max_attempts, recovery_cmd, fault=None):
 
 
 def set_baseline_e2e(hours_old):
-    old = (datetime.now(timezone.utc) - timedelta(hours=hours_old)).strftime("%Y-%m-%dT%H:%M:%SZ")
-    E2E.write_text(json.dumps({"completed_at": old, "stages_passed": 6}))
-    return old
+    """Seed a verified-primary watermark in the durable ledger (not repo JSON)."""
+    ledger.record_run("primary", "2026-01-01T00:00:00Z",
+                      (datetime.now(timezone.utc) - timedelta(hours=hours_old)).strftime("%Y-%m-%dT%H:%M:%SZ"),
+                      "success", 1, "na", True, 10.0)
+    return ledger.latest_verified_primary()
+
+
+def _drop():
+    from google.cloud import bigquery
+    bigquery.Client(project=ledger.PROJECT).query(
+        f"DROP TABLE IF EXISTS `{ledger.TABLE}`", job_config=ledger.JOB).result()
 
 
 def main():
@@ -58,31 +70,32 @@ def main():
                  and b["verification"].get("no_duplicate_pks_in_bq") is True),
     }
 
-    # C — exhausted: exactly max_attempts, no infinite loop, timestamp NOT refreshed, escalated
-    base_c = set_baseline_e2e(100)
+    # C — exhausted: exactly max_attempts, no infinite loop, ledger watermark NOT advanced, escalated
+    _drop(); base_c = set_baseline_e2e(100)
     c = watchdog("C", 3, "ingestion/recovery_target.py", fault="always_transient")
     results["C_exhausted_recovery"] = {
         "attempts_made": len(c["attempts"]), "final_state": c["final_state"],
-        "e2e_unchanged": c.get("e2e_timestamp_unchanged_on_escalation"),
+        "watermark_unchanged": c.get("latest_verified_unchanged_on_escalation"),
         "pass": (c["final_state"] == "escalated" and len(c["attempts"]) == 3
                  and all(x["result"] == "transient_retry" for x in c["attempts"])
-                 and c.get("e2e_timestamp_unchanged_on_escalation") is True
-                 and c["last_e2e_after"] == base_c
+                 and c.get("latest_verified_unchanged_on_escalation") is True
+                 and c["last_verified_primary_after"] == base_c
                  and bool(c.get("escalation_artifact"))),
     }
 
     # D — unsafe: no auto-repair, escalate immediately (single attempt)
-    base_d = set_baseline_e2e(100)
+    _drop(); base_d = set_baseline_e2e(100)
     d = watchdog("D", 5, "ingestion/recovery_target.py", fault="unsafe")
     results["D_unsafe_failure"] = {
         "attempts_made": len(d["attempts"]), "final_state": d["final_state"],
         "classification": d["failure_classification"],
         "pass": (d["final_state"] == "escalated" and len(d["attempts"]) == 1
                  and d["failure_classification"] == "unsafe_no_auto_repair"
-                 and d["last_e2e_after"] == base_d
+                 and d["last_verified_primary_after"] == base_d
                  and bool(d.get("escalation_artifact"))),
     }
 
+    _drop()
     all_pass = all(v["pass"] for v in results.values())
     score = "green" if all_pass else "yellow"
     report = {"suite": "freshness_self_healing", "scenarios": results,

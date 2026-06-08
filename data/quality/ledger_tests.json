@@ -1,0 +1,33 @@
+{
+  "suite": "persistent_ledger",
+  "scenarios": {
+    "A_fresh_no_action": {
+      "final": "ok_no_action",
+      "pass": true
+    },
+    "B_stale_recovers": {
+      "final": "recovered",
+      "before": "2026-06-04T13:59:10Z",
+      "after": "2026-06-08T17:59:55Z",
+      "pass": true
+    },
+    "C_failed_unverified_no_advance": {
+      "final": "escalated",
+      "watermark_before": "2026-06-04T14:00:05Z",
+      "watermark_after": "2026-06-04T14:00:05Z",
+      "pass": true
+    },
+    "D_reliability_metrics": {
+      "metrics": {
+        "dag_success_rate": 0.3333,
+        "incident_count": 2,
+        "retry_recovery_rate": 0.0,
+        "mttr_seconds": null,
+        "primary_runs": 3
+      },
+      "pass": true
+    }
+  },
+  "all_pass": true,
+  "git_commit": "470c2990db112592f4b08fd77dc8a189de59d1a2"
+}
