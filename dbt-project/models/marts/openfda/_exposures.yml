@@ -1,0 +1,35 @@
+version: 2
+
+# Exposures = the governed downstream consumers of the semantic marts. This is the
+# lineage proof for Bullet 3 ("powering Power BI queries and grounded AI responses"):
+# the BI dashboard and the grounded-AI API are declared to depend on the marts, so
+# `dbt ls --select +exposure:*` shows the tap is wired end-to-end.
+
+exposures:
+  - name: powerbi_drug_safety_dashboard
+    type: dashboard
+    maturity: medium
+    url: https://app.powerbi.com/  # Fabric/Power BI report (Card 03)
+    description: >-
+      Sub-5s Power BI report ranking drugs by serious_rate and surfacing top
+      reactions. Reads the semantic marts, never the star-schema internals.
+    depends_on:
+      - ref('mart_drug_safety_kpis')
+      - ref('mart_reaction_signals')
+    owner:
+      name: Anix Lynch
+      email: alynch@gozeroshot.dev
+
+  - name: grounded_ai_openfda_api
+    type: application
+    maturity: medium
+    description: >-
+      FastAPI /api/ask — grounded Gemini answers over the openFDA corpus with
+      [doc N] citations, refusing when evidence is absent. Source-level citations
+      trace back to governed report fields.
+    depends_on:
+      - ref('mart_drug_safety_kpis')
+      - ref('fact_adverse_events')
+    owner:
+      name: Anix Lynch
+      email: alynch@gozeroshot.dev

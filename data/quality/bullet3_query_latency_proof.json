@@ -1,0 +1,45 @@
+{
+  "proof": "bullet3_sub5s_query_benchmark",
+  "claim_phrase": "sub-5-second Power BI queries",
+  "sla_seconds": 5.0,
+  "engine": "BigQuery (service-account, interactive priority)",
+  "queries": {
+    "drug_leaderboard_by_serious_rate": {
+      "iters": 8,
+      "rows": 18,
+      "p50_s": 1.277,
+      "p95_s": 1.915,
+      "max_s": 1.915,
+      "mbytes_billed": 0.0,
+      "under_5s": true
+    },
+    "top_reactions_panel": {
+      "iters": 8,
+      "rows": 20,
+      "p50_s": 1.119,
+      "p95_s": 1.544,
+      "max_s": 1.544,
+      "mbytes_billed": 0.0,
+      "under_5s": true
+    },
+    "drug_reaction_drilldown": {
+      "iters": 8,
+      "rows": 50,
+      "p50_s": 1.11,
+      "p95_s": 1.879,
+      "max_s": 1.879,
+      "mbytes_billed": 0.0,
+      "under_5s": true
+    },
+    "serious_kpi_card": {
+      "iters": 8,
+      "rows": 1,
+      "p50_s": 1.224,
+      "p95_s": 1.641,
+      "max_s": 1.641,
+      "mbytes_billed": 0.0,
+      "under_5s": true
+    }
+  },
+  "verdict": "GREEN \u2014 every representative query max latency < 5s"
+}

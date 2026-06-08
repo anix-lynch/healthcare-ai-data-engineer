@@ -1,0 +1,66 @@
+version: 2
+
+# Business-defined semantic marts for Bullet 3. Each KPI has a plain-language
+# definition so an analyst/recruiter reads intent, not raw SQL. Tests below are the
+# proof that the KPI contract holds (grain uniqueness, non-null, bounded rates).
+
+models:
+  - name: mart_drug_safety_kpis
+    description: >-
+      Drug-safety KPIs, one row per primary drug. The analyst/BI/AI tap for openFDA:
+      rank drugs by serious_rate, see reaction breadth and reporting reach.
+    columns:
+      - name: primary_drug
+        description: Primary suspect drug (grain).
+        tests: [not_null, unique]
+      - name: total_reports
+        description: Distinct adverse-event reports naming this drug as primary suspect.
+        tests: [not_null]
+      - name: serious_reports
+        description: Of total_reports, how many were flagged serious by the reporter.
+        tests: [not_null]
+      - name: serious_rate
+        description: serious_reports / total_reports. Headline safety KPI, bounded 0-1.
+        tests: [not_null]
+      - name: distinct_reactions
+        description: Count of distinct reaction preferred-terms associated with the drug.
+        tests: [not_null]
+      - name: total_reaction_events
+        description: Sum of reaction occurrences (report x reaction) from the governed bridge.
+        tests: [not_null]
+      - name: reactions_per_report
+        description: total_reaction_events / total_reports. Reaction density per report.
+      - name: countries_reporting
+        description: Distinct reporting countries — geographic reach KPI.
+      - name: first_report_date
+        description: Earliest received_date for the drug (BI date-slicer lower bound).
+      - name: last_report_date
+        description: Latest received_date for the drug (freshness upper bound).
+      - name: reporting_window_days
+        description: Days between first and last report — reporting span KPI.
+
+  - name: mart_reaction_signals
+    description: >-
+      Reaction-level signal KPIs, one row per reaction. Consumed by the Signal
+      Platform and Power BI to surface high-volume / high-seriousness reactions.
+    columns:
+      - name: reaction_name
+        description: Reaction preferred term (grain).
+        tests: [not_null, unique]
+      - name: reports_with_reaction
+        description: Distinct reports citing this reaction.
+        tests: [not_null]
+      - name: serious_reports_with_reaction
+        description: Of those, how many reports were serious.
+        tests: [not_null]
+      - name: serious_share
+        description: serious_reports_with_reaction / reports_with_reaction. Bounded 0-1.
+        tests: [not_null]
+      - name: distinct_drugs
+        description: Distinct primary drugs implicated with this reaction (breadth).
+        tests: [not_null]
+      - name: report_share
+        description: >-
+          Screening proxy: this reaction's share of all reports. NOT a validated
+          PRR/ROR disproportionality statistic — a triage proxy only.
+        tests: [not_null]

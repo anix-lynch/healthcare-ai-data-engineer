@@ -1,0 +1,121 @@
+{
+  "proof": "bullet3_semantic_marts_kpis",
+  "claim_phrase": "business-defined semantic marts and KPI definitions",
+  "source": "openFDA FAERS star schema (fact_adverse_events = 300 reports)",
+  "marts": {
+    "mart_drug_safety_kpis": {
+      "grain": "primary_drug",
+      "rows": 156,
+      "kpis": [
+        "total_reports",
+        "serious_reports",
+        "serious_rate",
+        "distinct_reactions",
+        "total_reaction_events",
+        "reactions_per_report",
+        "countries_reporting",
+        "first_report_date",
+        "last_report_date",
+        "reporting_window_days"
+      ]
+    },
+    "mart_reaction_signals": {
+      "grain": "reaction_name",
+      "rows": 408,
+      "kpis": [
+        "reports_with_reaction",
+        "serious_reports_with_reaction",
+        "serious_share",
+        "distinct_drugs",
+        "report_share"
+      ]
+    }
+  },
+  "kpi_contract_tests": {
+    "total": 15,
+    "passed": 15,
+    "failed": 0,
+    "includes": [
+      "grain uniqueness",
+      "non-null KPIs",
+      "serious_rate bounded [0,1]",
+      "serious_reports<=total_reports",
+      "share KPIs bounded [0,1]"
+    ],
+    "note": "assert_openfda_kpi_bounds caught a double-count bug (serious_rate>1, 176 rows) during build; mart fixed to aggregate volume KPIs at report grain before reaction explosion; re-test 0 violations."
+  },
+  "exposures_lineage": [
+    "powerbi_drug_safety_dashboard",
+    "grounded_ai_openfda_api"
+  ],
+  "top_drugs_by_serious_rate": [
+    {
+      "distinct_reactions": "19",
+      "primary_drug": "SKYRIZI",
+      "serious_rate": "1.0",
+      "serious_reports": "10",
+      "total_reports": "10"
+    },
+    {
+      "distinct_reactions": "15",
+      "primary_drug": "RITUXIMAB",
+      "serious_rate": "1.0",
+      "serious_reports": "6",
+      "total_reports": "6"
+    },
+    {
+      "distinct_reactions": "11",
+      "primary_drug": "FOSCARBIDOPA\\FOSLEVODOPA",
+      "serious_rate": "1.0",
+      "serious_reports": "5",
+      "total_reports": "5"
+    },
+    {
+      "distinct_reactions": "1",
+      "primary_drug": "GLIVEC",
+      "serious_rate": "1.0",
+      "serious_reports": "5",
+      "total_reports": "5"
+    },
+    {
+      "distinct_reactions": "15",
+      "primary_drug": "CARFILZOMIB",
+      "serious_rate": "1.0",
+      "serious_reports": "4",
+      "total_reports": "4"
+    }
+  ],
+  "top_reactions_by_volume": [
+    {
+      "distinct_drugs": "18",
+      "reaction_name": "Off label use",
+      "reports_with_reaction": "21",
+      "serious_share": "0.857"
+    },
+    {
+      "distinct_drugs": "10",
+      "reaction_name": "Death",
+      "reports_with_reaction": "16",
+      "serious_share": "1.0"
+    },
+    {
+      "distinct_drugs": "14",
+      "reaction_name": "Drug ineffective",
+      "reports_with_reaction": "16",
+      "serious_share": "0.563"
+    },
+    {
+      "distinct_drugs": "8",
+      "reaction_name": "Product dose omission issue",
+      "reports_with_reaction": "12",
+      "serious_share": "0.083"
+    },
+    {
+      "distinct_drugs": "9",
+      "reaction_name": "Headache",
+      "reports_with_reaction": "11",
+      "serious_share": "0.455"
+    }
+  ],
+  "verdict": "GREEN \u2014 marts materialized in BigQuery, KPI contract enforced by 15/15 passing dbt tests"
+}
