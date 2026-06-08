@@ -2,6 +2,7 @@
   "source_system": "openfda_faers",
   "warn_after_h": 24,
   "error_after_h": 48,
+  "source_warn_days": 180,
   "refresh_cadence": "daily",
-  "note": "FAERS publishes ~quarterly; daily pull demonstrates the freshness gate machinery"
+  "note": "warn/error_after_h = INGESTION clock (did the pipeline run?). source_warn_days=180 = SOURCE clock; FAERS lags ~a quarter, so newest records are legitimately months old — only flag a stalled feed past ~2 quarters."
 }

@@ -14,6 +14,7 @@ Usage:
 """
 from __future__ import annotations
 import json, os, sys
+from datetime import datetime, timezone
 from pathlib import Path
 
 from google.cloud import bigquery
@@ -91,6 +92,10 @@ def main():
     # 3. reconciliation report (leg a: API→accepted from manifest · leg b: accepted→warehouse)
     man = json.loads((REPO / "data" / "freshness" / "ingest_manifest.json").read_text())
     rec_a = man.get("reconciliation", {})
+    # warehouse lag = clock #3 (ingest_ts → landed in BigQuery)
+    loaded_at = datetime.now(timezone.utc)
+    ingest_ts = datetime.strptime(man["last_successful_ingest"], "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
+    warehouse_lag_s = round((loaded_at - ingest_ts).total_seconds(), 1)
     report = {
         "generated_at": man.get("last_successful_ingest"),
         "source_url": man.get("source_url"), "window": man.get("window"),
@@ -105,6 +110,8 @@ def main():
             "warehouse_before": before, "warehouse_after": after,
             "merge_inserted": inserted, "merge_matched_updated_or_unchanged": matched,
             "net_new_rows": inserted,
+            "loaded_at": loaded_at.strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "warehouse_lag_seconds": warehouse_lag_s,
         },
         "reconciles": (
             rec_a.get("balances", False)

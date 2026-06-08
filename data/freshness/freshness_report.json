@@ -1,12 +1,25 @@
 {
-  "checked_at": "2026-06-08T15:58:55Z",
-  "last_successful_ingest": "2026-06-08T02:26:41Z",
-  "data_latency_hours": 13.54,
-  "sla": {
-    "warn_after_h": 24,
-    "error_after_h": 48
+  "checked_at": "2026-06-08T16:52:29Z",
+  "clocks": {
+    "source_freshness": {
+      "newest_record_receivedate": "20260119",
+      "source_age_days": 140,
+      "source_feed_status": "ok"
+    },
+    "ingestion_freshness": {
+      "last_successful_ingest": "2026-06-08T16:51:20Z",
+      "ingestion_latency_hours": 0.02,
+      "sla": {
+        "warn_after_h": 24,
+        "error_after_h": 48
+      },
+      "status": "fresh"
+    },
+    "warehouse_lag": {
+      "warehouse_lag_seconds": 10.8
+    }
   },
-  "sla_status": "fresh",
   "records_landed": 300,
+  "sla_status": "fresh",
   "stale_alert": false
 }

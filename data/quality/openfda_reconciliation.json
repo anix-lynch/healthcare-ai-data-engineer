@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-08T16:27:45Z",
+  "generated_at": "2026-06-08T16:51:20Z",
   "source_url": "https://api.fda.gov/drug/event.json",
   "window": {
     "since": "20260101",
@@ -21,7 +21,9 @@
     "warehouse_after": 300,
     "merge_inserted": 0,
     "merge_matched_updated_or_unchanged": 300,
-    "net_new_rows": 0
+    "net_new_rows": 0,
+    "loaded_at": "2026-06-08T16:51:30Z",
+    "warehouse_lag_seconds": 10.8
   },
   "reconciles": true
 }

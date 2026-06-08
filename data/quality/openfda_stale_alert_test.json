@@ -1,0 +1,18 @@
+{
+  "test": "stale_alert_fires",
+  "exit_codes": {
+    "A_stale": 1,
+    "B_fresh": 0
+  },
+  "stale_alert": {
+    "A_stale": true,
+    "B_fresh": false
+  },
+  "checks": {
+    "stale_fixture_exits_nonzero": true,
+    "stale_alert_fired": true,
+    "fresh_real_exits_zero": true,
+    "fresh_no_false_alert": true
+  },
+  "passed": true
+}
