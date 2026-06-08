@@ -1,0 +1,89 @@
+{
+  "proof": "bullet3_grounded_ai_citations",
+  "claim_phrase": "grounded AI responses, with ... source-level citations",
+  "corpus": "openfda_corpus.jsonl (300 deduped real FAERS reports)",
+  "retrieval": "BM25 top-k over governed report fields",
+  "generation": "gemini-2.5-flash",
+  "cases": {
+    "answerable": {
+      "label": "answerable",
+      "question": "What adverse reactions are reported for LUCENTIS?",
+      "grounded": true,
+      "model": "gemini-2.5-flash",
+      "answer": "The reported adverse reactions for LUCENTIS are Endophthalmitis, Sudden visual loss, and Product quality issue [doc 1].",
+      "cited_docs": [
+        1
+      ],
+      "sources": [
+        {
+          "doc": 1,
+          "id": "10067080",
+          "drug": "LUCENTIS"
+        },
+        {
+          "doc": 2,
+          "id": "26219463",
+          "drug": "XOFLUZA"
+        },
+        {
+          "doc": 3,
+          "id": "26219643",
+          "drug": "XOFLUZA"
+        },
+        {
+          "doc": 4,
+          "id": "26219628",
+          "drug": "SUSVIMO"
+        },
+        {
+          "doc": 5,
+          "id": "26219622",
+          "drug": "CARFILZOMIB"
+        }
+      ],
+      "note": "BM25 top-k retrieval \u2192 grounded Gemini, answers cite [doc N]."
+    },
+    "refusal": {
+      "label": "refusal",
+      "question": "What is the recommended aspirin dose for a headache?",
+      "grounded": true,
+      "model": "gemini-2.5-flash",
+      "answer": "Not supported by the retrieved evidence.",
+      "cited_docs": [],
+      "sources": [
+        {
+          "doc": 1,
+          "id": "26219537",
+          "drug": "DUPIXENT"
+        },
+        {
+          "doc": 2,
+          "id": "26219615",
+          "drug": "APIXABAN"
+        },
+        {
+          "doc": 3,
+          "id": "26219634",
+          "drug": "NEMLUVIO"
+        },
+        {
+          "doc": 4,
+          "id": "26219759",
+          "drug": "NEMLUVIO"
+        },
+        {
+          "doc": 5,
+          "id": "26219491",
+          "drug": "DUPIXENT"
+        }
+      ],
+      "note": "BM25 top-k retrieval \u2192 grounded Gemini, answers cite [doc N]."
+    }
+  },
+  "checks": {
+    "grounded_generation_ran": true,
+    "answerable_cites_doc": true,
+    "refuses_out_of_corpus": true
+  },
+  "verdict": "GREEN \u2014 grounded Gemini cited real reports and refused out-of-evidence"
+}
