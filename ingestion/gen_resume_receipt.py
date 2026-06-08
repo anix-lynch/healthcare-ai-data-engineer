@@ -27,6 +27,8 @@ gate = load("data/quality/openfda_gate_report.json")
 ge = load("data/quality/openfda_ge_validation.json")
 late = load("data/quality/openfda_late_arriving.json")
 fc = load("data/quality/openfda_failclose_test.json")
+pipe = load("data/quality/openfda_pipeline_run.json")
+drift = load("data/quality/openfda_schema_drift_test.json")
 rr = load("dbt-project/proof/run_results.json")
 sched = (REPO / ".github/workflows/openfda_pipeline.yml").exists()
 streaming_files = [p for p in subprocess.run(
@@ -45,11 +47,12 @@ phrases = [
      "pass": bool(man and man.get("source_url", "").startswith("https://api.fda.gov")
                   and man.get("records_landed", 0) > 0),
      "kind": "openFDA-specific"},
-    {"phrase": "scheduled incremental batch ingestion",
-     "proof": ".github/workflows/openfda_pipeline.yml + data/quality/openfda_gate_report.json (idempotency.files_loaded)",
-     "result": f"scheduler_committed={sched}; repeat_pulls={gate and gate['idempotency']['files_loaded']}; "
-               f"incremental merge on ingest_ts (stg_openfda_events)",
-     "pass": bool(sched and gate and gate["idempotency"]["files_loaded"] >= 2),
+    {"phrase": "scheduled incremental batch ingestion (full Trust chain)",
+     "proof": "data/quality/openfda_pipeline_run.json + .github/workflows/openfda_pipeline.yml",
+     "result": f"full-chain E2E run {pipe and pipe['stages_passed']}/{pipe and pipe['stages_total']} "
+               f"(pull→gate→bq_load→ge→dbt→freshness) passed={pipe and pipe['passed']}; "
+               f"workflow wired to schedule. CAVEAT: green GitHub-scheduled run needs push+GCP_SA_KEY secret.",
+     "pass": bool(pipe and pipe["passed"] and sched),
      "kind": "openFDA-specific"},
     {"phrase": "real-time streaming ingestion (dual-mode)",
      "proof": "NONE — no pubsub/stream/dataflow file tracked in repo",
@@ -83,6 +86,18 @@ phrases = [
      "result": f"{len(fk)} relationships(FK) tests, all pass={all(r['status'] in ('pass','success') for r in fk) if fk else False}",
      "pass": bool(fk and all(r["status"] in ("pass", "success") for r in fk)),
      "kind": "openFDA-specific"},
+    {"phrase": "normalized openFDA contract validation (NOT live-API drift)",
+     "proof": "data/quality/openfda_schema_drift_test.json",
+     "result": f"drop required col -> gate exits nonzero + flags drift; passed={drift and drift['passed']}. "
+               f"scope: {drift and drift.get('scope')}",
+     "pass": bool(drift and drift["passed"]),
+     "kind": "openFDA-specific"},
+    {"phrase": "malformed-record handling (fail-closed at batch level)",
+     "proof": "data/quality/openfda_failclose_test.json + openfda_schema_drift_test.json",
+     "result": f"corrupt/drift fixtures stop the pipeline (exit!=0). NOTE: stops whole batch — "
+               f"per-record quarantine NOT yet built.",
+     "pass": bool(fc and fc["passed"] and drift and drift["passed"]),
+     "kind": "openFDA-specific"},
 ]
 
 sha = subprocess.run(["git", "rev-parse", "HEAD"], cwd=REPO, capture_output=True, text=True).stdout.strip()
@@ -92,11 +107,11 @@ verbatim_bullet = ("Built a resilient dual-mode healthcare data pipeline support
                    "real-time streaming ingestion, with idempotent deduplication, fail-closed Great "
                    "Expectations/dbt quality gates, late-arriving record handling, and end-to-end "
                    "BigQuery reconciliation.")
-approved_bullet = ("Hardened a healthcare data pipeline ingesting real openFDA adverse-event data via "
-                   "scheduled incremental batch, with idempotent deduplication, fail-closed Great "
-                   "Expectations + dbt quality gates, late-arriving/revised-record handling, real "
-                   "drug/reaction referential integrity, and end-to-end source-to-BigQuery reconciliation "
-                   "— each control independently evidenced by a generated proof file.")
+approved_bullet = ("Hardened a real openFDA batch pipeline against duplicate, revised, late-arriving, "
+                   "malformed, and missing records using idempotent BigQuery merges, fail-closed Great "
+                   "Expectations + dbt quality gates, real drug/reaction referential integrity, and "
+                   "window-scoped source-to-BigQuery reconciliation — each control independently "
+                   "evidenced by a generated proof file. (Codex-QA approved batch scope.)")
 
 receipt = {
     "generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),

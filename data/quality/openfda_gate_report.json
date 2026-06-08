@@ -1,13 +1,13 @@
 {
-  "scanned_at": "2026-06-08T09:50:26",
+  "scanned_at": "2026-06-08T09:59:08",
   "n_rows": 300,
   "idempotency": {
-    "files_loaded": 2,
-    "raw_rows": 600,
+    "files_loaded": 5,
+    "raw_rows": 1500,
     "canonical_rows": 300,
-    "cross_pull_collapsed": 300,
+    "cross_pull_collapsed": 1200,
     "within_pull_dupes": 0,
-    "duplicate_rate": 0.5,
+    "duplicate_rate": 0.8,
     "note": "canonical = latest row per safetyreportid (MERGE); re-runs collapse, no false dup-fail"
   },
   "checks": {

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-08T16:51:20Z",
+  "generated_at": "2026-06-08T16:59:04Z",
   "source_url": "https://api.fda.gov/drug/event.json",
   "window": {
     "since": "20260101",
@@ -15,15 +15,21 @@
   },
   "leg_b_accepted_to_warehouse": {
     "canonical_rows_across_pulls": 300,
-    "raw_rows_all_pulls": 600,
-    "cross_pull_collapsed": 300,
+    "raw_rows_all_pulls": 1500,
+    "cross_pull_collapsed": 1200,
     "warehouse_before": 300,
     "warehouse_after": 300,
     "merge_inserted": 0,
     "merge_matched_updated_or_unchanged": 300,
     "net_new_rows": 0,
-    "loaded_at": "2026-06-08T16:51:30Z",
-    "warehouse_lag_seconds": 10.8
+    "loaded_at": "2026-06-08T16:59:19Z",
+    "warehouse_lag_seconds": 15.6
+  },
+  "window_reconciliation": {
+    "batch_accepted": 300,
+    "batch_ids_present_in_warehouse": 300,
+    "warehouse_total_all_windows": 300,
+    "note": "reconcile THIS batch's ids (window-scoped), not the whole warehouse \u2014 stays correct as history accumulates beyond the current slice"
   },
   "reconciles": true
 }

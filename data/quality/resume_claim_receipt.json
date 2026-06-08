@@ -1,19 +1,19 @@
 {
-  "generated_at": "2026-06-08T16:41:32Z",
-  "git_commit": "af0dbfd9fe5daed3cd74bacc528aa9121e0e2171",
+  "generated_at": "2026-06-08T17:01:02Z",
+  "git_commit": "5254543b8a2622b1124cc398b9ddf70b769a8dc1",
   "verbatim_target_bullet": "Built a resilient dual-mode healthcare data pipeline supporting scheduled batch and real-time streaming ingestion, with idempotent deduplication, fail-closed Great Expectations/dbt quality gates, late-arriving record handling, and end-to-end BigQuery reconciliation.",
   "phrases": [
     {
       "phrase": "real openFDA adverse-event data",
       "proof": "data/freshness/ingest_manifest.json",
-      "result": "source=https://api.fda.gov/drug/event.json window={'since': '20260101', 'until': '20260608'} accepted=300 at 2026-06-08T16:27:45Z",
+      "result": "source=https://api.fda.gov/drug/event.json window={'since': '20260101', 'until': '20260608'} accepted=300 at 2026-06-08T16:59:04Z",
       "pass": true,
       "kind": "openFDA-specific"
     },
     {
-      "phrase": "scheduled incremental batch ingestion",
-      "proof": ".github/workflows/openfda_pipeline.yml + data/quality/openfda_gate_report.json (idempotency.files_loaded)",
-      "result": "scheduler_committed=True; repeat_pulls=2; incremental merge on ingest_ts (stg_openfda_events)",
+      "phrase": "scheduled incremental batch ingestion (full Trust chain)",
+      "proof": "data/quality/openfda_pipeline_run.json + .github/workflows/openfda_pipeline.yml",
+      "result": "full-chain E2E run 6/6 (pull\u2192gate\u2192bq_load\u2192ge\u2192dbt\u2192freshness) passed=True; workflow wired to schedule. CAVEAT: green GitHub-scheduled run needs push+GCP_SA_KEY secret.",
       "pass": true,
       "kind": "openFDA-specific"
     },
@@ -58,6 +58,20 @@
       "result": "3 relationships(FK) tests, all pass=True",
       "pass": true,
       "kind": "openFDA-specific"
+    },
+    {
+      "phrase": "normalized openFDA contract validation (NOT live-API drift)",
+      "proof": "data/quality/openfda_schema_drift_test.json",
+      "result": "drop required col -> gate exits nonzero + flags drift; passed=True. scope: normalized openFDA contract validation (NOT comprehensive live-API drift detection)",
+      "pass": true,
+      "kind": "openFDA-specific"
+    },
+    {
+      "phrase": "malformed-record handling (fail-closed at batch level)",
+      "proof": "data/quality/openfda_failclose_test.json + openfda_schema_drift_test.json",
+      "result": "corrupt/drift fixtures stop the pipeline (exit!=0). NOTE: stops whole batch \u2014 per-record quarantine NOT yet built.",
+      "pass": true,
+      "kind": "openFDA-specific"
     }
   ],
   "unsupported_phrases": [
@@ -65,6 +79,6 @@
   ],
   "verbatim_verdict": "CLAIM REJECTED",
   "verbatim_reason": "'real-time streaming ingestion (dual-mode)' has no proof file in repo \u2014 streaming path was removed in the openFDA cleanup. All other phrases pass.",
-  "approved_alternative_bullet": "Hardened a healthcare data pipeline ingesting real openFDA adverse-event data via scheduled incremental batch, with idempotent deduplication, fail-closed Great Expectations + dbt quality gates, late-arriving/revised-record handling, real drug/reaction referential integrity, and end-to-end source-to-BigQuery reconciliation \u2014 each control independently evidenced by a generated proof file.",
+  "approved_alternative_bullet": "Hardened a real openFDA batch pipeline against duplicate, revised, late-arriving, malformed, and missing records using idempotent BigQuery merges, fail-closed Great Expectations + dbt quality gates, real drug/reaction referential integrity, and window-scoped source-to-BigQuery reconciliation \u2014 each control independently evidenced by a generated proof file. (Codex-QA approved batch scope.)",
   "approved_alternative_verdict": "CLAIM APPROVED \u2014 every phrase backed by a generated proof file"
 }

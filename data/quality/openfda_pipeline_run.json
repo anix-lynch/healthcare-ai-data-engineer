@@ -1,0 +1,39 @@
+{
+  "ran_at": "2026-06-08T16:59:45Z",
+  "stages": [
+    {
+      "stage": "pull",
+      "exit": 0,
+      "seconds": 4.3
+    },
+    {
+      "stage": "gate",
+      "exit": 0,
+      "seconds": 0.1
+    },
+    {
+      "stage": "bq_load",
+      "exit": 0,
+      "seconds": 11.2
+    },
+    {
+      "stage": "ge",
+      "exit": 0,
+      "seconds": 1.9
+    },
+    {
+      "stage": "dbt_build",
+      "exit": 0,
+      "seconds": 23.9
+    },
+    {
+      "stage": "freshness",
+      "exit": 0,
+      "seconds": 0.1
+    }
+  ],
+  "stages_total": 6,
+  "stages_passed": 6,
+  "failed_stage": null,
+  "passed": true
+}

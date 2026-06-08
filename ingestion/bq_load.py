@@ -87,6 +87,14 @@ def main():
     after = count(target)
     inserted = after - before
     matched = len(rows) - inserted          # already existed → updated or unchanged
+    # window-scoped reconciliation: how many of THIS batch's ids are in the warehouse?
+    # (stays correct when the warehouse accumulates history beyond this slice)
+    batch_ids = [r["safetyreportid"] for r in rows if r.get("safetyreportid")]
+    wq = bigquery.QueryJobConfig(
+        maximum_bytes_billed=100 * 1024 * 1024,
+        query_parameters=[bigquery.ArrayQueryParameter("ids", "STRING", batch_ids)])
+    window_in_warehouse = list(client.query(
+        f"SELECT COUNT(*) c FROM `{target}` WHERE safetyreportid IN UNNEST(@ids)", job_config=wq).result())[0].c
     client.query(f"DROP TABLE `{stage}`", job_config=JOB).result()
 
     # 3. reconciliation report (leg a: API→accepted from manifest · leg b: accepted→warehouse)
@@ -113,9 +121,16 @@ def main():
             "loaded_at": loaded_at.strftime("%Y-%m-%dT%H:%M:%SZ"),
             "warehouse_lag_seconds": warehouse_lag_s,
         },
+        "window_reconciliation": {
+            "batch_accepted": len(rows),
+            "batch_ids_present_in_warehouse": window_in_warehouse,
+            "warehouse_total_all_windows": after,
+            "note": "reconcile THIS batch's ids (window-scoped), not the whole warehouse — "
+                    "stays correct as history accumulates beyond the current slice",
+        },
         "reconciles": (
             rec_a.get("balances", False)
-            and idem["canonical_rows"] == after
+            and window_in_warehouse == len(rows)   # window-scoped, not total-warehouse
             and matched + inserted == len(rows)
         ),
     }

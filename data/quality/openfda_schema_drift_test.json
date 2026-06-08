@@ -1,0 +1,15 @@
+{
+  "test": "schema_drift_negative",
+  "dropped_column": "row_hash",
+  "gate_exit": 1,
+  "missing_reported": [
+    "row_hash"
+  ],
+  "checks": {
+    "dropped_required_col_exits_nonzero": true,
+    "schema_drift_flagged_critical": true,
+    "missing_col_identified": true
+  },
+  "passed": true,
+  "scope": "normalized openFDA contract validation (NOT comprehensive live-API drift detection)"
+}

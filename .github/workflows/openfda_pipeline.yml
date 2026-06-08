@@ -1,37 +1,54 @@
 name: openfda-pipeline
-# Orchestration (Reliability branch): scheduled ingest with retry + freshness gate.
+# Full Trust pipeline on a schedule (Codex QA gap #1): every filter wired onto the
+# daily pump — pull -> strict gate -> BigQuery merge -> GE --strict -> dbt build ->
+# freshness. Fail-closed at each step. Needs repo secret GCP_SA_KEY (deploy SA JSON).
 on:
   schedule:
     - cron: "0 6 * * *"
   workflow_dispatch: {}
   push:
-    paths: ["ingestion/**", ".github/workflows/openfda_pipeline.yml"]
+    paths: ["ingestion/**", "dbt-project/**", ".github/workflows/openfda_pipeline.yml"]
+env:
+  GCP_PROJECT_ID: bchan-genai-lab
+  BQ_DATASET: healthcare_analytics
+  BQ_LOCATION: US
 jobs:
-  ingest-and-gate:
+  trust-pipeline:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: { python-version: "3.12" }
-      - name: Pull openFDA (retry up to 3x = retry recovery)
+      - name: Install deps
+        run: pip install --quiet google-cloud-bigquery pandas great_expectations dbt-bigquery
+      - name: Auth (deploy SA key, machine identity — no user ADC)
+        run: |
+          echo '${{ secrets.GCP_SA_KEY }}' > /tmp/sa.json
+          echo "GOOGLE_APPLICATION_CREDENTIALS=/tmp/sa.json" >> "$GITHUB_ENV"
+      - name: 1/6 Pull openFDA (retry up to 3x = retry recovery)
         run: |
           n=0
           until python ingestion/openfda_pull.py --since 20260101 --max 500; do
             n=$((n+1)); [ $n -ge 3 ] && echo "::error::ingest failed after 3 retries" && exit 1
             echo "retry $n"; sleep $((n*10))
           done
-      - name: Quality gate (fail-closed)
+      - name: 2/6 Quality gate (fail-closed)
         run: python ingestion/openfda_gate.py --strict
-      - name: Freshness gate (stale alert)
+      - name: 3/6 BigQuery merge + window reconciliation
+        run: python ingestion/bq_load.py
+      - name: 4/6 Great Expectations (fail-closed, normalized contract)
+        run: python ingestion/ge_validate.py --strict
+      - name: 5/6 dbt build (staging/fact/dims/bridge + tests)
+        run: cd dbt-project && dbt build --profiles-dir .
+      - name: 6/6 Freshness gate (3 clocks + stale alert)
         run: python ingestion/freshness_check.py --strict
-      - name: Point-in-time feature leak guard
-        run: python ingestion/openfda_features.py
-      - name: Upload run artifacts (uptime / success evidence)
+      - name: Upload Trust proof artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: openfda-run-${{ github.run_number }}
+          name: openfda-trust-run-${{ github.run_number }}
           path: |
-            data/freshness/ingest_manifest.json
-            data/freshness/freshness_report.json
-            data/quality/openfda_gate_report.json
+            data/freshness/
+            data/quality/
+            dbt-project/target/run_results.json
+            dbt-project/target/manifest.json

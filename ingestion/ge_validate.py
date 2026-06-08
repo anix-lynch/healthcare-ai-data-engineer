@@ -7,8 +7,10 @@ decorative suite file. v1 shipped a GE suite JSON that the engine never executed
 actually validates the 300 landed reports and we PRESERVE the result as proof.
 
 Expectations are openFDA-specific (14 FAERS fields), derived from observed
-distributions. Schema-drift is caught by expect_table_columns_to_match_set, so a
-column dropped/renamed by the live API fails the suite.
+distributions. expect_table_columns_to_match_set validates the NORMALIZED openFDA
+data contract (the fixed shape our ingestion produces) — it catches a contract
+column going missing, NOT every possible upstream live-FDA-API change. Honest
+claim: "normalized openFDA contract validation", not "detects all live API drift".
 
 Run:  .ge-venv/bin/python ingestion/ge_validate.py [--strict]
 Proof: data/quality/openfda_ge_validation.json
