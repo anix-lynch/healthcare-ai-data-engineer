@@ -1,0 +1,82 @@
+{
+  "proof": "bullet4_sensitive_classification_masking",
+  "claim_phrase": "sensitive-data classification and masking",
+  "honesty": "openFDA FAERS carries NO PHI; capability proven on synthetic PII fixture, then shown to classify real openFDA fields as non-sensitive (0 findings).",
+  "rules": [
+    {
+      "label": "email",
+      "sensitivity": "PII"
+    },
+    {
+      "label": "phone",
+      "sensitivity": "PII"
+    },
+    {
+      "label": "ssn",
+      "sensitivity": "PII-high"
+    },
+    {
+      "label": "mrn",
+      "sensitivity": "PHI-like"
+    }
+  ],
+  "fixture": {
+    "rows": 3,
+    "rows_with_pii_masked": 2,
+    "total_findings": 4,
+    "leak_after_mask": false,
+    "detail": [
+      {
+        "original_len": 58,
+        "findings": [
+          {
+            "label": "email",
+            "sensitivity": "PII",
+            "match_len": 20
+          },
+          {
+            "label": "phone",
+            "sensitivity": "PII",
+            "match_len": 12
+          }
+        ],
+        "masked": "Reporter contact: [REDACTED:email], call [REDACTED:phone].",
+        "leak_after_mask": false
+      },
+      {
+        "original_len": 49,
+        "findings": [
+          {
+            "label": "ssn",
+            "sensitivity": "PII-high",
+            "match_len": 11
+          },
+          {
+            "label": "mrn",
+            "sensitivity": "PHI-like",
+            "match_len": 12
+          }
+        ],
+        "masked": "Patient SSN [REDACTED:ssn] and [REDACTED:mrn] on file.",
+        "leak_after_mask": false
+      },
+      {
+        "original_len": 54,
+        "findings": [],
+        "masked": "No identifiers here \u2014 just a drug name and a reaction.",
+        "leak_after_mask": false
+      }
+    ]
+  },
+  "openfda_control_run": {
+    "rows": 2,
+    "findings": 0,
+    "expected": 0
+  },
+  "checks": {
+    "detected_pii": true,
+    "no_leak_after_mask": true,
+    "openfda_classified_clean": true
+  },
+  "verdict": "GREEN \u2014 PII detected + masked with no residual leak; openFDA correctly clean"
+}

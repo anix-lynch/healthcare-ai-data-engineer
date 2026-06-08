@@ -1,0 +1,36 @@
+{
+  "proof": "bullet4_audit_and_versioned_contract",
+  "claim_phrase": "versioned data contracts ... and auditable pipeline activity",
+  "data_contract": {
+    "table": "fact_adverse_events",
+    "version": "1.0.0",
+    "sha256": "6ffbf4e78744f4d3cb92c9a357938e7167e2d5ced7f5108e16e630b3825c560d",
+    "columns": 9,
+    "enforced_against_live_schema": true
+  },
+  "audit_ledger": {
+    "table": "bchan-genai-lab.healthcare_analytics.governance_audit_log",
+    "append_only": true,
+    "partitioned_by": "event_ts",
+    "events_written": 3,
+    "events_read_back": 3,
+    "sample": [
+      {
+        "event": "data_contract_published",
+        "subject": "fact_adverse_events v1.0.0",
+        "evidence_sha256": "6ffbf4e78744f4d3cb92c9a357938e7167e2d5ced7f5108e16e630b3825c560d"
+      },
+      {
+        "event": "sensitive_scan_run",
+        "subject": "bullet4_masking_proof",
+        "evidence_sha256": "325fe8debdb0f2c2a82707a0be90061851e1f96566ec189b012498c8bc0f510a"
+      },
+      {
+        "event": "least_privilege_view_built",
+        "subject": "healthcare_secure.vw_adverse_events_safe",
+        "evidence_sha256": "2137c097784cd50af07abe446f4ae433b8f3ccc3d9b73ff90fa4f2315d67573a"
+      }
+    ]
+  },
+  "verdict": "GREEN \u2014 contract pinned+hashed+verified vs live schema; audit events durable & queryable"
+}

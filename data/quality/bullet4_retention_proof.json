@@ -1,0 +1,26 @@
+{
+  "proof": "bullet4_retention_deletion",
+  "claim_phrase": "automated retention and deletion policies",
+  "fixture": {
+    "table": "bchan-genai-lab.healthcare_analytics._fixture_retention",
+    "seeded_rows": 10,
+    "bounded": true,
+    "dropped_after": true
+  },
+  "retention_policy": {
+    "partition_expiration_days": 365.0,
+    "declarative_auto_expiry": true,
+    "target_days": 365
+  },
+  "deletion_run": {
+    "rows_past_retention": 5,
+    "after_retention_delete": 5,
+    "after_targeted_erasure": 0
+  },
+  "checks": {
+    "retention_deletes_expected_rows": true,
+    "targeted_deletion_works": true,
+    "partition_expiration_set": true
+  },
+  "verdict": "GREEN \u2014 partition expiration set + retention/targeted deletion verified on fixture"
+}

@@ -1,0 +1,40 @@
+{
+  "proof": "bullet4_least_privilege_authorized_view",
+  "claim_phrase": "least-privilege access ... and authorized views",
+  "secure_dataset": "bchan-genai-lab.healthcare_secure",
+  "authorized_view": "bchan-genai-lab.healthcare_secure.vw_adverse_events_safe",
+  "base_table_columns": [
+    "safetyreportid",
+    "received_date",
+    "primary_drug",
+    "is_serious",
+    "n_drugs",
+    "n_reactions",
+    "reactions",
+    "occurcountry",
+    "ingest_ts"
+  ],
+  "view_columns": [
+    "safetyreportid",
+    "received_date",
+    "primary_drug",
+    "is_serious",
+    "n_reactions",
+    "occurcountry"
+  ],
+  "columns_dropped": [
+    "ingest_ts",
+    "n_drugs",
+    "reactions"
+  ],
+  "authorized_on_source": false,
+  "view_query_rows_sampled": 5,
+  "steps": {
+    "secure_dataset": "bchan-genai-lab.healthcare_secure",
+    "view": "bchan-genai-lab.healthcare_secure.vw_adverse_events_safe"
+  },
+  "errors": [
+    "authorize(Forbidden-needs-owner): 403 PATCH https://bigquery.googleapis.com/bigquery/v2/projects/bchan-genai-lab/datasets/healthcare_analytics?prettyPrint=false: Access Denied: Dataset bchan-genai-lab:healthcare_analytics: Permission bigquery.datasets.update denied on dataset bchan-genai-lab:healthcare_analytics (or it may not exist)."
+  ],
+  "verdict": "YELLOW \u2014 view built but authorization/reduction incomplete (see errors)"
+}

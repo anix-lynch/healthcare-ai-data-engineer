@@ -1,0 +1,56 @@
+{
+  "dataset": "healthcare_analytics",
+  "table": "fact_adverse_events",
+  "version": "1.0.0",
+  "grain": "safetyreportid",
+  "owner": "alynch@gozeroshot.dev",
+  "columns": [
+    {
+      "name": "safetyreportid",
+      "type": "STRING",
+      "mode": "NULLABLE"
+    },
+    {
+      "name": "received_date",
+      "type": "DATE",
+      "mode": "NULLABLE"
+    },
+    {
+      "name": "primary_drug",
+      "type": "STRING",
+      "mode": "NULLABLE"
+    },
+    {
+      "name": "is_serious",
+      "type": "BOOLEAN",
+      "mode": "NULLABLE"
+    },
+    {
+      "name": "n_drugs",
+      "type": "INTEGER",
+      "mode": "NULLABLE"
+    },
+    {
+      "name": "n_reactions",
+      "type": "INTEGER",
+      "mode": "NULLABLE"
+    },
+    {
+      "name": "reactions",
+      "type": "STRING",
+      "mode": "NULLABLE"
+    },
+    {
+      "name": "occurcountry",
+      "type": "STRING",
+      "mode": "NULLABLE"
+    },
+    {
+      "name": "ingest_ts",
+      "type": "TIMESTAMP",
+      "mode": "NULLABLE"
+    }
+  ],
+  "retention_days": 365,
+  "classification": "public-deidentified (no PHI)"
+}
