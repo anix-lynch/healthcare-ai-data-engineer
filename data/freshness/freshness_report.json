@@ -1,7 +1,7 @@
 {
-  "checked_at": "2026-06-08T02:26:45Z",
+  "checked_at": "2026-06-08T15:58:55Z",
   "last_successful_ingest": "2026-06-08T02:26:41Z",
-  "data_latency_hours": 0.0,
+  "data_latency_hours": 13.54,
   "sla": {
     "warn_after_h": 24,
     "error_after_h": 48

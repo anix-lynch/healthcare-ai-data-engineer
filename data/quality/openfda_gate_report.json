@@ -1,13 +1,23 @@
 {
-  "scanned_at": "2026-06-07T19:26:45",
+  "scanned_at": "2026-06-08T08:58:55",
   "n_rows": 300,
+  "idempotency": {
+    "files_loaded": 1,
+    "raw_rows": 300,
+    "canonical_rows": 300,
+    "cross_pull_collapsed": 0,
+    "within_pull_dupes": 0,
+    "duplicate_rate": 0.0,
+    "note": "canonical = latest row per safetyreportid (MERGE); re-runs collapse, no false dup-fail"
+  },
   "checks": {
     "null_key": {
       "fail": 0,
       "critical": false
     },
     "duplicate_key": {
-      "fail": 0,
+      "within_pull_dupes": 0,
+      "residual_after_canonical": 0,
       "critical": false
     },
     "schema_drift": {

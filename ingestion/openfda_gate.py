@@ -15,13 +15,49 @@ REQUIRED = {"safetyreportid", "receivedate", "serious", "source_system", "ingest
 
 
 def _load(part_dir):
-    rows = []
-    for f in sorted(part_dir.rglob("*.jsonl")):
+    """Build the canonical openFDA view across all landed pulls (idempotent).
+
+    A scheduled pipeline lands a new .jsonl per pull, so the same safetyreportid
+    legitimately reappears across files (overlapping source windows / re-runs).
+    We upsert by safetyreportid keeping the latest ingest_ts (MERGE semantics) so
+    re-running the pull N times yields the SAME canonical set — the gate no longer
+    fails-closed on operational re-lands. A genuine source defect (the SAME id
+    duplicated WITHIN one pull) is still caught via within_pull_dupes.
+    """
+    files = sorted(part_dir.rglob("*.jsonl"))
+    raw, within_pull_dupes = [], 0
+    for f in files:
+        seen_in_file = set()
         for line in f.open():
             line = line.strip()
-            if line:
-                rows.append(json.loads(line))
-    return rows
+            if not line:
+                continue
+            r = json.loads(line)
+            rid = r.get("safetyreportid")
+            if rid and rid in seen_in_file:
+                within_pull_dupes += 1
+            seen_in_file.add(rid)
+            raw.append(r)
+
+    canonical, nullkey_rows = {}, []
+    for r in raw:
+        rid = r.get("safetyreportid")
+        if not rid:                      # preserve so null_key check still fires
+            nullkey_rows.append(r)
+            continue
+        prev = canonical.get(rid)
+        if prev is None or str(r.get("ingest_ts", "")) >= str(prev.get("ingest_ts", "")):
+            canonical[rid] = r
+    rows = list(canonical.values()) + nullkey_rows
+
+    stats = {
+        "files_loaded": len(files),
+        "raw_rows": len(raw),
+        "canonical_rows": len(rows),
+        "cross_pull_collapsed": len(raw) - len(rows),
+        "within_pull_dupes": within_pull_dupes,
+    }
+    return rows, stats
 
 
 def main():
@@ -30,14 +66,15 @@ def main():
     ap.add_argument("--strict", action="store_true")
     args = ap.parse_args()
 
-    rows = _load(args.data)
+    rows, idem = _load(args.data)
     if not rows:
         print("ERROR: no landed openFDA data", file=sys.stderr)
         return 1
 
     ids = [r.get("safetyreportid") for r in rows]
     null_keys = sum(1 for i in ids if not i)
-    dupes = [k for k, c in Counter(ids).items() if c > 1 and k]
+    # post-canonical residual dupes (must be 0 — idempotency safety net)
+    residual_dupes = [k for k, c in Counter(ids).items() if c > 1 and k]
     missing_cols = sorted(REQUIRED - set(rows[0].keys()))
     bad_dates = 0
     for r in rows:
@@ -51,7 +88,13 @@ def main():
 
     checks = {
         "null_key": {"fail": null_keys, "critical": null_keys > 0},
-        "duplicate_key": {"fail": len(dupes), "critical": len(dupes) > 0},
+        # within-pull dups = genuine source defect (pull dedup broke) → critical.
+        # cross-pull re-lands are collapsed by canonical upsert, NOT a failure.
+        "duplicate_key": {
+            "within_pull_dupes": idem["within_pull_dupes"],
+            "residual_after_canonical": len(residual_dupes),
+            "critical": idem["within_pull_dupes"] > 0 or len(residual_dupes) > 0,
+        },
         "schema_drift": {"missing": missing_cols, "critical": bool(missing_cols)},
         "temporal_sanity": {"bad_dates": bad_dates, "critical": bad_dates > 0},
         "value_domain": {"bad_serious": bad_serious, "critical": bad_serious > 0},
@@ -61,6 +104,11 @@ def main():
     report = {
         "scanned_at": datetime.now().isoformat(timespec="seconds"),
         "n_rows": len(rows),
+        "idempotency": {
+            **idem,
+            "duplicate_rate": round(idem["cross_pull_collapsed"] / max(idem["raw_rows"], 1), 4),
+            "note": "canonical = latest row per safetyreportid (MERGE); re-runs collapse, no false dup-fail",
+        },
         "checks": checks,
         "reconciliation": {
             "records_landed": len(rows),

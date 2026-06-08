@@ -4,7 +4,8 @@ healthcare_analytics:
   outputs:
     bigquery:
       type: bigquery
-      method: oauth          # uses gcloud ADC (owner: alynch@gozeroshot.dev)
+      method: service-account   # headless SA key (no weekly ADC death); SA needs dataEditor+jobUser
+      keyfile: "{{ env_var('GOOGLE_APPLICATION_CREDENTIALS', '/Users/anixlynch/.config/secrets/bchan-genai-deploy.json') }}"
       project: "{{ env_var('GCP_PROJECT_ID', 'bchan-genai-lab') }}"
       dataset: "{{ env_var('BQ_DATASET', 'healthcare_analytics') }}"
       location: "{{ env_var('BQ_LOCATION', 'US') }}"
