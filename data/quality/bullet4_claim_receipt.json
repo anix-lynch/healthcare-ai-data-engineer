@@ -1,0 +1,34 @@
+{
+  "bullet": 4,
+  "exact_text": "Implemented governed openFDA data lifecycle controls with least-privilege access, sensitive-data classification and masking, versioned data contracts, auditable pipeline activity, and automated retention and deletion policies.",
+  "phrases": [
+    {
+      "phrase": "least-privilege access",
+      "verdict": "YELLOW",
+      "proof": "secure dataset + reduced-column authorized view (9->6 cols) built; cross-dataset AUTHORIZE needs owner (bigquery.datasets.update on healthcare_analytics); bullet4_least_privilege_proof.json",
+      "owner_action": "ONE owner command pending (SA cannot self-grant)"
+    },
+    {
+      "phrase": "sensitive-data classification and masking",
+      "verdict": "GREEN",
+      "proof": "detect+mask synthetic PII, no residual leak; openFDA classified clean (no PHI claim); bullet4_masking_proof.json"
+    },
+    {
+      "phrase": "versioned data contracts",
+      "verdict": "GREEN",
+      "proof": "contract v1.0.0 sha256-pinned, enforced vs live schema; bullet4_audit_contract_proof.json"
+    },
+    {
+      "phrase": "auditable pipeline activity",
+      "verdict": "GREEN",
+      "proof": "append-only partitioned governance_audit_log; events written+read back; bullet4_audit_contract_proof.json"
+    },
+    {
+      "phrase": "automated retention and deletion policies",
+      "verdict": "GREEN",
+      "proof": "partition-expiration retention + targeted deletion verified on bounded fixture; bullet4_retention_proof.json"
+    }
+  ],
+  "phrase_summary": "4/5 GREEN",
+  "verdict": "PARTIAL / YELLOW \u2014 4/5 phrases GREEN; 1 pending (see phrase verdicts). NOT approved per START HERE one-phrase rule."
+}

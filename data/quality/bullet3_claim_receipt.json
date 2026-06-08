@@ -1,0 +1,43 @@
+{
+  "bullet": 3,
+  "exact_text": "Designed an analytics-ready openFDA star schema, business-defined semantic marts, and discoverable Feast features powering sub-5-second Power BI queries and grounded AI responses, with governed metadata and source-level citations.",
+  "phrases": [
+    {
+      "phrase": "analytics-ready openFDA star schema",
+      "verdict": "GREEN",
+      "proof": "dbt marts fact_adverse_events+dim_drug+dim_reaction+bridge_report_reaction in BQ; bullet3_marts_proof.json"
+    },
+    {
+      "phrase": "business-defined semantic marts",
+      "verdict": "GREEN",
+      "proof": "mart_drug_safety_kpis (156) + mart_reaction_signals (408), 15/15 KPI tests; bullet3_marts_proof.json"
+    },
+    {
+      "phrase": "discoverable Feast features",
+      "verdict": "GREEN",
+      "proof": "feast apply registers FV+service; historical+online retrieval; bullet3_feast_proof.json"
+    },
+    {
+      "phrase": "sub-5-second Power BI queries",
+      "verdict": "GREEN (query/data layer; BI report surface = Card 03)",
+      "proof": "4 Power-BI-style queries p50~1.2s max<1.92s over marts; bullet3_query_latency_proof.json"
+    },
+    {
+      "phrase": "grounded AI responses",
+      "verdict": "GREEN",
+      "proof": "grounded gemini-2.5-flash over 300 real reports, refuses out-of-evidence; bullet3_grounded_ai_proof.json"
+    },
+    {
+      "phrase": "governed metadata",
+      "verdict": "GREEN",
+      "proof": "dbt column descriptions (_semantic__marts.yml) + exposures lineage (_exposures.yml) + versioned data contract v1.0.0 (contracts/); bullet4_audit_contract_proof.json"
+    },
+    {
+      "phrase": "source-level citations",
+      "verdict": "GREEN",
+      "proof": "[doc N] citations trace to governed report fields; bullet3_grounded_ai_proof.json"
+    }
+  ],
+  "phrase_summary": "7/7 GREEN",
+  "verdict": "CLAIM APPROVED \u2014 every phrase backed by a generated proof file"
+}
