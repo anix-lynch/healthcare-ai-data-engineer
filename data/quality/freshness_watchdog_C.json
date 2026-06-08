@@ -1,7 +1,7 @@
 {
   "scenario": "C",
-  "detected_at": "2026-06-08T17:09:06Z",
-  "last_e2e_before": "2026-06-04T13:09:06Z",
+  "detected_at": "2026-06-08T17:28:24Z",
+  "last_e2e_before": "2026-06-04T13:28:24Z",
   "e2e_age_hours_at_detect": 100.0,
   "stale_detected": true,
   "max_attempts": 3,
@@ -30,8 +30,8 @@
   "failure_classification": "transient",
   "verification": null,
   "final_state": "escalated",
-  "last_e2e_after": "2026-06-04T13:09:06Z",
-  "git_commit": "4580c88da3475efe0f8c459555539b94cab0e41c",
+  "last_e2e_after": "2026-06-04T13:28:24Z",
+  "git_commit": "6189872846931d150c0042506f78fdd89d1b3161",
   "e2e_timestamp_unchanged_on_escalation": true,
   "escalation_artifact": "data/quality/freshness_escalation_C.json",
   "mttr_seconds": 0.1

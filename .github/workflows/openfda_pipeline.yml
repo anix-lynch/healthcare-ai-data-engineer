@@ -25,23 +25,10 @@ jobs:
         run: |
           echo '${{ secrets.GCP_SA_KEY }}' > /tmp/sa.json
           echo "GOOGLE_APPLICATION_CREDENTIALS=/tmp/sa.json" >> "$GITHUB_ENV"
-      - name: 1/6 Pull openFDA (retry up to 3x = retry recovery)
-        run: |
-          n=0
-          until python ingestion/openfda_pull.py --since 20260101 --max 500; do
-            n=$((n+1)); [ $n -ge 3 ] && echo "::error::ingest failed after 3 retries" && exit 1
-            echo "retry $n"; sleep $((n*10))
-          done
-      - name: 2/6 Quality gate (fail-closed)
-        run: python ingestion/openfda_gate.py --strict
-      - name: 3/6 BigQuery merge + window reconciliation
-        run: python ingestion/bq_load.py
-      - name: 4/6 Great Expectations (fail-closed, normalized contract)
-        run: python ingestion/ge_validate.py --strict
-      - name: 5/6 dbt build (staging/fact/dims/bridge + tests)
-        run: cd dbt-project && dbt build --profiles-dir .
-      - name: 6/6 Freshness gate (3 clocks + stale alert)
-        run: python ingestion/freshness_check.py --strict
+      - name: Run canonical pipeline (pull→gate→merge→GE→dbt→freshness + verify)
+        # Primary DAG and the watchdog both invoke this SAME runner; it stamps
+        # last_successful_e2e only after final verification passes.
+        run: python ingestion/run_pipeline.py
       - name: Upload Trust proof artifacts
         if: always()
         uses: actions/upload-artifact@v4

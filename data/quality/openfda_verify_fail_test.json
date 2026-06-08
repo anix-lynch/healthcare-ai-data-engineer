@@ -1,0 +1,14 @@
+{
+  "test": "verify_failure_leaves_timestamp_unchanged",
+  "pipeline_exit": 1,
+  "e2e_before": "2026-06-08T17:26:22Z",
+  "e2e_after": "2026-06-08T17:26:22Z",
+  "checks": {
+    "pipeline_exits_nonzero_on_verify_fail": true,
+    "stages_ran_ok": true,
+    "verification_failed": true,
+    "run_marked_not_passed": true,
+    "e2e_timestamp_unchanged": true
+  },
+  "passed": true
+}

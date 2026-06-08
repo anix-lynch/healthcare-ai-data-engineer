@@ -22,6 +22,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(REPO / "ingestion"))
+import verify_e2e
 PY = sys.executable
 GE_PY = os.environ.get("GE_PY", str(REPO / ".ge-venv" / "bin" / "python"))
 DBT = os.environ.get("DBT", str(REPO / ".venv" / "bin" / "dbt"))
@@ -46,23 +48,32 @@ def main():
         if rc != 0:                       # fail-closed: stop at first critical failure
             failed = name
             break
+    stages_ok = failed is None and len(results) == len(STAGES)
+    # FINAL verification gates the success stamp: stages exiting 0 is necessary but
+    # NOT sufficient. last_successful_e2e is written only after verify() passes too.
+    verification = verify_e2e.verify() if stages_ok else None
+    verified = bool(verification and verification.get("all_passed"))
     report = {
         "ran_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "stages": results,
         "stages_total": len(STAGES),
         "stages_passed": sum(1 for r in results if r["exit"] == 0),
         "failed_stage": failed,
-        "passed": failed is None and len(results) == len(STAGES),
+        "stages_ok": stages_ok,
+        "verification": verification,
+        "passed": stages_ok and verified,
     }
     out = REPO / "data" / "quality" / "openfda_pipeline_run.json"
     out.write_text(json.dumps(report, indent=2))
-    # The single source of truth for "last successfully COMPLETED end-to-end run".
-    # Written ONLY on full success — the watchdog reads this and never refreshes it
-    # on failure, so a dead pipeline stays detectably stale.
+    # Single source of truth for "last successfully COMPLETED + VERIFIED E2E run".
+    # Written ONLY when stages AND final verification pass — the watchdog reads this
+    # and never refreshes it on failure, so a dead/unverified pipeline stays stale.
     if report["passed"]:
         (REPO / "data" / "freshness" / "last_successful_e2e.json").write_text(json.dumps({
-            "completed_at": report["ran_at"], "stages_passed": report["stages_passed"]}, indent=2))
+            "completed_at": report["ran_at"], "stages_passed": report["stages_passed"],
+            "verified": True}, indent=2))
     print(json.dumps({k: report[k] for k in ("stages_passed", "stages_total", "failed_stage", "passed")}, indent=2))
+    print(f"  verification: {verification and {k: v for k, v in verification.items() if k != 'bq_dup_check_error'}}")
     return 0 if report["passed"] else 1
 
 

@@ -1,7 +1,7 @@
 {
   "scenario": "B",
-  "detected_at": "2026-06-08T17:08:26Z",
-  "last_e2e_before": "2026-06-08T17:08:24Z",
+  "detected_at": "2026-06-08T17:27:43Z",
+  "last_e2e_before": "2026-06-08T17:27:40Z",
   "e2e_age_hours_at_detect": 0.0,
   "stale_detected": true,
   "max_attempts": 4,
@@ -29,7 +29,6 @@
   ],
   "failure_classification": "transient",
   "verification": {
-    "e2e_timestamp_exists": true,
     "ingestion_within_sla": true,
     "reconciliation_passes": true,
     "ge_passes": true,
@@ -38,7 +37,7 @@
     "all_passed": true
   },
   "final_state": "recovered",
-  "last_e2e_after": "2026-06-08T17:09:04Z",
-  "git_commit": "4580c88da3475efe0f8c459555539b94cab0e41c",
-  "mttr_seconds": 39.5
+  "last_e2e_after": "2026-06-08T17:28:22Z",
+  "git_commit": "6189872846931d150c0042506f78fdd89d1b3161",
+  "mttr_seconds": 41.1
 }

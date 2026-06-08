@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-06-08T17:09:04Z",
+  "checked_at": "2026-06-08T17:28:20Z",
   "clocks": {
     "source_freshness": {
       "newest_record_receivedate": "20260119",
@@ -7,7 +7,7 @@
       "source_feed_status": "ok"
     },
     "ingestion_freshness": {
-      "last_successful_ingest": "2026-06-08T17:08:26Z",
+      "last_successful_ingest": "2026-06-08T17:27:43Z",
       "ingestion_latency_hours": 0.01,
       "sla": {
         "warn_after_h": 24,
@@ -16,7 +16,7 @@
       "status": "fresh"
     },
     "warehouse_lag": {
-      "warehouse_lag_seconds": 13.2
+      "warehouse_lag_seconds": 14.0
     }
   },
   "records_landed": 300,
