@@ -1,0 +1,70 @@
+{
+  "generated_at": "2026-06-08T16:41:32Z",
+  "git_commit": "af0dbfd9fe5daed3cd74bacc528aa9121e0e2171",
+  "verbatim_target_bullet": "Built a resilient dual-mode healthcare data pipeline supporting scheduled batch and real-time streaming ingestion, with idempotent deduplication, fail-closed Great Expectations/dbt quality gates, late-arriving record handling, and end-to-end BigQuery reconciliation.",
+  "phrases": [
+    {
+      "phrase": "real openFDA adverse-event data",
+      "proof": "data/freshness/ingest_manifest.json",
+      "result": "source=https://api.fda.gov/drug/event.json window={'since': '20260101', 'until': '20260608'} accepted=300 at 2026-06-08T16:27:45Z",
+      "pass": true,
+      "kind": "openFDA-specific"
+    },
+    {
+      "phrase": "scheduled incremental batch ingestion",
+      "proof": ".github/workflows/openfda_pipeline.yml + data/quality/openfda_gate_report.json (idempotency.files_loaded)",
+      "result": "scheduler_committed=True; repeat_pulls=2; incremental merge on ingest_ts (stg_openfda_events)",
+      "pass": true,
+      "kind": "openFDA-specific"
+    },
+    {
+      "phrase": "real-time streaming ingestion (dual-mode)",
+      "proof": "NONE \u2014 no pubsub/stream/dataflow file tracked in repo",
+      "result": "tracked_streaming_files=none (prior Pub/Sub-native proof removed in cleanup)",
+      "pass": false,
+      "kind": "absent"
+    },
+    {
+      "phrase": "idempotent deduplication",
+      "proof": "data/quality/openfda_reconciliation.json (leg_b net_new_rows)",
+      "result": "two pulls -> canonical 300, net_new_rows=0 on reload",
+      "pass": true,
+      "kind": "openFDA-specific"
+    },
+    {
+      "phrase": "fail-closed Great Expectations + dbt quality gates",
+      "proof": "data/quality/openfda_failclose_test.json + openfda_ge_validation.json + dbt-project/proof/run_results.json",
+      "result": "corrupt->exit 1; GE 15/15 success=True; dbt 28 nodes pass=True",
+      "pass": true,
+      "kind": "openFDA-specific"
+    },
+    {
+      "phrase": "late-arriving / revised record handling",
+      "proof": "data/quality/openfda_late_arriving.json",
+      "result": "late-insert+revised-update+stale-ignored passed=True",
+      "pass": true,
+      "kind": "openFDA-specific"
+    },
+    {
+      "phrase": "end-to-end source-to-BigQuery reconciliation",
+      "proof": "data/quality/openfda_reconciliation.json",
+      "result": "reconciles=True (fetched=accepted+rejected; accepted=warehouse)",
+      "pass": true,
+      "kind": "openFDA-specific"
+    },
+    {
+      "phrase": "referential integrity (real FK dims/bridge)",
+      "proof": "dbt-project/proof/run_results.json (relationships tests)",
+      "result": "3 relationships(FK) tests, all pass=True",
+      "pass": true,
+      "kind": "openFDA-specific"
+    }
+  ],
+  "unsupported_phrases": [
+    "real-time streaming ingestion (dual-mode)"
+  ],
+  "verbatim_verdict": "CLAIM REJECTED",
+  "verbatim_reason": "'real-time streaming ingestion (dual-mode)' has no proof file in repo \u2014 streaming path was removed in the openFDA cleanup. All other phrases pass.",
+  "approved_alternative_bullet": "Hardened a healthcare data pipeline ingesting real openFDA adverse-event data via scheduled incremental batch, with idempotent deduplication, fail-closed Great Expectations + dbt quality gates, late-arriving/revised-record handling, real drug/reaction referential integrity, and end-to-end source-to-BigQuery reconciliation \u2014 each control independently evidenced by a generated proof file.",
+  "approved_alternative_verdict": "CLAIM APPROVED \u2014 every phrase backed by a generated proof file"
+}
