@@ -56,6 +56,12 @@ def main():
     }
     out = REPO / "data" / "quality" / "openfda_pipeline_run.json"
     out.write_text(json.dumps(report, indent=2))
+    # The single source of truth for "last successfully COMPLETED end-to-end run".
+    # Written ONLY on full success — the watchdog reads this and never refreshes it
+    # on failure, so a dead pipeline stays detectably stale.
+    if report["passed"]:
+        (REPO / "data" / "freshness" / "last_successful_e2e.json").write_text(json.dumps({
+            "completed_at": report["ran_at"], "stages_passed": report["stages_passed"]}, indent=2))
     print(json.dumps({k: report[k] for k in ("stages_passed", "stages_total", "failed_stage", "passed")}, indent=2))
     return 0 if report["passed"] else 1
 

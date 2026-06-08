@@ -1,0 +1,36 @@
+{
+  "scenario": "C",
+  "detected_at": "2026-06-08T17:09:06Z",
+  "last_e2e_before": "2026-06-04T13:09:06Z",
+  "e2e_age_hours_at_detect": 100.0,
+  "stale_detected": true,
+  "max_attempts": 3,
+  "attempts": [
+    {
+      "attempt": 1,
+      "exit": 1,
+      "result": "transient_retry"
+    },
+    {
+      "attempt": 2,
+      "exit": 1,
+      "result": "transient_retry"
+    },
+    {
+      "attempt": 3,
+      "exit": 1,
+      "result": "transient_retry"
+    }
+  ],
+  "actions": [
+    "attempt 1: /opt/homebrew/opt/python@3.14/bin/python3.14 ingestion/recovery_target.py",
+    "attempt 2: /opt/homebrew/opt/python@3.14/bin/python3.14 ingestion/recovery_target.py",
+    "attempt 3: /opt/homebrew/opt/python@3.14/bin/python3.14 ingestion/recovery_target.py"
+  ],
+  "failure_classification": "transient",
+  "verification": null,
+  "final_state": "escalated",
+  "last_e2e_after": "2026-06-04T13:09:06Z",
+  "git_commit": "4580c88da3475efe0f8c459555539b94cab0e41c",
+  "e2e_timestamp_unchanged_on_escalation": true
+}

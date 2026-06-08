@@ -10,7 +10,9 @@ record pulled today read "fresh 0h" — a lie):
                           This drives the stale alert / fail-closed exit.
   3. warehouse lag       — ingest_ts -> landed in BigQuery (from reconciliation report).
 
-Run after every ingest. --strict exits non-zero when ingestion is stale (alert fired).
+Run after every ingest. --strict exits non-zero when ingestion is stale. NB: the
+stale flag + exit code + JSON report = DETECTION (an escalation artifact). It is
+not an external notification — no email/Slack channel is wired.
 """
 from __future__ import annotations
 import argparse, json, sys
@@ -82,7 +84,8 @@ def main():
     (REPO / "data" / "freshness" / "freshness_report.json").write_text(json.dumps(report, indent=2))
     print(json.dumps(report, indent=2))
     if status == "stale":
-        print(f"\n[STALE] pipeline data {ingestion_latency_h:.1f}h old (> {err}h SLA) -- alert fired", file=sys.stderr)
+        print(f"\n[STALE] pipeline data {ingestion_latency_h:.1f}h old (> {err}h SLA) -- detected; "
+              f"escalation artifact freshness_report.json (no external notifier wired)", file=sys.stderr)
         if args.strict:
             return 1
     else:

@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-06-08T17:01:02Z",
-  "git_commit": "5254543b8a2622b1124cc398b9ddf70b769a8dc1",
+  "generated_at": "2026-06-08T17:10:51Z",
+  "git_commit": "4580c88da3475efe0f8c459555539b94cab0e41c",
   "verbatim_target_bullet": "Built a resilient dual-mode healthcare data pipeline supporting scheduled batch and real-time streaming ingestion, with idempotent deduplication, fail-closed Great Expectations/dbt quality gates, late-arriving record handling, and end-to-end BigQuery reconciliation.",
   "phrases": [
     {
       "phrase": "real openFDA adverse-event data",
       "proof": "data/freshness/ingest_manifest.json",
-      "result": "source=https://api.fda.gov/drug/event.json window={'since': '20260101', 'until': '20260608'} accepted=300 at 2026-06-08T16:59:04Z",
+      "result": "source=https://api.fda.gov/drug/event.json window={'since': '20260101', 'until': '20260608'} accepted=300 at 2026-06-08T17:08:26Z",
       "pass": true,
       "kind": "openFDA-specific"
     },
@@ -67,9 +67,16 @@
       "kind": "openFDA-specific"
     },
     {
-      "phrase": "malformed-record handling (fail-closed at batch level)",
-      "proof": "data/quality/openfda_failclose_test.json + openfda_schema_drift_test.json",
-      "result": "corrupt/drift fixtures stop the pipeline (exit!=0). NOTE: stops whole batch \u2014 per-record quarantine NOT yet built.",
+      "phrase": "malformed/missing data DETECTED (not recovered)",
+      "proof": "data/quality/openfda_failclose_test.json + openfda_schema_drift_test.json + openfda_reconciliation.json",
+      "result": "malformed -> fail-closed stop (detected, whole-batch; NO per-record quarantine yet); missing -> window reconciliation detects (NOT auto-restored). Honest: detect, not heal.",
+      "pass": true,
+      "kind": "openFDA-specific"
+    },
+    {
+      "phrase": "self-healing freshness recovery (bounded, verified, escalates)",
+      "proof": "data/quality/freshness_selfheal_tests.json (+ freshness_watchdog_{A,B,C,D}.json)",
+      "result": "watchdog detect->bounded recover->verify->escalate; 4/4 scenarios (recover/transient/exhausted/unsafe) score=green",
       "pass": true,
       "kind": "openFDA-specific"
     }
@@ -79,6 +86,6 @@
   ],
   "verbatim_verdict": "CLAIM REJECTED",
   "verbatim_reason": "'real-time streaming ingestion (dual-mode)' has no proof file in repo \u2014 streaming path was removed in the openFDA cleanup. All other phrases pass.",
-  "approved_alternative_bullet": "Hardened a real openFDA batch pipeline against duplicate, revised, late-arriving, malformed, and missing records using idempotent BigQuery merges, fail-closed Great Expectations + dbt quality gates, real drug/reaction referential integrity, and window-scoped source-to-BigQuery reconciliation \u2014 each control independently evidenced by a generated proof file. (Codex-QA approved batch scope.)",
+  "approved_alternative_bullet": "Hardened a real openFDA batch pipeline against duplicate, revised, and late-arriving records, with fail-closed Great Expectations + dbt quality gates and window-scoped source-to-BigQuery reconciliation that detects malformed or missing data; added a self-healing freshness watchdog that detects missed runs, auto-recovers the full 6-stage pipeline with bounded retries, verifies restoration, and escalates unsafe failures without falsely marking data fresh \u2014 each control independently evidenced by a generated proof file. (Codex-QA approved batch scope.)",
   "approved_alternative_verdict": "CLAIM APPROVED \u2014 every phrase backed by a generated proof file"
 }

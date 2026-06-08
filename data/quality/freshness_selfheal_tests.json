@@ -1,0 +1,33 @@
+{
+  "suite": "freshness_self_healing",
+  "scenarios": {
+    "A_recoverable_missed_run": {
+      "final_state": "recovered",
+      "pass": true
+    },
+    "B_transient_retry": {
+      "attempts": [
+        "transient_retry",
+        "transient_retry",
+        "verified"
+      ],
+      "final_state": "recovered",
+      "pass": true
+    },
+    "C_exhausted_recovery": {
+      "attempts_made": 3,
+      "final_state": "escalated",
+      "e2e_unchanged": true,
+      "pass": true
+    },
+    "D_unsafe_failure": {
+      "attempts_made": 1,
+      "final_state": "escalated",
+      "classification": "unsafe_no_auto_repair",
+      "pass": true
+    }
+  },
+  "all_scenarios_pass": true,
+  "self_healing_score": "green",
+  "git_commit": "4580c88da3475efe0f8c459555539b94cab0e41c"
+}

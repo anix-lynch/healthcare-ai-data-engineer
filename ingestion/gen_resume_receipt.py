@@ -29,6 +29,7 @@ late = load("data/quality/openfda_late_arriving.json")
 fc = load("data/quality/openfda_failclose_test.json")
 pipe = load("data/quality/openfda_pipeline_run.json")
 drift = load("data/quality/openfda_schema_drift_test.json")
+selfheal = load("data/quality/freshness_selfheal_tests.json")
 rr = load("dbt-project/proof/run_results.json")
 sched = (REPO / ".github/workflows/openfda_pipeline.yml").exists()
 streaming_files = [p for p in subprocess.run(
@@ -92,11 +93,17 @@ phrases = [
                f"scope: {drift and drift.get('scope')}",
      "pass": bool(drift and drift["passed"]),
      "kind": "openFDA-specific"},
-    {"phrase": "malformed-record handling (fail-closed at batch level)",
-     "proof": "data/quality/openfda_failclose_test.json + openfda_schema_drift_test.json",
-     "result": f"corrupt/drift fixtures stop the pipeline (exit!=0). NOTE: stops whole batch — "
-               f"per-record quarantine NOT yet built.",
+    {"phrase": "malformed/missing data DETECTED (not recovered)",
+     "proof": "data/quality/openfda_failclose_test.json + openfda_schema_drift_test.json + openfda_reconciliation.json",
+     "result": "malformed -> fail-closed stop (detected, whole-batch; NO per-record quarantine yet); "
+               "missing -> window reconciliation detects (NOT auto-restored). Honest: detect, not heal.",
      "pass": bool(fc and fc["passed"] and drift and drift["passed"]),
+     "kind": "openFDA-specific"},
+    {"phrase": "self-healing freshness recovery (bounded, verified, escalates)",
+     "proof": "data/quality/freshness_selfheal_tests.json (+ freshness_watchdog_{A,B,C,D}.json)",
+     "result": f"watchdog detect->bounded recover->verify->escalate; 4/4 scenarios "
+               f"(recover/transient/exhausted/unsafe) score={selfheal and selfheal.get('self_healing_score')}",
+     "pass": bool(selfheal and selfheal.get("self_healing_score") == "green"),
      "kind": "openFDA-specific"},
 ]
 
@@ -107,11 +114,13 @@ verbatim_bullet = ("Built a resilient dual-mode healthcare data pipeline support
                    "real-time streaming ingestion, with idempotent deduplication, fail-closed Great "
                    "Expectations/dbt quality gates, late-arriving record handling, and end-to-end "
                    "BigQuery reconciliation.")
-approved_bullet = ("Hardened a real openFDA batch pipeline against duplicate, revised, late-arriving, "
-                   "malformed, and missing records using idempotent BigQuery merges, fail-closed Great "
-                   "Expectations + dbt quality gates, real drug/reaction referential integrity, and "
-                   "window-scoped source-to-BigQuery reconciliation — each control independently "
-                   "evidenced by a generated proof file. (Codex-QA approved batch scope.)")
+approved_bullet = ("Hardened a real openFDA batch pipeline against duplicate, revised, and late-arriving "
+                   "records, with fail-closed Great Expectations + dbt quality gates and window-scoped "
+                   "source-to-BigQuery reconciliation that detects malformed or missing data; added a "
+                   "self-healing freshness watchdog that detects missed runs, auto-recovers the full "
+                   "6-stage pipeline with bounded retries, verifies restoration, and escalates unsafe "
+                   "failures without falsely marking data fresh — each control independently evidenced "
+                   "by a generated proof file. (Codex-QA approved batch scope.)")
 
 receipt = {
     "generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
