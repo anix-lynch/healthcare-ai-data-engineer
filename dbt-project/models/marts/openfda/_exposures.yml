@@ -19,7 +19,7 @@ exposures:
       - ref('mart_reaction_signals')
     owner:
       name: Anix Lynch
-      email: alynch@gozeroshot.dev
+      email: data-eng@example.com
 
   - name: grounded_ai_openfda_api
     type: application
@@ -33,4 +33,4 @@ exposures:
       - ref('fact_adverse_events')
     owner:
       name: Anix Lynch
-      email: alynch@gozeroshot.dev
+      email: data-eng@example.com

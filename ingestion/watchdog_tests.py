@@ -16,7 +16,7 @@ from pathlib import Path
 
 # staleness/watermark now live in the durable ledger — use a throwaway table here
 os.environ["LEDGER_TABLE"] = "pipeline_run_history_wtest"
-os.environ.setdefault("GCP_PROJECT_ID", "bchan-genai-lab")
+os.environ.setdefault("GCP_PROJECT_ID", "PROJECT")
 os.environ.setdefault("BQ_DATASET", "healthcare_analytics")
 REPO = Path(__file__).resolve().parents[1]
 Q = REPO / "data" / "quality"

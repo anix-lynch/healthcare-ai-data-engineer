@@ -21,7 +21,7 @@ sys.path.insert(0, str(REPO / "ingestion"))
 from openfda_gate import _load
 from bq_load import SCHEMA, COLS
 
-PROJECT = os.environ.get("GCP_PROJECT_ID", "bchan-genai-lab")
+PROJECT = os.environ.get("GCP_PROJECT_ID", "PROJECT")
 DATASET = os.environ.get("BQ_DATASET", "healthcare_analytics")
 MAIN = f"{PROJECT}.{DATASET}.raw_openfda_events"
 JOB = bigquery.QueryJobConfig(maximum_bytes_billed=100 * 1024 * 1024)

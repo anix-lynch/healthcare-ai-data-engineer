@@ -15,7 +15,7 @@ from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
 os.environ["LEDGER_TABLE"] = "pipeline_run_history_test"
-os.environ.setdefault("GCP_PROJECT_ID", "bchan-genai-lab")
+os.environ.setdefault("GCP_PROJECT_ID", "PROJECT")
 os.environ.setdefault("BQ_DATASET", "healthcare_analytics")
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "ingestion"))

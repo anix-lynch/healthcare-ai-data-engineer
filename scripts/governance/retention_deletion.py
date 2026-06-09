@@ -15,7 +15,7 @@ from pathlib import Path
 from google.cloud import bigquery
 
 REPO = Path(__file__).resolve().parents[2]
-PROJECT, DS = "bchan-genai-lab", "healthcare_analytics"
+PROJECT, DS = "PROJECT", "healthcare_analytics"
 FIX = "_fixture_retention"
 RETENTION_DAYS = 365
 

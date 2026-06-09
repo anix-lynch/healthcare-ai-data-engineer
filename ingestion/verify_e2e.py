@@ -39,7 +39,7 @@ def verify():
     }
     try:
         from google.cloud import bigquery
-        c = bigquery.Client(project=os.environ.get("GCP_PROJECT_ID", "bchan-genai-lab"))
+        c = bigquery.Client(project=os.environ.get("GCP_PROJECT_ID", "PROJECT"))
         ds = os.environ.get("BQ_DATASET", "healthcare_analytics")
         jc = bigquery.QueryJobConfig(maximum_bytes_billed=100 * 1024 * 1024)
         dup = list(c.query(f"SELECT COUNT(*)-COUNT(DISTINCT safetyreportid) d "

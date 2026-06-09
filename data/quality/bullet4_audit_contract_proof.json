@@ -9,7 +9,7 @@
     "enforced_against_live_schema": true
   },
   "audit_ledger": {
-    "table": "bchan-genai-lab.healthcare_analytics.governance_audit_log",
+    "table": "PROJECT.healthcare_analytics.governance_audit_log",
     "append_only": true,
     "partitioned_by": "event_ts",
     "events_written": 3,

@@ -16,13 +16,13 @@ set -euo pipefail
 #   + 5 deploy roles · key at ~/.config/secrets/bchan-genai-deploy.json
 SA_KEY="$HOME/.config/secrets/bchan-genai-deploy.json"
 if [[ -f "$SA_KEY" ]]; then
-  SA_EMAIL="bchan-genai-deploy@bchan-genai-lab.iam.gserviceaccount.com"
+  SA_EMAIL="deploy-sa@PROJECT.iam.gserviceaccount.com"
   gcloud auth activate-service-account --key-file="$SA_KEY" --quiet >/dev/null 2>&1 || true
   export CLOUDSDK_CORE_ACCOUNT="$SA_EMAIL"
   echo "[auth] using SA $SA_EMAIL"
 fi
 
-PROJECT="${GCP_PROJECT:-bchan-genai-lab}"
+PROJECT="${GCP_PROJECT:-PROJECT}"
 REGION="${GCP_REGION:-us-west1}"
 SERVICE="${SERVICE_NAME:-healthcare-ai-data}"
 REPO="cloud-run-source-deploy"
@@ -50,7 +50,7 @@ echo "[2/3] Deploying to Cloud Run..."
 # so /api/ask can call Gemini via Vertex. The default compute SA does NOT have it
 # (it 403s aiplatform.endpoints.predict), so DO NOT drop this flag — grounded
 # generation regresses to retrieval-only if the service reverts to the compute SA.
-RUNTIME_SA="${RUNTIME_SA:-bchan-genai-deploy@bchan-genai-lab.iam.gserviceaccount.com}"
+RUNTIME_SA="${RUNTIME_SA:-deploy-sa@PROJECT.iam.gserviceaccount.com}"
 gcloud run deploy "$SERVICE" \
     --image "$IMAGE" \
     --region "$REGION" \

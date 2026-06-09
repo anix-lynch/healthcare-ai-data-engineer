@@ -9,7 +9,7 @@ on:
     - cron: "30 */6 * * *"   # every 6h, offset 30min from the daily 06:00 primary DAG
   workflow_dispatch: {}
 env:
-  GCP_PROJECT_ID: bchan-genai-lab
+  GCP_PROJECT_ID: PROJECT
   BQ_DATASET: healthcare_analytics
   BQ_LOCATION: US
 jobs:

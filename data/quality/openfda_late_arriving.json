@@ -1,6 +1,6 @@
 {
   "test": "late_arriving_and_revision",
-  "target": "bchan-genai-lab.healthcare_analytics.raw_openfda_events",
+  "target": "PROJECT.healthcare_analytics.raw_openfda_events",
   "counts": {
     "before": 300,
     "after_late_insert": 301,

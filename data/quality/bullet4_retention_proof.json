@@ -2,7 +2,7 @@
   "proof": "bullet4_retention_deletion",
   "claim_phrase": "automated retention and deletion policies",
   "fixture": {
-    "table": "bchan-genai-lab.healthcare_analytics._fixture_retention",
+    "table": "PROJECT.healthcare_analytics._fixture_retention",
     "seeded_rows": 10,
     "bounded": true,
     "dropped_after": true

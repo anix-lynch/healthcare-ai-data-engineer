@@ -20,7 +20,7 @@ from google.cloud import bigquery
 from google.api_core.exceptions import Conflict, Forbidden
 
 REPO = Path(__file__).resolve().parents[2]
-PROJECT = "bchan-genai-lab"
+PROJECT = "PROJECT"
 SRC_DS = "healthcare_analytics"
 SEC_DS = "healthcare_secure"
 BASE = "fact_adverse_events"

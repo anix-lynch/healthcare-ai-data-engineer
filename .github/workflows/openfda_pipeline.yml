@@ -9,7 +9,7 @@ on:
   push:
     paths: ["ingestion/**", "dbt-project/**", ".github/workflows/openfda_pipeline.yml"]
 env:
-  GCP_PROJECT_ID: bchan-genai-lab
+  GCP_PROJECT_ID: PROJECT
   BQ_DATASET: healthcare_analytics
   BQ_LOCATION: US
 jobs:

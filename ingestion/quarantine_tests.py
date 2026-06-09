@@ -17,7 +17,7 @@ QUAR = REPO / "data" / "quarantine" / "quarantine.jsonl"
 LEDGER = REPO / "data" / "quarantine" / "replayed_ledger.json"
 QRPT = REPO / "data" / "quality" / "openfda_quarantine.json"
 TID = "TEST_QUAR_0001"
-ENV = {**os.environ, "GCP_PROJECT_ID": "bchan-genai-lab", "BQ_DATASET": "healthcare_analytics", "BQ_LOCATION": "US"}
+ENV = {**os.environ, "GCP_PROJECT_ID": "PROJECT", "BQ_DATASET": "healthcare_analytics", "BQ_LOCATION": "US"}
 
 
 def make_fixture(n_bad, n_total=12):
@@ -50,7 +50,7 @@ def test_A():
 
 
 def test_B():
-    c = bigquery.Client(project="bchan-genai-lab")
+    c = bigquery.Client(project="PROJECT")
     jc = bigquery.QueryJobConfig(maximum_bytes_billed=100 * 1024 * 1024)
     def cnt(): return list(c.query(f"SELECT COUNT(*) n FROM healthcare_analytics.raw_openfda_events WHERE safetyreportid='{TID}'", job_config=jc).result())[0].n
     c.query(f"DELETE FROM healthcare_analytics.raw_openfda_events WHERE safetyreportid='{TID}'", job_config=jc).result()

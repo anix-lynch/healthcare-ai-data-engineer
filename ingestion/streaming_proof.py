@@ -25,7 +25,7 @@ sys.path.insert(0, str(REPO / "ingestion"))
 from quarantine import classify
 from bq_load import SCHEMA, COLS
 
-PROJECT = os.environ.get("GCP_PROJECT_ID", "bchan-genai-lab")
+PROJECT = os.environ.get("GCP_PROJECT_ID", "PROJECT")
 DATASET = os.environ.get("BQ_DATASET", "healthcare_analytics")
 TOPIC = "openfda-events"
 SUB = "openfda-events-bqsub"

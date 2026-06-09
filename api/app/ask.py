@@ -27,7 +27,7 @@ except Exception:  # pragma: no cover - import shim for direct execution
     from retrieval import get_retriever  # type: ignore
 
 _MODEL_NAME = os.environ.get("ASK_MODEL", "gemini-2.5-flash")
-_PROJECT = os.environ.get("GCP_PROJECT_ID") or os.environ.get("GOOGLE_CLOUD_PROJECT") or "bchan-genai-lab"
+_PROJECT = os.environ.get("GCP_PROJECT_ID") or os.environ.get("GOOGLE_CLOUD_PROJECT") or "PROJECT"
 _LOCATION = os.environ.get("GCP_LOCATION", "us-central1")
 
 _SYSTEM = (

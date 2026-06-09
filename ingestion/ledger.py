@@ -18,7 +18,7 @@ import os
 from datetime import datetime, timezone
 from google.cloud import bigquery
 
-PROJECT = os.environ.get("GCP_PROJECT_ID", "bchan-genai-lab")
+PROJECT = os.environ.get("GCP_PROJECT_ID", "PROJECT")
 DATASET = os.environ.get("BQ_DATASET", "healthcare_analytics")
 TABLE = f"{PROJECT}.{DATASET}.{os.environ.get('LEDGER_TABLE', 'pipeline_run_history')}"
 JOB = bigquery.QueryJobConfig(maximum_bytes_billed=100 * 1024 * 1024)

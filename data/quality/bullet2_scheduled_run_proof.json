@@ -11,7 +11,7 @@
   "executor": {
     "type": "Cloud Run Job",
     "job": "freshness-watchdog",
-    "runtime_identity": "bchan-genai-deploy@bchan-genai-lab (god-SA via metadata server \u2014 NO key file)",
+    "runtime_identity": "deploy-sa@PROJECT (god-SA via metadata server \u2014 NO key file)",
     "note": "runtime identity = zero key material on disk or in any repo/secret"
   },
   "executions": [

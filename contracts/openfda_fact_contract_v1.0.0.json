@@ -3,7 +3,7 @@
   "table": "fact_adverse_events",
   "version": "1.0.0",
   "grain": "safetyreportid",
-  "owner": "alynch@gozeroshot.dev",
+  "owner": "data-eng@example.com",
   "columns": [
     {
       "name": "safetyreportid",

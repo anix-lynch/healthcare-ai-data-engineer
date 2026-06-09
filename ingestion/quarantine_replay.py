@@ -19,7 +19,7 @@ sys.path.insert(0, str(REPO / "ingestion"))
 from quarantine import classify, QUAR
 from bq_load import SCHEMA, COLS
 
-PROJECT = os.environ.get("GCP_PROJECT_ID", "bchan-genai-lab")
+PROJECT = os.environ.get("GCP_PROJECT_ID", "PROJECT")
 DATASET = os.environ.get("BQ_DATASET", "healthcare_analytics")
 TARGET = f"{PROJECT}.{DATASET}.raw_openfda_events"
 LEDGER = REPO / "data" / "quarantine" / "replayed_ledger.json"

@@ -23,7 +23,7 @@ REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "ingestion"))
 from openfda_gate import _load, DATA_DIR  # reuse canonical dedup + clean/raw switch
 
-PROJECT = os.environ.get("GCP_PROJECT_ID", "bchan-genai-lab")
+PROJECT = os.environ.get("GCP_PROJECT_ID", "PROJECT")
 DATASET = os.environ.get("BQ_DATASET", "healthcare_analytics")
 TARGET = "raw_openfda_events"
 

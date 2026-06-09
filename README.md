@@ -1,5 +1,24 @@
 # healthcare-ai-data-engineer
 
+## Repo Map
+
+```
+healthcare-ai-data-engineer/
+├── ingestion/        ✅ openFDA pull → quarantine → idempotent BQ merge → reconcile (Bullet 1)
+├── dbt-project/      ✅ medallion SQL: stg → fact_adverse_events + dim_drug/reaction + bridge → marts (Bullet 3)
+│   └── models/marts/openfda/  ✅ semantic marts: drug-safety KPIs + reaction signals (+ tests)
+├── feature_repo/     ✅ Feast features over openFDA (point-in-time correct) — discovery + serving
+├── api/              ✅ grounded AI: BM25 retrieve → Gemini answer with [doc N] citations + refusal (Bullet 3)
+├── scripts/governance/ ✅ Bullet 4: masking · audit ledger · versioned contract · retention/deletion
+├── gx/               ✅ Great Expectations quality gates
+├── contracts/        📜 versioned data contract (sha-pinned)
+├── data/quality/     🟡 proof receipts — every resume bullet → a machine-readable JSON (the evidence bank)
+├── data/raw|clean/   📦 bounded openFDA sample (real FAERS reports)
+├── deploy/           ✅ Cloud Run watchdog deploy (Bullet 2: independently-scheduled self-healing)
+├── tests/            ✅ pytest
+└── README.md         📖 you are here
+```
+
 > A trust layer over a **live FDA adverse-event feed** — bad rows fail closed at the door, the feed never goes quietly stale, every number has a receipt, and the model reads only the clean, cited layer.
 
 Ingests live drug-safety reports from **openFDA** (api.fda.gov — free, no key, 20M+ reports) on a schedule, gates them before anyone trusts them, keeps them fresh, and serves a grounded API that refuses when the evidence isn't there.

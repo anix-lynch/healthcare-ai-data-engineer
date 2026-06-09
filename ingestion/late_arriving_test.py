@@ -17,7 +17,7 @@ from google.cloud import bigquery
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "ingestion"))
 from bq_load import SCHEMA  # identical column types as the real loader (ingest_ts STRING)
-PROJECT = os.environ.get("GCP_PROJECT_ID", "bchan-genai-lab")
+PROJECT = os.environ.get("GCP_PROJECT_ID", "PROJECT")
 DATASET = os.environ.get("BQ_DATASET", "healthcare_analytics")
 TARGET = f"{PROJECT}.{DATASET}.raw_openfda_events"
 TID = "TEST_LATE_0001"

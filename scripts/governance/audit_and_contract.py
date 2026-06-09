@@ -15,7 +15,7 @@ from pathlib import Path
 from google.cloud import bigquery
 
 REPO = Path(__file__).resolve().parents[2]
-PROJECT, DS = "bchan-genai-lab", "healthcare_analytics"
+PROJECT, DS = "PROJECT", "healthcare_analytics"
 FACT = "fact_adverse_events"
 LEDGER = "governance_audit_log"
 CONTRACT_VERSION = "1.0.0"
@@ -33,7 +33,7 @@ def main():
     schema = [{"name": f.name, "type": f.field_type, "mode": f.mode}
               for f in c.get_table(f"{PROJECT}.{DS}.{FACT}").schema]
     contract = {"dataset": DS, "table": FACT, "version": CONTRACT_VERSION,
-                "grain": "safetyreportid", "owner": "alynch@gozeroshot.dev",
+                "grain": "safetyreportid", "owner": "data-eng@example.com",
                 "columns": schema, "retention_days": 365,
                 "classification": "public-deidentified (no PHI)"}
     contract_hash = sha(contract)
@@ -59,11 +59,11 @@ def main():
     c.create_table(t, exists_ok=True)
 
     events = [
-        {"event_ts": now.isoformat(), "actor": "bchan-genai-deploy@sa", "event": "data_contract_published",
+        {"event_ts": now.isoformat(), "actor": "deploy-sa", "event": "data_contract_published",
          "subject": f"{FACT} v{CONTRACT_VERSION}", "evidence_sha256": contract_hash},
-        {"event_ts": now.isoformat(), "actor": "bchan-genai-deploy@sa", "event": "sensitive_scan_run",
+        {"event_ts": now.isoformat(), "actor": "deploy-sa", "event": "sensitive_scan_run",
          "subject": "bullet4_masking_proof", "evidence_sha256": sha("masking-fixture-4-findings")},
-        {"event_ts": now.isoformat(), "actor": "bchan-genai-deploy@sa", "event": "least_privilege_view_built",
+        {"event_ts": now.isoformat(), "actor": "deploy-sa", "event": "least_privilege_view_built",
          "subject": "healthcare_secure.vw_adverse_events_safe", "evidence_sha256": sha("view-6col")},
     ]
     errs = c.insert_rows_json(ledger_id, events)
