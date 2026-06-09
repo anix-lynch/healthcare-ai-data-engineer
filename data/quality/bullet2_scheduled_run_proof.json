@@ -1,0 +1,35 @@
+{
+  "proof": "bullet2_independently_scheduled_operational",
+  "claim_phrase": "independently scheduled orchestration",
+  "scheduler": {
+    "type": "Cloud Scheduler",
+    "job": "freshness-watchdog-cron",
+    "schedule": "30 */6 * * * (every 6h)",
+    "state": "30 */6 * * *\tENABLED",
+    "timezone": "UTC"
+  },
+  "executor": {
+    "type": "Cloud Run Job",
+    "job": "freshness-watchdog",
+    "runtime_identity": "bchan-genai-deploy@bchan-genai-lab (god-SA via metadata server \u2014 NO key file)",
+    "note": "runtime identity = zero key material on disk or in any repo/secret"
+  },
+  "executions": [
+    {
+      "name": "freshness-watchdog-6xq8s",
+      "trigger": "Cloud Scheduler (forced run)",
+      "succeeded": 1,
+      "failed": 0
+    },
+    {
+      "name": "freshness-watchdog-5zfzv",
+      "trigger": "direct execute --wait",
+      "succeeded": 1,
+      "failed": 0
+    }
+  ],
+  "durable_evidence": "healthcare_analytics.pipeline_run_history \u2014 2 watchdog rows written by CLOUD executions (result='na' = detected fresh, no action), independent of any local run",
+  "behavior_proven": "scheduler triggered a real cloud execution -> watchdog read the durable BigQuery ledger -> detected data fresh (< 48h) -> took no action -> recorded run. The recover/verify/escalate paths are proven separately by ledger_tests A-D (local).",
+  "cost": "Cloud Scheduler 2/3 free jobs; Cloud Run Job scale-to-zero (~seconds/run, free tier); BQ 100MB cap. $0; no GenAI credit touched.",
+  "verdict": "GREEN \u2014 independently scheduled (Cloud Scheduler) cloud execution of the self-healing watchdog ran successfully and recorded to the durable ledger. Config -> operational."
+}

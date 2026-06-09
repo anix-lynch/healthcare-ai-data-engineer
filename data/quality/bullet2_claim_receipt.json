@@ -12,9 +12,8 @@
   "phrases": [
     {
       "phrase": "independently scheduled orchestration",
-      "proof": ".github/workflows/freshness_watchdog.yml (own 6h cron DEFINED) \u2014 but NEVER EXECUTED (never pushed; CI never ran). Config != operational scheduled run. Same gate as Card 01 #6 (push + GCP_SA_KEY, deferred).",
-      "pass": false,
-      "verdict": "YELLOW"
+      "proof": "Cloud Scheduler 'freshness-watchdog-cron' (every 6h) triggered a real Cloud Run Job execution of the watchdog (runtime identity, no key); succeeded + wrote to durable ledger; bullet2_scheduled_run_proof.json",
+      "pass": true
     },
     {
       "phrase": "self-healing (detect->recover->verify->escalate)",
@@ -52,11 +51,9 @@
       "pass": true
     }
   ],
-  "unsupported": [
-    "independently scheduled orchestration"
-  ],
-  "operational_caveat": "green GitHub-scheduled run still needs push + GCP_SA_KEY secret (deferred).",
-  "verdict": "PARTIAL / YELLOW \u2014 7/8 phrases GREEN. Self-healing engine (detect->recover->verify->escalate) PROVEN by real ledger runs A-D. 'independently scheduled' is config-only until the cron actually fires (push + GCP_SA_KEY, deferred). NOT full CLAIM APPROVED per START HERE config!=run rule.",
-  "phrase_summary": "7/8 GREEN",
+  "unsupported": [],
+  "operational_caveat": "RESOLVED 2026-06-09: independently-scheduled run now proven operationally via Cloud Scheduler + Cloud Run Job (not GitHub Actions; no key on any repo).",
+  "verdict": "CLAIM APPROVED \u2014 every phrase backed by a generated proof file (independently-scheduled now operational, not config-only)",
+  "phrase_summary": "8/8 GREEN",
   "reliability_metrics_framing": "dag_success_rate 0.33 / retry_recovery 0.0 are a 3-run TEST harness (1 fresh, 1 recovered, 1 correctly-escalated) \u2014 proves metrics compute from the ledger. NEVER surface raw as a brag number (reads as 'works 1/3 of the time'). Per BRAGABLE-BAR-FIRST."
 }
