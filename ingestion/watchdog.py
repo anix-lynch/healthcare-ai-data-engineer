@@ -30,6 +30,19 @@ Q = REPO / "data" / "quality"
 UNSAFE_RC = 3
 
 
+def _git_commit():
+    """Best-effort commit hash for the receipt. Prefer GIT_COMMIT env (set at deploy);
+    fall back to `git` if present; never crash in a slim container without git."""
+    env = os.environ.get("GIT_COMMIT")
+    if env:
+        return env
+    try:
+        return subprocess.run(["git", "rev-parse", "HEAD"], cwd=REPO,
+                              capture_output=True, text=True).stdout.strip() or "unknown"
+    except (FileNotFoundError, OSError):
+        return "unknown"
+
+
 def _now():
     return datetime.now(timezone.utc)
 
@@ -80,8 +93,7 @@ def main():
                "stale_detected": stale, "max_attempts": args.max_attempts,
                "attempts": [], "actions": [], "failure_classification": None,
                "verification": None, "final_state": None, "last_verified_primary_after": None,
-               "git_commit": subprocess.run(["git", "rev-parse", "HEAD"], cwd=REPO,
-                                            capture_output=True, text=True).stdout.strip()}
+               "git_commit": _git_commit()}
 
     if not stale:
         receipt["final_state"] = "ok_no_action"
