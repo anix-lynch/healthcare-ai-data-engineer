@@ -43,9 +43,8 @@ b4 = {
                    "sensitive-data classification and masking, versioned data contracts, auditable "
                    "pipeline activity, and automated retention and deletion policies."),
     "phrases": [
-        {"phrase": "least-privilege access", "verdict": "YELLOW",
-         "proof": "secure dataset + reduced-column authorized view (9->6 cols) built; cross-dataset AUTHORIZE needs owner (bigquery.datasets.update on healthcare_analytics); bullet4_least_privilege_proof.json",
-         "owner_action": "ONE owner command pending (SA cannot self-grant)"},
+        {"phrase": "least-privilege access", "verdict": "GREEN",
+         "proof": "secure dataset + reduced-column authorized view (9->6 cols, drops ingest_ts/n_drugs/reactions), registered on source dataset ACL (authorized_on_source=True after owner granted SA dataOwner 2026-06-08); bullet4_least_privilege_proof.json"},
         {"phrase": "sensitive-data classification and masking", "verdict": "GREEN",
          "proof": "detect+mask synthetic PII, no residual leak; openFDA classified clean (no PHI claim); bullet4_masking_proof.json"},
         {"phrase": "versioned data contracts", "verdict": "GREEN",

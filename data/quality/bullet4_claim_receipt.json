@@ -4,9 +4,8 @@
   "phrases": [
     {
       "phrase": "least-privilege access",
-      "verdict": "YELLOW",
-      "proof": "secure dataset + reduced-column authorized view (9->6 cols) built; cross-dataset AUTHORIZE needs owner (bigquery.datasets.update on healthcare_analytics); bullet4_least_privilege_proof.json",
-      "owner_action": "ONE owner command pending (SA cannot self-grant)"
+      "verdict": "GREEN",
+      "proof": "secure dataset + reduced-column authorized view (9->6 cols, drops ingest_ts/n_drugs/reactions), registered on source dataset ACL (authorized_on_source=True after owner granted SA dataOwner 2026-06-08); bullet4_least_privilege_proof.json"
     },
     {
       "phrase": "sensitive-data classification and masking",
@@ -29,6 +28,6 @@
       "proof": "partition-expiration retention + targeted deletion verified on bounded fixture; bullet4_retention_proof.json"
     }
   ],
-  "phrase_summary": "4/5 GREEN",
-  "verdict": "PARTIAL / YELLOW \u2014 4/5 phrases GREEN; 1 pending (see phrase verdicts). NOT approved per START HERE one-phrase rule."
+  "phrase_summary": "5/5 GREEN",
+  "verdict": "CLAIM APPROVED \u2014 every phrase backed by a generated proof file"
 }

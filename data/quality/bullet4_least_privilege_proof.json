@@ -27,14 +27,13 @@
     "n_drugs",
     "reactions"
   ],
-  "authorized_on_source": false,
+  "authorized_on_source": true,
   "view_query_rows_sampled": 5,
   "steps": {
     "secure_dataset": "bchan-genai-lab.healthcare_secure",
-    "view": "bchan-genai-lab.healthcare_secure.vw_adverse_events_safe"
+    "view": "bchan-genai-lab.healthcare_secure.vw_adverse_events_safe",
+    "authorized_on_source": "healthcare_analytics ACL includes healthcare_secure.vw_adverse_events_safe"
   },
-  "errors": [
-    "authorize(Forbidden-needs-owner): 403 PATCH https://bigquery.googleapis.com/bigquery/v2/projects/bchan-genai-lab/datasets/healthcare_analytics?prettyPrint=false: Access Denied: Dataset bchan-genai-lab:healthcare_analytics: Permission bigquery.datasets.update denied on dataset bchan-genai-lab:healthcare_analytics (or it may not exist)."
-  ],
-  "verdict": "YELLOW \u2014 view built but authorization/reduction incomplete (see errors)"
+  "errors": [],
+  "verdict": "GREEN \u2014 authorized view registered on source, exposes reduced column set"
 }
