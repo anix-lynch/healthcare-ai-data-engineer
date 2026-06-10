@@ -1,5 +1,5 @@
 """
-Schema-drift negative test + honest scope (Trust / Codex QA gap #2).
+Schema-drift negative test + honest scope (Trust / audit QA gap #2).
 
 HONEST SCOPE: the gate validates the NORMALIZED openFDA data contract — the fixed
 field set our ingestion produces (REQUIRED columns). It catches a required field

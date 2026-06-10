@@ -1,7 +1,7 @@
 """
 Fail-closed end-to-end proof (Trust + resilience).
 
-Codex requirement: prove the pipeline STOPS (non-zero exit) on bad data, and runs
+audit requirement: prove the pipeline STOPS (non-zero exit) on bad data, and runs
 clean to success on good data. We exercise the real gate binary via subprocess so
 the receipt reflects actual exit codes, not in-process asserts.
 

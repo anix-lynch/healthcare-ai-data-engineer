@@ -30,5 +30,5 @@
     }
   ],
   "phrase_summary": "4/5 GREEN",
-  "verdict": "PARTIAL \u2014 4/5 GREEN. Least-privilege = reduced-column authorized view proven; restricted-identity access-denial test pending (Codex 2026-06-09)."
+  "verdict": "PARTIAL \u2014 4/5 GREEN. Least-privilege = reduced-column authorized view proven; restricted-identity access-denial test pending (audit 2026-06-09)."
 }

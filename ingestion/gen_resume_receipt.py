@@ -120,7 +120,7 @@ approved_bullet = ("Hardened a real openFDA batch pipeline against duplicate, re
                    "self-healing freshness watchdog that detects missed runs, auto-recovers the full "
                    "6-stage pipeline with bounded retries, verifies restoration, and escalates unsafe "
                    "failures without falsely marking data fresh — each control independently evidenced "
-                   "by a generated proof file. (Codex-QA approved batch scope.)")
+                   "by a generated proof file. (audit-QA approved batch scope.)")
 
 receipt = {
     "generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),

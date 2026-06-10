@@ -4,19 +4,18 @@
 
 ```
 healthcare-ai-data-engineer/
-├── ingestion/        ✅ openFDA pull → quarantine → idempotent BQ merge → reconcile (Bullet 1)
-├── dbt-project/      ✅ medallion SQL: stg → fact_adverse_events + dim_drug/reaction + bridge → marts (Bullet 3)
-│   └── models/marts/openfda/  ✅ semantic marts: drug-safety KPIs + reaction signals (+ tests)
-├── feature_repo/     ✅ Feast features over openFDA (point-in-time correct) — discovery + serving
-├── api/              ✅ grounded AI: BM25 retrieve → Gemini answer with [doc N] citations + refusal (Bullet 3)
-├── scripts/governance/ ✅ Bullet 4: masking · audit ledger · versioned contract · retention/deletion
-├── gx/               ✅ Great Expectations quality gates
-├── contracts/        📜 versioned data contract (sha-pinned)
-├── data/quality/     🟡 proof receipts — every resume bullet → a machine-readable JSON (the evidence bank)
-├── data/raw|clean/   📦 bounded openFDA sample (real FAERS reports)
-├── deploy/           ✅ Cloud Run watchdog deploy (Bullet 2: independently-scheduled self-healing)
-├── tests/            ✅ pytest
-└── README.md         📖 you are here
+├── ingestion/        openFDA pull → quarantine → idempotent BQ merge → reconcile + pipeline *_test.py
+├── dbt-project/      medallion SQL: stg → fact_adverse_events + dim_drug/reaction + bridge → marts + dbt tests
+│   └── models/marts/openfda/   semantic marts: drug-safety KPIs + reaction signals
+├── feature_repo/     Feast features over openFDA (point-in-time correct) — discovery + serving
+├── api/              grounded AI: BM25 retrieve → Gemini answer with [doc N] citations + refusal
+├── scripts/governance/  masking · audit ledger · versioned contract · retention/deletion
+├── gx/               Great Expectations quality gates
+├── contracts/        versioned data contract (sha-pinned)
+├── data/quality/     proof receipts — every claim → a machine-readable JSON (the evidence bank)
+├── data/raw|clean/   bounded openFDA sample (real FAERS reports)
+├── deploy/           Cloud Run watchdog deploy (independently-scheduled self-healing)
+└── README.md         you are here
 ```
 
 > A trust layer over a **live FDA adverse-event feed** — bad rows fail closed at the door, the feed never goes quietly stale, every number has a receipt, and the model reads only the clean, cited layer.
@@ -41,20 +40,6 @@ Live FDA feed --> scheduled pull --> fail-closed gate --> dbt marts --> grounded
 - **Runs itself** — daily orchestrated pull with retry recovery (GitHub Actions).
 - **Every number has a receipt** — source->warehouse contracts, reconciliation, committed reports.
 - **AI reads the clean layer** — `/api/ask` grounds on the redacted corpus with `[doc N]` citations and says *"not supported by the evidence"* rather than invent a drug interaction.
-
-## Repo map
-
-```
-healthcare-ai-data-engineer/
-|- ingestion/        pull + gate + freshness + point-in-time features (the pipeline)
-|- config/           freshness SLA thresholds
-|- dbt-project/      source freshness + incremental staging + fact + reconciliation test
-|- api/app/          grounded /api/ask + /api/retrieve over the openFDA corpus
-|- .github/workflows openFDA pipeline -- daily cron + retry
-|- demo/             quickstart.sh -- run the whole thing in 30s
-|- deploy/           Cloud Run deploy
-\- Dockerfile . Makefile
-```
 
 ## Stack
 Python . openFDA API . dbt (incremental + source freshness) . BM25 + Vertex/Gemini (grounded) . FastAPI . Cloud Run . GitHub Actions.

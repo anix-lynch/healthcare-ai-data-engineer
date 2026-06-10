@@ -1,5 +1,5 @@
 """
-Self-healing watchdog test suite (Bchan smart-pipe claim gate).
+Self-healing watchdog test suite (smart-pipe claim gate).
 
 Proves all four required scenarios. "self-healing freshness" stays YELLOW unless
 every scenario passes:

@@ -1,5 +1,5 @@
 """
-Full Trust pipeline — one button, fail-closed, the SAME chain CI runs (Codex QA gap #1).
+Full Trust pipeline — one button, fail-closed, the SAME chain CI runs (audit QA gap #1).
 
 Before this, the scheduled workflow ran only pull -> gate -> freshness -> features;
 BigQuery load / GE / dbt / reconciliation ran only when invoked by hand. This wires

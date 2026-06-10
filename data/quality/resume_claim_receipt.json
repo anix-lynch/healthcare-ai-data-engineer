@@ -86,6 +86,6 @@
   ],
   "verbatim_verdict": "CLAIM REJECTED",
   "verbatim_reason": "'real-time streaming ingestion (dual-mode)' has no proof file in repo \u2014 streaming path was removed in the openFDA cleanup. All other phrases pass.",
-  "approved_alternative_bullet": "Hardened a real openFDA batch pipeline against duplicate, revised, and late-arriving records, with fail-closed Great Expectations + dbt quality gates and window-scoped source-to-BigQuery reconciliation that detects malformed or missing data; added a self-healing freshness watchdog that detects missed runs, auto-recovers the full 6-stage pipeline with bounded retries, verifies restoration, and escalates unsafe failures without falsely marking data fresh \u2014 each control independently evidenced by a generated proof file. (Codex-QA approved batch scope.)",
+  "approved_alternative_bullet": "Hardened a real openFDA batch pipeline against duplicate, revised, and late-arriving records, with fail-closed Great Expectations + dbt quality gates and window-scoped source-to-BigQuery reconciliation that detects malformed or missing data; added a self-healing freshness watchdog that detects missed runs, auto-recovers the full 6-stage pipeline with bounded retries, verifies restoration, and escalates unsafe failures without falsely marking data fresh \u2014 each control independently evidenced by a generated proof file. (audit-QA approved batch scope.)",
   "approved_alternative_verdict": "CLAIM APPROVED \u2014 every phrase backed by a generated proof file"
 }

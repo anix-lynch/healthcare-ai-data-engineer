@@ -1,5 +1,5 @@
 """
-Persistent ledger proof suite (Bullet 2 durability — Codex proofs A,B,C,D).
+Persistent ledger proof suite (Bullet 2 durability — audit proofs A,B,C,D).
 
 A persisted FRESH primary success  -> watchdog takes no action
 B persisted STALE primary success  -> watchdog detects and recovers (real pipeline)

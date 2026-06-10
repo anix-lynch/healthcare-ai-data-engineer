@@ -10,11 +10,11 @@
 
 set -euo pipefail
 
-# ── Auth: use bchan-genai-deploy SA if its key is present ──
+# ── Auth: use deploy-sa SA if its key is present ──
 # Avoids the daily `gcloud auth login` browser dance. One-time setup:
-#   gcloud iam service-accounts create bchan-genai-deploy
-#   + 5 deploy roles · key at ~/.config/secrets/bchan-genai-deploy.json
-SA_KEY="$HOME/.config/secrets/bchan-genai-deploy.json"
+#   gcloud iam service-accounts create deploy-sa
+#   + 5 deploy roles · key at ~/.config/secrets/sa-key.json
+SA_KEY="$HOME/.config/secrets/sa-key.json"
 if [[ -f "$SA_KEY" ]]; then
   SA_EMAIL="deploy-sa@PROJECT.iam.gserviceaccount.com"
   gcloud auth activate-service-account --key-file="$SA_KEY" --quiet >/dev/null 2>&1 || true
@@ -46,7 +46,7 @@ while true; do
 done
 
 echo "[2/3] Deploying to Cloud Run..."
-# Runtime identity: the deploy SA (bchan-genai-deploy) holds roles/aiplatform.user,
+# Runtime identity: the deploy SA (deploy-sa) holds roles/aiplatform.user,
 # so /api/ask can call Gemini via Vertex. The default compute SA does NOT have it
 # (it 403s aiplatform.endpoints.predict), so DO NOT drop this flag — grounded
 # generation regresses to retrieval-only if the service reverts to the compute SA.

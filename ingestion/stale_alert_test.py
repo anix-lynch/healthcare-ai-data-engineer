@@ -1,5 +1,5 @@
 """
-Stale-alert proof (Freshness branch). Codex DOD: a stale fixture must make the
+Stale-alert proof (Freshness branch). audit DOD: a stale fixture must make the
 freshness gate fire an alert AND exit non-zero (fail-closed), not die silently.
 
   Case A (stale fixture): manifest ingest_ts forced 72h old (> 48h err SLA)

@@ -1,5 +1,5 @@
 """
-Freshness self-healing watchdog (Bchan smart-pipe standard).
+Freshness self-healing watchdog (smart-pipe standard).
 
 Runs INDEPENDENTLY of the ingestion pipeline. Detects a stale/missed end-to-end
 run, attempts BOUNDED safe recovery, VERIFIES the promised state was actually

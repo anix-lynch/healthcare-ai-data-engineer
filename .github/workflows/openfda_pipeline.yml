@@ -1,5 +1,5 @@
 name: openfda-pipeline
-# Full Trust pipeline on a schedule (Codex QA gap #1): every filter wired onto the
+# Full Trust pipeline on a schedule (audit QA gap #1): every filter wired onto the
 # daily pump — pull -> strict gate -> BigQuery merge -> GE --strict -> dbt build ->
 # freshness. Fail-closed at each step. Needs repo secret GCP_SA_KEY (deploy SA JSON).
 on:
