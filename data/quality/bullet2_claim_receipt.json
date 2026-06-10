@@ -55,5 +55,18 @@
   "operational_caveat": "RESOLVED 2026-06-09: independently-scheduled run now proven operationally via Cloud Scheduler + Cloud Run Job (not GitHub Actions; no key on any repo).",
   "verdict": "CLAIM APPROVED \u2014 every phrase backed by a generated proof file (independently-scheduled now operational, not config-only)",
   "phrase_summary": "8/8 GREEN",
-  "reliability_metrics_framing": "dag_success_rate 0.33 / retry_recovery 0.0 are a 3-run TEST harness (1 fresh, 1 recovered, 1 correctly-escalated) \u2014 proves metrics compute from the ledger. NEVER surface raw as a brag number (reads as 'works 1/3 of the time'). Per BRAGABLE-BAR-FIRST."
+  "reliability_metrics_framing": "dag_success_rate 0.33 / retry_recovery 0.0 are a 3-run TEST harness (1 fresh, 1 recovered, 1 correctly-escalated) \u2014 proves metrics compute from the ledger. NEVER surface raw as a brag number (reads as 'works 1/3 of the time'). Per BRAGABLE-BAR-FIRST.",
+  "audit_2026-06-09_codex": {
+    "operational_scheduled (cloud, proven live)": [
+      "independently scheduled detection \u2014 Cloud Scheduler -> Cloud Run watchdog ran, read durable ledger, detected fresh -> no-action"
+    ],
+    "locally-exercised (fault-injection tests, NOT cloud-executed)": [
+      "detect-stale -> bounded recover -> verify -> escalate-artifact (ledger_tests A-D, freshness_selfheal A-D)"
+    ],
+    "NOT yet proven": [
+      "scheduled CLOUD recovery execution (the live cron found data fresh, never had to recover)",
+      "external incident delivery \u2014 escalation is a machine-readable JSON artifact, not a notification (bullet says 'machine-readable evidence', so not over-claimed)"
+    ],
+    "verdict_adjust": "Bullet stands ONLY because the receipt now separates operational-scheduled-detection from locally-exercised-recovery. For full GREEN: force a bounded STALE cloud run and prove cloud recovery + durable post-recovery verification."
+  }
 }

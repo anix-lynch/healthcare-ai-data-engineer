@@ -11,7 +11,8 @@
     {
       "phrase": "real-time ingestion pipeline (native Pub/Sub->BigQuery)",
       "proof": "openfda_streaming_proof.json",
-      "pass": true
+      "pass": true,
+      "honest_note": "The streaming PIPELINE is real (native Pub/Sub->BigQuery, converge + DLQ proven). HONEST: openFDA's source is BATCH; records are replayed as an event-driven feed \u2014 there is no live FDA stream. Architecture = real-time-capable ingestion path, not a live FDA real-time source. (resume: prefer 'batch and event-driven ingestion paths')"
     },
     {
       "phrase": "idempotent BigQuery merges",
@@ -60,5 +61,6 @@
     }
   ],
   "unsupported": [],
-  "verdict": "CLAIM APPROVED \u2014 every phrase backed by a generated proof file"
+  "verdict": "CLAIM APPROVED \u2014 every phrase backed by a generated proof file",
+  "audit_2026-06-09": "Codex: real-time = event-driven replay of batch FDA, not live stream \u2014 noted honestly."
 }
