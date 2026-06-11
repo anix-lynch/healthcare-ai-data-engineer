@@ -1,0 +1,13 @@
+{
+  "identity": "restricted-reader-b4 \u00b7 jobUser + READER(healthcare_secure ONLY)",
+  "query_authorized_view": {
+    "allowed": true,
+    "rows": 300
+  },
+  "query_base_table": {
+    "denied": true,
+    "http": "403"
+  },
+  "least_privilege_proven": true,
+  "verdict": "GREEN \u2014 restricted identity reads the reduced 5-col authorized view but is DENIED (403) on the full base table"
+}

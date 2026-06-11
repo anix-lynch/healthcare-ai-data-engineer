@@ -4,9 +4,8 @@
   "phrases": [
     {
       "phrase": "least-privilege access",
-      "verdict": "YELLOW",
-      "proof": "secure dataset + reduced-column authorized view (9->6 cols, drops ingest_ts/n_drugs/reactions), registered on source dataset ACL (authorized_on_source=True after owner granted SA dataOwner 2026-06-08); bullet4_least_privilege_proof.json",
-      "honest_note": "PROVEN: secure dataset + reduced-column authorized view (9->6 cols) registered on source ACL. NOT proven: a restricted identity can query the VIEW but is DENIED on the BASE table (the access-denial test). So this = reduced-column authorized view, not a closed least-privilege loop yet."
+      "verdict": "GREEN",
+      "proof": "EMPIRICAL denial test: restricted identity (restricted-reader-b4, granted ONLY healthcare_secure + jobUser) reads the reduced 5-col authorized view (300 rows) but DENIED 403 on base healthcare_analytics.fact_adverse_events. bullet4_denial_test_proof.json"
     },
     {
       "phrase": "sensitive-data classification and masking",
@@ -29,6 +28,6 @@
       "proof": "partition-expiration retention + targeted deletion verified on bounded fixture; bullet4_retention_proof.json"
     }
   ],
-  "phrase_summary": "4/5 GREEN",
-  "verdict": "PARTIAL \u2014 4/5 GREEN. Least-privilege = reduced-column authorized view proven; restricted-identity access-denial test pending (audit 2026-06-09)."
+  "phrase_summary": "5/5 GREEN",
+  "verdict": "CLAIM APPROVED \u2014 5/5 GREEN. Least-privilege denial test proven empirically (2026-06-10)."
 }
