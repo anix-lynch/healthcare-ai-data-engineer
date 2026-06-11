@@ -68,5 +68,14 @@
       "external incident delivery \u2014 escalation is a machine-readable JSON artifact, not a notification (bullet says 'machine-readable evidence', so not over-claimed)"
     ],
     "verdict_adjust": "Bullet stands ONLY because the receipt now separates operational-scheduled-detection from locally-exercised-recovery. For full GREEN: force a bounded STALE cloud run and prove cloud recovery + durable post-recovery verification."
+  },
+  "cloud_recovery_proven_2026-06-10": {
+    "scenario": "forced-stale against real BigQuery",
+    "detected": "stale 47.6h from durable BQ run-ledger",
+    "recovered": "full e2e (pull\u2192quarantine\u2192gate\u2192bq_load\u2192GE\u2192dbt\u2192freshness) ran against BigQuery, verify all_passed=True",
+    "durable_verification": "ledger watermark advanced ONLY on verified recovery (\u21922026-06-11T00:31:53Z); held unchanged on escalation",
+    "mttr_seconds": 133.8,
+    "proof": "data/quality/freshness_watchdog_cloud_recovery_proof.json",
+    "remaining": "scheduled Cloud Run execution = deploy step (recovery LOGIC + durable BQ verification proven)"
   }
 }
