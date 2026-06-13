@@ -1,0 +1,22 @@
+{
+  "proof": "bullet1_real_pubsub_to_cloudrun_to_bigquery",
+  "topology": "Pub/Sub topic (encounter-events) -> push subscription (encounter-events-push) -> Cloud Run /pubsub/push -> BigQuery raw_ingest_clean",
+  "service_url": "https://healthcare-ai-data-819957310168.us-west1.run.app/pubsub/push",
+  "runtime_service_account": "bchan-genai-deploy@bchan-genai-lab.iam.gserviceaccount.com",
+  "pre_state": { "clean_rows": 13, "quarantine_rows": 6, "zoe_young_present": false },
+  "event_1_new": {
+    "action": "published demo encounter 'zoe young' (key zoe young|2024-07-09) to topic",
+    "message_id": "20038804948925049",
+    "result": "landed in raw_ingest_clean via the live push endpoint",
+    "post_state": { "clean_rows": 14, "zoe_young_in_clean": 1 }
+  },
+  "event_2_duplicate": {
+    "action": "re-published the SAME event to prove idempotency",
+    "message_id": "20038429191749256",
+    "result": "quarantined as duplicate — clean table unchanged",
+    "quarantine_reason": "duplicate:key_already_ingested",
+    "post_state": { "clean_rows": 14, "quarantine_rows": 7, "zoe_young_in_quarantine": 1 }
+  },
+  "shared_validator": "api /pubsub/push, /api/ingest, and batch ingest.py all call ingestion/validate.py + ingestion/sink.py — the accept/quarantine verdict and the idempotent MERGE cannot drift between the HTTP, streaming, and batch entry points",
+  "verdict": "GREEN — a real published message flows Pub/Sub -> Cloud Run -> BigQuery (clean 13->14); a re-published duplicate is quarantined with a reason and the clean table holds at 14, proving the idempotent MERGE through the live service."
+}

@@ -1,0 +1,146 @@
+{
+  "proof": "bullet1_event_driven_ingestion_with_quarantine",
+  "source_rows_streamed": 20,
+  "decisions": {
+    "accepted_new": 13,
+    "accepted_revised": 1,
+    "quarantined": 6
+  },
+  "quarantine_reasons": {
+    "duplicate": 1,
+    "malformed_age": 1,
+    "bad_gender": 1,
+    "bad_admission_type": 1,
+    "missing_required": 2,
+    "late_arriving": 1
+  },
+  "messy_modes_exercised": [
+    "bad_admission_type",
+    "bad_gender",
+    "duplicate",
+    "late_arriving",
+    "malformed_age",
+    "missing_required"
+  ],
+  "reconciliation": {
+    "streamed": 20,
+    "accepted_plus_quarantined": 20,
+    "match": true
+  },
+  "idempotent_merge": "clean rows upsert on natural_key (name|date_of_admission); re-running the same stream leaves the clean table row count unchanged",
+  "ledger": [
+    {
+      "name": "amy archer",
+      "status": "accepted_new",
+      "reasons": []
+    },
+    {
+      "name": "ben cole",
+      "status": "accepted_new",
+      "reasons": []
+    },
+    {
+      "name": "carla diaz",
+      "status": "accepted_new",
+      "reasons": []
+    },
+    {
+      "name": "dan evans",
+      "status": "accepted_new",
+      "reasons": []
+    },
+    {
+      "name": "ella fox",
+      "status": "accepted_new",
+      "reasons": []
+    },
+    {
+      "name": "frank gill",
+      "status": "accepted_new",
+      "reasons": []
+    },
+    {
+      "name": "gina hall",
+      "status": "accepted_new",
+      "reasons": []
+    },
+    {
+      "name": "hank ito",
+      "status": "accepted_new",
+      "reasons": []
+    },
+    {
+      "name": "ivy jones",
+      "status": "accepted_new",
+      "reasons": []
+    },
+    {
+      "name": "jack kim",
+      "status": "accepted_new",
+      "reasons": []
+    },
+    {
+      "name": "kate lee",
+      "status": "accepted_new",
+      "reasons": []
+    },
+    {
+      "name": "leo marsh",
+      "status": "accepted_new",
+      "reasons": []
+    },
+    {
+      "name": "amy archer",
+      "status": "quarantined",
+      "reasons": [
+        "duplicate:key_already_ingested"
+      ]
+    },
+    {
+      "name": "mia novak",
+      "status": "quarantined",
+      "reasons": [
+        "malformed_age:'abc'"
+      ]
+    },
+    {
+      "name": "ned oh",
+      "status": "quarantined",
+      "reasons": [
+        "bad_gender:'Robot'",
+        "bad_admission_type:'Spaceship'"
+      ]
+    },
+    {
+      "name": "",
+      "status": "quarantined",
+      "reasons": [
+        "missing_required:name"
+      ]
+    },
+    {
+      "name": "olga park",
+      "status": "quarantined",
+      "reasons": [
+        "missing_required:date_of_admission"
+      ]
+    },
+    {
+      "name": "ben cole",
+      "status": "accepted_revised",
+      "reasons": []
+    },
+    {
+      "name": "carla diaz",
+      "status": "quarantined",
+      "reasons": [
+        "late_arriving:key_already_ingested"
+      ]
+    },
+    {
+      "name": "pia quinn",
+      "status": "accepted_new",
+      "reasons": []
+    }
+  ]
+}
