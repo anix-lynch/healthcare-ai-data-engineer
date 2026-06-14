@@ -23,9 +23,23 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install -r api/requirements.txt
+          pip install -r scripts/requirements-quality.txt
 
-      # Layer 1 lightweight quality gate — 7 checks against the
-      # enriched 497-row corpus. Exit 1 on any critical failure.
+      # Release gate — validates all 55,500 source rows before promotion,
+      # then validates the AI-facing enriched slice. Exit 1 blocks release.
+      - name: Great Expectations release gates
+        run: python scripts/run_ge.py
+
+      # Warehouse contract tests: uniqueness, relationships, accepted values,
+      # and domain assertions. Uses the committed service-account profile in
+      # live warehouse runs; CI validates the project structure offline here.
+      - name: Validate dbt project
+        run: |
+          pip install dbt-core dbt-bigquery
+          cd dbt-project
+          dbt parse --profiles-dir .
+
+      # Healthcare-specific guards complement GE: PII, identity, temporal sanity.
       - name: make checkpoint
         run: make checkpoint
 
@@ -39,5 +53,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: l1-quality-report
-          path: data/quality/l1_checkpoint_report.json
+          path: |
+            data/quality/ge_release_gate_report.json
+            data/quality/l1_checkpoint_report.json
           retention-days: 30

@@ -15,7 +15,7 @@ version: 2
 models:
   - name: fact_patient_encounters
     description: >
-      One row per patient encounter. Surrogate-keyed FKs to all 7 dims +
+      One row per patient encounter. Surrogate-keyed FKs to all 8 dims +
       8 measures (billing, LOS, cost/day, is_emergency, is_readmission,
       previous_admission_count, age_group, season).
     columns:
@@ -29,50 +29,65 @@ models:
         tests:
           - not_null
           - relationships:
-              to: ref('dim_patient')
-              field: patient_key
+              arguments:
+                to: ref('dim_patient')
+                field: patient_key
       - name: doctor_key
         description: surrogate FK → dim_doctor.doctor_key
         tests:
           - not_null
           - relationships:
-              to: ref('dim_doctor')
-              field: doctor_key
+              arguments:
+                to: ref('dim_doctor')
+                field: doctor_key
       - name: hospital_key
         description: surrogate FK → dim_hospital.hospital_key
         tests:
           - not_null
           - relationships:
-              to: ref('dim_hospital')
-              field: hospital_key
+              arguments:
+                to: ref('dim_hospital')
+                field: hospital_key
       - name: diagnosis_key
         description: surrogate FK → dim_diagnosis.diagnosis_key
         tests:
           - not_null
           - relationships:
-              to: ref('dim_diagnosis')
-              field: diagnosis_key
+              arguments:
+                to: ref('dim_diagnosis')
+                field: diagnosis_key
       - name: insurance_key
         description: surrogate FK → dim_insurance.insurance_key
         tests:
           - not_null
           - relationships:
-              to: ref('dim_insurance')
-              field: insurance_key
+              arguments:
+                to: ref('dim_insurance')
+                field: insurance_key
+      - name: admission_type_key
+        description: surrogate FK → dim_admission_type.admission_type_key
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_admission_type')
+                field: admission_type_key
       - name: is_emergency
         description: 1 if admission_type = 'Emergency'; else 0.
         tests:
           - not_null
           - accepted_values:
-              values: [0, 1]
-              quote: false
+              arguments:
+                values: [0, 1]
+                quote: false
       - name: is_readmission
         description: 1 if same patient was admitted within 30 days prior; else 0.
         tests:
           - not_null
           - accepted_values:
-              values: [0, 1]
-              quote: false
+              arguments:
+                values: [0, 1]
+                quote: false
       - name: billing_amount
         description: gross billed amount (USD). Synthetic — pre-insurance write-off.
         tests:
@@ -129,8 +144,9 @@ models:
         tests:
           - not_null
           - accepted_values:
-              # staging standardizes conditions to lowercase + underscores
-              values: ['diabetes', 'hypertension', 'cancer', 'obesity', 'asthma', 'arthritis']
+              arguments:
+                # staging standardizes conditions to lowercase + underscores
+                values: ['diabetes', 'hypertension', 'cancer', 'obesity', 'asthma', 'arthritis']
 
   - name: dim_insurance
     description: "One row per insurance provider (Kaggle: 5 providers)."
@@ -147,3 +163,17 @@ models:
         tests:
           - not_null
           - unique
+
+  - name: dim_admission_type
+    description: Governed admission classification used by analytics and AI consumers.
+    columns:
+      - name: admission_type_key
+        tests:
+          - not_null
+          - unique
+      - name: admission_type
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['elective', 'emergency', 'urgent']

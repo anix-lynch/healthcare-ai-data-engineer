@@ -36,6 +36,11 @@ dim_medication AS (
 dim_insurance AS (
     SELECT *
     FROM {{ ref('dim_insurance') }}
+),
+
+dim_admission_type AS (
+    SELECT *
+    FROM {{ ref('dim_admission_type') }}
 )
 
 SELECT
@@ -48,6 +53,7 @@ SELECT
     ddi.diagnosis_key,
     dmed.medication_key,
     di.insurance_key,
+    dat.admission_type_key,
     ir.billing_amount,
     ir.length_of_stay_days,
     ir.cost_per_day,
@@ -77,3 +83,5 @@ LEFT JOIN dim_medication dmed
     ON ir.medication = dmed.medication_name
 LEFT JOIN dim_insurance di
     ON ir.insurance_provider = di.insurance_provider_name
+LEFT JOIN dim_admission_type dat
+    ON ir.admission_type = dat.admission_type

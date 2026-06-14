@@ -1,0 +1,42 @@
+{
+  "proof": "great_expectations_release_gate",
+  "activity_bracket": [
+    "ingest source",
+    "validate source contract",
+    "quarantine and reconcile",
+    "dbt build and test",
+    "validate AI-facing enrichment",
+    "publish to downstream consumers"
+  ],
+  "gates": [
+    {
+      "suite": "source_release_contract",
+      "asset": "data/raw/healthcare_dataset.csv",
+      "rows": 55500,
+      "expectations": 27,
+      "passed": 27,
+      "success": true,
+      "exceptions_observed": [
+        {
+          "expectation": "expect_column_values_to_be_between",
+          "column": "Billing Amount",
+          "unexpected_count": 108,
+          "unexpected_percent": 0.19459459459459458
+        }
+      ]
+    },
+    {
+      "suite": "enriched_ai_contract",
+      "asset": "data/raw/healthcare_dataset_enriched.csv",
+      "rows": 497,
+      "expectations": 21,
+      "passed": 21,
+      "success": true,
+      "exceptions_observed": []
+    }
+  ],
+  "total_expectations": 48,
+  "passed_expectations": 48,
+  "success": true,
+  "boundary": "GE validates contracts at source and AI-facing release boundaries. Duplicate disposition and no-row-loss accounting are proven separately by reconciliation."
+}

@@ -4,7 +4,8 @@ help:
 	@echo "Targets:"
 	@echo "  install            pip install requirements"
 	@echo "  serve              uvicorn api/app on :8000"
-	@echo "  checkpoint         run L1 data quality gate (7 checks)"
+	@echo "  ge                 run GE release gates at source + AI-facing boundaries"
+	@echo "  checkpoint         run healthcare-specific quality guards"
 	@echo "  patient-id         (re)build encounter→patient identity map"
 	@echo "  portfolio-snapshot generate A1 control-room payload"
 	@echo "  feast-apply        register L1.25 feature definitions (needs BigQuery)"
@@ -44,7 +45,7 @@ clean:
 	find . -type d -name __pycache__ -prune -exec rm -rf {} +
 	rm -rf .pytest_cache
 
-# Great Expectations: standard column contract (schema/null/range/set/unique)
-# + Data Docs HTML. Domain checks (PII, identity) stay in `make checkpoint`.
+# Great Expectations release gates at source + AI-facing boundaries.
+# Domain checks (PII, identity) stay in `make checkpoint`.
 ge:
 	.ge-venv/bin/python scripts/run_ge.py

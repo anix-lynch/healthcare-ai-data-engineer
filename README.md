@@ -54,7 +54,7 @@ healthcare-ai-data-engineer/
 ├── dbt-project/                      the warehouse (raw → clean → gold)
 │   ├── models/staging/               ✅ stg_healthcare + sources — raw landing
 │   ├── models/intermediate/          ✅ enriched encounters + readmission logic
-│   ├── models/marts/core/            ✅ 7 dims + fact_patient_encounters (the gold tables)
+│   ├── models/marts/core/            ✅ 8 dims + fact_patient_encounters (the gold tables)
 │   ├── tests/                        ✅ 3 SQL data tests (no negative LOS, discharge>admit…)
 │   ├── dbt_project.yml · profiles    ✅ dbt config
 │   └── README.md                     📖 how the marts are built
@@ -119,6 +119,7 @@ healthcare-ai-data-engineer/
 ## 60-Second Read
 
 - 55,500 synthetic encounters modeled through dbt bronze/silver/gold layers.
+- 8 governed dimensions + 1 encounter fact validated by 51/51 live BigQuery dbt tests.
 - 497-row enriched slice shipped with a passing **7/7 L1 quality gate**, 0 critical failures.
 - 55,500 encounters resolved into 40,235 unique patient identities (47 synthetic edges flagged).
 - Published contracts + frozen OpenAPI snapshot keep the surface stable.
@@ -142,12 +143,15 @@ Not everything belongs in the same tool. This repo uses the right one for each j
 
 | Layer | Tool | Owns | Run |
 |---|---|---|---|
-| **Standard column contract** | **Great Expectations** | schema (33 cols) · not-null · value ranges (vitals/ESI) · allowed sets · `row_hash` uniqueness — **21 expectations, rendered as Data Docs HTML** | `make ge` |
+| **Release-boundary contracts** | **Great Expectations** | all **55,500 source rows** before promotion + the **497-row AI-facing enrichment** before downstream use; schema · not-null · ranges · allowed sets · hashes — rendered as Data Docs HTML | `make ge` |
 | **Healthcare-specific guards** | custom Python (`scripts/checkpoint.py`) | PII regex over free-text clinical notes · encounter→patient identity resolution · temporal sanity — things GE can't express | `make checkpoint` |
 
-GE handles the standard tabular contract a reviewer expects; the custom gate covers the domain
-checks an off-the-shelf tool can't. The suite is committed at
-[`gx/expectations/l1_data_quality.json`](gx/expectations/l1_data_quality.json).
+GE is a fail-closed release gate, not a decorative sample report. Duplicates are not
+treated as a source-contract failure because the platform deliberately quarantines
+and reconciles them; `quality/proof_reconciliation.json` proves every row is accounted for.
+The two GE boundary suites currently pass **48/48 expectations** while explicitly
+surfacing 108 source billing exceptions inside the approved tolerance.
+The custom gate covers domain checks an off-the-shelf tool cannot express.
 
 ---
 

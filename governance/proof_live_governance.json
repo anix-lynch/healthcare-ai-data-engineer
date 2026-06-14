@@ -1,0 +1,75 @@
+{
+  "proof": "bullet4_live_governance_audit",
+  "audited_at": "2026-06-14T06:08:30.688399+00:00",
+  "schema_drift": {
+    "fact_patient_encounters": {
+      "required": [
+        "admission_date_key",
+        "admission_type_key",
+        "billing_amount",
+        "diagnosis_key",
+        "discharge_date_key",
+        "doctor_key",
+        "encounter_id",
+        "hospital_key",
+        "insurance_key",
+        "length_of_stay_days",
+        "medication_key",
+        "patient_key"
+      ],
+      "missing": [],
+      "unexpected": [
+        "age_group",
+        "cost_per_day",
+        "created_at",
+        "days_since_last_admission",
+        "is_emergency",
+        "is_readmission",
+        "previous_admission_count",
+        "room_number",
+        "season",
+        "updated_at"
+      ],
+      "pass": true
+    },
+    "pipeline_run_history": {
+      "required": [
+        "attempts",
+        "completed_at",
+        "dag_type",
+        "duration_seconds",
+        "final_verification",
+        "recovery_state",
+        "result",
+        "run_id",
+        "started_at"
+      ],
+      "missing": [],
+      "unexpected": [],
+      "pass": true
+    },
+    "quarantine_records": {
+      "required": [
+        "quarantined_at",
+        "raw_json",
+        "reasons",
+        "source_event_ts"
+      ],
+      "missing": [],
+      "unexpected": [],
+      "pass": true
+    }
+  },
+  "masking_view": {
+    "table": "bchan-genai-lab.healthcare_governed.vw_encounters_safe",
+    "type": "VIEW",
+    "pass": true
+  },
+  "retention": {
+    "table": "bchan-genai-lab.healthcare_analytics.quarantine_records",
+    "expires": "2026-09-11T20:55:25.513000+00:00",
+    "pass": true
+  },
+  "pass": true,
+  "evidence_sha256": "fe7628b43a75c13bdc1a2544e7b348b9173099d112efaea854b36cc9a179168d"
+}

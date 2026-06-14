@@ -103,6 +103,15 @@ fluent_datasources:
       enriched_encounters:
         type: csv
         filepath_or_buffer: data/raw/healthcare_dataset_enriched.csv
+  healthcare_release_gates:
+    type: pandas
+    assets:
+      source_encounters:
+        type: csv
+        filepath_or_buffer: data/raw/healthcare_dataset.csv
+      enriched_encounters:
+        type: csv
+        filepath_or_buffer: data/raw/healthcare_dataset_enriched.csv
 notebooks:
 include_rendered_content:
   globally: false

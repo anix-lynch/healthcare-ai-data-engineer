@@ -1,6 +1,6 @@
 {
   "checkpoint_version": 1,
-  "scanned_at": "2026-06-13T20:26:28",
+  "scanned_at": "2026-06-13T23:10:56",
   "input_file": "/Users/anixlynch/dev/healthcare-ai-data-engineer/data/raw/healthcare_dataset_enriched.csv",
   "n_rows": 497,
   "checks": {
@@ -28,12 +28,12 @@
     },
     "critical_nulls": {
       "null_counts": {
-        "Age": 0,
         "Medical Condition": 0,
+        "Discharge Date": 0,
         "Date of Admission": 0,
         "Gender": 0,
-        "Name": 0,
-        "Discharge Date": 0
+        "Age": 0,
+        "Name": 0
       },
       "failing_columns": {},
       "verdict_critical": false
