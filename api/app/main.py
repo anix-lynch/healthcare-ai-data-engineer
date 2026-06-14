@@ -153,6 +153,80 @@ def app_shell():
     return FileResponse(index_path)
 
 
+def _ingestion_mod():
+    """Make the shared streaming code (validate.py + sink.py) importable in-container.
+    Same modules the batch ingester uses — the accept/quarantine rule can't drift."""
+    import sys
+    from pathlib import Path
+    p = str(Path(__file__).resolve().parents[2] / "ingestion")
+    if p not in sys.path:
+        sys.path.insert(0, p)
+    import validate, sink
+    return validate, sink
+
+
+@app.post("/api/ingest")
+def ingest_record(record: dict = Body(...)):
+    """Stateless classify endpoint — the HTTP demo face of Bullet 1.
+
+    POST a single encounter record; it runs through the SAME validator that both
+    the batch stream ingester and the live Pub/Sub consumer use, so the
+    accept/quarantine verdict is identical no matter how a row arrives. This
+    endpoint only classifies (safe for recruiter pokes); persistence to BigQuery
+    happens on the `/pubsub/push` path below.
+    """
+    validate, _ = _ingestion_mod()
+    decision = validate.validate_record(record, seen={})
+    return {
+        "status": decision.status,
+        "quarantined": decision.status == "quarantined",
+        "reasons": decision.reasons,
+        "natural_key": "|".join(str(record.get(k, "")) for k in ("name", "date_of_admission")),
+    }
+
+
+@app.post("/pubsub/push")
+def pubsub_push(envelope: dict = Body(...)):
+    """Pub/Sub push subscription target — the real streaming leg of Bullet 1.
+
+    A message published to the `encounter-events` topic is delivered here by a
+    Pub/Sub push subscription. We unwrap the envelope, classify with the SHARED
+    validator (seeding `seen` from what already landed so duplicates / late
+    replays are caught exactly like the batch run), and PERSIST: a good row is
+    idempotently MERGEd into `raw_ingest_clean`, a bad row is isolated in
+    `quarantine_records` with its reasons. Always 200 so Pub/Sub does not redeliver
+    a message we have already (correctly) decided on — including a quarantine.
+
+        Pub/Sub topic → push subscription → THIS endpoint on Cloud Run → BigQuery
+    """
+    import base64
+    import json
+
+    msg = (envelope or {}).get("message", {})
+    raw = msg.get("data")
+    if not raw:
+        return {"status": "ack_no_data"}  # malformed/empty — ack to avoid poison redelivery
+    try:
+        record = json.loads(base64.b64decode(raw).decode("utf-8"))
+    except Exception as e:
+        return {"status": "ack_undecodable", "error": str(e)[:120]}
+
+    validate, sink = _ingestion_mod()
+    from google.cloud import bigquery
+    client = bigquery.Client(project=sink.PROJECT)
+
+    seen = sink.seen_from_bigquery(client)
+    decision = validate.validate_record(record, seen)
+    action = sink.persist_decision(client, decision)
+    return {
+        "status": action,
+        "quarantined": decision.status == "quarantined",
+        "reasons": decision.reasons,
+        "message_id": msg.get("messageId"),
+        "natural_key": "|".join(str(record.get(k, "")) for k in ("name", "date_of_admission")),
+    }
+
+
 @app.get("/api/encounters")
 def get_encounters(
     limit: int = Query(default=10, ge=1, le=1000, description="Number of records to return"),
