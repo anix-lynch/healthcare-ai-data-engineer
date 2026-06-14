@@ -64,6 +64,11 @@ except Exception:
     except Exception:
         grounded_answer = None  # type: ignore
 
+try:
+    from .reliability import run_reliability_probe
+except ImportError:
+    from reliability import run_reliability_probe  # type: ignore
+
 # Typed response contracts live in api/app/schemas.py.
 # They are reference contracts (publishable as OpenAPI components manually if
 # needed) — NOT wired as `response_model=` decorators, because the existing
@@ -643,6 +648,15 @@ async def ask(
     if grounded_answer is None:
         raise HTTPException(status_code=503, detail="ask path unavailable in this environment")
     return grounded_answer(q, k=k)
+
+
+@app.post("/api/platform/reliability")
+def platform_reliability():
+    """Scheduled GCP-native reliability probe with a verified BigQuery receipt."""
+    try:
+        return run_reliability_probe()
+    except Exception as exc:
+        raise HTTPException(status_code=503, detail=f"reliability probe failed: {str(exc)[:300]}")
 
 
 if __name__ == "__main__":
