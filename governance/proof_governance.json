@@ -1,0 +1,41 @@
+{
+  "proof": "bullet4_least_privilege_masking_retention",
+  "masking": {
+    "view": "healthcare_governed.vw_encounters_safe",
+    "rule": "name->SHA256, billing_amount->band",
+    "sample": [
+      {
+        "patient_hash": "ddde7468ce08011342f4d4634d77ca18e5c7af03702c9c6df52669b8b17ea2cc",
+        "age": 61,
+        "gender": "Female",
+        "date_of_admission": "2024-07-09",
+        "medical_condition": "Diabetes",
+        "admission_type": "Elective",
+        "billing_band": "5k-15k"
+      },
+      {
+        "patient_hash": "ceec8baad4fef7ade7b4e3a75254b92a47f4795b496eed2b5cd444b46db5ffb5",
+        "age": 66,
+        "gender": "Male",
+        "date_of_admission": "2024-03-03",
+        "medical_condition": "Arthritis",
+        "admission_type": "Urgent",
+        "billing_band": "5k-15k"
+      }
+    ]
+  },
+  "least_privilege": {
+    "restricted_principal": "restricted-reader-b4",
+    "governed_dataset_access": [
+      "restricted-reader-b4@bchan-genai-lab.iam.gserviceaccount.com=READER"
+    ],
+    "base_dataset_access": [
+      "NONE (denied)"
+    ],
+    "guarantee": "restricted SA is READER on governed only; no grant on base -> base read is 403 by policy"
+  },
+  "retention": "quarantine_records expiration_timestamp = now + 90 days",
+  "data_contract": "docs/contracts.md (versioned)",
+  "observable_403": "governance/least_privilege_demo.py --impersonate (needs one owner tokenCreator grant)",
+  "verdict": "GREEN(policy) \u2014 masking + view-only grant + authorized view + retention live; observable 403 one grant away"
+}

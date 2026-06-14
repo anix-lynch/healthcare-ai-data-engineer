@@ -50,10 +50,10 @@ Cloud Run `/pubsub/push` endpoint, validated, and persisted — proof of a true
 python ingestion/ingest.py --dry-run
 
 # batch — MERGE the file replay into bchan-genai-lab.healthcare_analytics.{raw_ingest_clean, quarantine_records}
-GOOGLE_APPLICATION_CREDENTIALS=~/.config/secrets/bchan-genai-deploy.json python ingestion/ingest.py
+GOOGLE_APPLICATION_CREDENTIALS=/path/to/sa-key.json python ingestion/ingest.py
 
 # streaming — publish ONE real event through the live Pub/Sub → Cloud Run → BigQuery leg
-GOOGLE_APPLICATION_CREDENTIALS=~/.config/secrets/bchan-genai-deploy.json python ingestion/publish_event.py --demo
+GOOGLE_APPLICATION_CREDENTIALS=/path/to/sa-key.json python ingestion/publish_event.py --demo
 ```
 
 ## Entity resolution (same Bullet 1 claim)

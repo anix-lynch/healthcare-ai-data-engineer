@@ -1,0 +1,10 @@
+Marking task as SUCCESS. dag_id=data_platform, task_id=ingest_source_b, run_id=manual__2024-07-12T00:00:00+00:00, execution_date=20240712T000000, start_date=, end_date=20260613T210046
+Marking task as SUCCESS. dag_id=data_platform, task_id=ingest_source_a, run_id=manual__2024-07-12T00:00:00+00:00, execution_date=20240712T000000, start_date=, end_date=20260613T210046
+transform: joined 18 rows from 2 parallel sources
+Marking task as SUCCESS. dag_id=data_platform, task_id=transform, run_id=manual__2024-07-12T00:00:00+00:00, execution_date=20240712T000000, start_date=, end_date=20260613T210046
+freshness: newest record lags as-of by 0.00h (SLA 24.0h)
+Marking task as SUCCESS. dag_id=data_platform, task_id=freshness_sla, run_id=manual__2024-07-12T00:00:00+00:00, execution_date=20240712T000000, start_date=, end_date=20260613T210046
+quality_gate: 1/18 rows anomalous (rate=6%)
+Marking task as SUCCESS. dag_id=data_platform, task_id=quality_gate, run_id=manual__2024-07-12T00:00:00+00:00, execution_date=20240712T000000, start_date=, end_date=20260613T210046
+publish: 17 clean rows promoted to the marts ✅
+Marking task as SUCCESS. dag_id=data_platform, task_id=publish, run_id=manual__2024-07-12T00:00:00+00:00, execution_date=20240712T000000, start_date=, end_date=20260613T210046

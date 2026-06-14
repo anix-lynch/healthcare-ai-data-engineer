@@ -54,7 +54,7 @@ healthcare-ai-data-engineer/
 ├── dbt-project/                      the warehouse (raw → clean → gold)
 │   ├── models/staging/               ✅ stg_healthcare + sources — raw landing
 │   ├── models/intermediate/          ✅ enriched encounters + readmission logic
-│   ├── models/marts/core/            ✅ 8 dims + fact_patient_encounters (the gold tables)
+│   ├── models/marts/core/            ✅ 7 dims + fact_patient_encounters (the gold tables)
 │   ├── tests/                        ✅ 3 SQL data tests (no negative LOS, discharge>admit…)
 │   ├── dbt_project.yml · profiles    ✅ dbt config
 │   └── README.md                     📖 how the marts are built
@@ -63,6 +63,21 @@ healthcare-ai-data-engineer/
 │   ├── feature_store.yaml            ✅ Feast config (BigQuery offline / sqlite online)
 │   ├── requirements.txt              ✅ feast[gcp] — kept out of the API image
 │   └── README.md                     📖 what the features are + how to apply them
+├── ingestion/                        Bullet 1 — event-driven streaming leg
+│   ├── ingest.py · validate.py        ✅ batch replay + shared pure validator
+│   ├── sink.py                        ✅ one idempotent-MERGE / quarantine contract
+│   ├── publish_event.py               ✅ producer → Pub/Sub topic encounter-events
+│   ├── proof_streaming.json           ✅ real Pub/Sub→Cloud Run→BigQuery flow
+│   └── README.md                      📖 streaming + quarantine + entity-res
+├── orchestration/                    Bullet 2 — self-monitoring Airflow DAG
+│   ├── dags/data_platform_dag.py      ✅ parallel→transform→freshness→gate→publish/escalate
+│   ├── anomaly.py                     ✅ IsolationForest auto-quarantine
+│   ├── explain.py                     ✅ Gemini explains a failure in plain language
+│   └── README.md · proof_*.json       📖 run-verified detect→recover→escalate
+├── governance/                       Bullet 4 — least-privilege + masking
+│   ├── setup_governance.py            ✅ masked authorized view + view-only grant + retention
+│   ├── least_privilege_demo.py        ✅ 200 on safe view · 403 on base table
+│   └── README.md · proof_*.json       📖 the access model + its proof
 ├── scripts/                          one-shot pipeline jobs (run by hand / CI)
 │   ├── checkpoint.py                 ✅ the L1 data-quality gate (7 checks)
 │   ├── patient_identity.py           ✅ rolls encounters up to stable patient IDs

@@ -1,0 +1,4 @@
+{
+  "source": "vertex:gemini-2.5-flash",
+  "explanation": "The IsolationForest model flagged this row as anomalous, most likely due to the extremely high and implausible `age` value of 920,000, which suggests a significant data entry error or a unit conversion issue. The pipeline correctly identified data that is far outside expected norms.\n\nInvestigate the `encounter_id` L1-100016 in the source system to determine the correct `age` value and the root cause of the incorrect entry."
+}

@@ -36,3 +36,7 @@ feature-store/**/__pycache__/
 # internal scaffolding — not for public showroom
 _private/
 .ge-venv/
+.airflow-venv/
+.airflow_home/
+orchestration/.run/
+orchestration/__pycache__/

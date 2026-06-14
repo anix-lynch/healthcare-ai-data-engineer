@@ -1,0 +1,36 @@
+{
+  "proof": "bullet2_self_monitoring_airflow_dag",
+  "dag_id": "data_platform",
+  "airflow": "2.10.3 (py3.12, SequentialExecutor, sqlite)",
+  "topology": "ingest_source_a + ingest_source_b (parallel) -> transform -> freshness_sla -> quality_gate -> publish | escalate(one_failed)",
+  "happy_path": {
+    "run": "dags test data_platform 2024-07-12",
+    "state": "success",
+    "parallel_ingest": "ingest_source_a + ingest_source_b ran independently",
+    "transform": "joined 18 rows from 2 sources",
+    "freshness_sla": "newest record lag 0.00h < 24h SLA -> pass",
+    "quality_gate": "1/18 rows anomalous (6%) auto-quarantined",
+    "publish": "17 clean rows promoted"
+  },
+  "ml_anomaly": {
+    "model": "IsolationForest(contamination=0.05, n_estimators=200, random_state=42)",
+    "caught": {
+      "encounter_id": "L1-100016",
+      "age": 920000,
+      "billing_amount": 4200000,
+      "length_of_stay_days": 365
+    },
+    "comment": "planted outlier isolated from the population on numeric features"
+  },
+  "llm_explained": {
+    "source": "vertex:gemini-2.5-flash",
+    "explanation": "The IsolationForest model flagged this row as anomalous, most likely due to the extremely high and implausible `age` value of 920,000, which suggests a significant data entry error or a unit conversion issue. The pipeline correctly identified data that is far outside expected norms.\n\nInvestigate the `encounter_id` L1-100016 in the source system to determine the correct `age` value and the root cause of the incorrect entry."
+  },
+  "bounded_recovery": {
+    "run": "dags test data_platform 2024-07-11 (QUARANTINE_FAIL_RATE=0.02)",
+    "gate": "rate 6% > 2% threshold -> AirflowException",
+    "retry": "task marked UP_FOR_RETRY (retries=2, retry_delay=2s)",
+    "escalation": "escalate task fired (trigger_rule=one_failed) -> escalation.json written, paged on-call"
+  },
+  "verdict": "GREEN \u2014 real Airflow DAG: parallel->sequential, IsolationForest auto-quarantine, REAL Gemini failure explanation, freshness SLA, bounded retry + human escalation. All run-verified."
+}
