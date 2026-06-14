@@ -62,7 +62,7 @@ SELECT
     CURRENT_TIMESTAMP AS updated_at
 FROM int_readmissions ir
 LEFT JOIN dim_patient dp
-    ON ir.patient_name_hash = dp.patient_name_hash
+    ON ir.patient_id = dp.patient_id
 LEFT JOIN dim_date dd_admission
     ON ir.admission_date = dd_admission.date_day
 LEFT JOIN dim_date dd_discharge

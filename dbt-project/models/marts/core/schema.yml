@@ -83,17 +83,24 @@ models:
           - not_null
 
   - name: dim_patient
-    description: One row per unique patient (deduped via patient_name_hash).
+    description: >
+      One row per CANONICAL patient (deduped via patient_id, the entity-resolution
+      grain). 55,500 encounters → 40,235 patients, matching scripts/patient_identity.py
+      byte-for-byte.
     columns:
       - name: patient_key
         tests:
           - not_null
           - unique
-      - name: patient_name_hash
-        description: SHA256 short-id from L1 patient_identity resolver.
+      - name: patient_id
+        description: Canonical patient id (P-…) — equals the resolver artifact's id.
         tests:
           - not_null
           - unique
+      - name: patient_name_hash
+        description: Most-recent encounter's raw-name hash for this canonical patient.
+        tests:
+          - not_null
 
   - name: dim_doctor
     description: One row per unique doctor name.

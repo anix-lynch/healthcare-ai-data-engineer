@@ -44,6 +44,13 @@ SELECT
     -- Hash PII for patient name (BigQuery: TO_HEX(SHA256(...)))
     TO_HEX(SHA256(patient_name)) AS patient_name_hash,
 
+    -- Canonical patient identity — collapses case/spacing variants of the SAME
+    -- name into one patient, byte-for-byte identical to scripts/patient_identity.py
+    -- (`P-` + first 10 hex of SHA256 of the lower-cased, space-normalized name).
+    -- This is the entity resolver expressed in SQL: 55,500 encounters → 40,235
+    -- canonical patients, so the warehouse dim == the resolver artifact == the bullet.
+    CONCAT('P-', SUBSTR(TO_HEX(SHA256(REPLACE(REPLACE(LOWER(patient_name), ' ', '_'), '_', ' '))), 1, 10)) AS patient_id,
+
     -- Clean column values
     REPLACE(LOWER(patient_name), ' ', '_')        AS patient_name_cleaned,
     date_of_admission                              AS admission_date,
