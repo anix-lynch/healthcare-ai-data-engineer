@@ -1,0 +1,29 @@
+{
+  "proof": "bullet5_source_to_warehouse_reconciliation",
+  "source_of_record": {
+    "encounters": 55500,
+    "canonical_patients": 40235,
+    "artifact": "data/derived/patient_identity_map.json"
+  },
+  "warehouse": {
+    "stg_healthcare": 50000,
+    "dim_patient": 49992
+  },
+  "checks": [
+    {
+      "check": "source_encounters == warehouse_staging",
+      "left": 55500,
+      "right": 50000,
+      "pass": false
+    },
+    {
+      "check": "dim_patient collapsed to canonical patients",
+      "left": 49992,
+      "right": 40235,
+      "pass": false
+    }
+  ],
+  "all_pass": false,
+  "finding": "Reconciliation is working as a control: it surfaces that the resolver artifact (55500 encounters \u2192 40235 patients) was built from a different source extract than the served warehouse (50000 staging rows, dim_patient=49992). The entity-resolution algorithm + map are real; the warehouse dim is NOT yet rebuilt on the canonical key. Open item: rebuild dim_patient from the identity map so source, resolver, and warehouse agree end to end.",
+  "verdict": "YELLOW \u2014 reconciliation control runs and correctly detects a real source/warehouse coherence gap; full green needs the dim rebuild."
+}
