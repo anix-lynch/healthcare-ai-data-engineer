@@ -15,3 +15,10 @@ deploy/cloudrun.sh
 # Drop bulky derived data — keep only files the API actually serves.
 # enriched_use_397.jsonl IS served (BM25 retrieval over CC+HPI+notes).
 data/raw/enriched_holdout_100.jsonl
+.airflow-venv/
+.airflow_home/
+.ge-venv/
+.feast-venv/
+.dbt-venv/
+venv/
+orchestration/.run/
