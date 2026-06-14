@@ -1,4 +1,4 @@
-"""Build the A2 trust-investigation payload from repo evidence artifacts."""
+"""Build the B2 trust-investigation payload from repo evidence artifacts."""
 from __future__ import annotations
 
 import json
@@ -57,25 +57,25 @@ def _click_target_map() -> dict[str, str]:
         "Open lineage gaps": "docs/dag.md",
         "Open model owners": "docs/contracts.md",
         "Open recon query": "scripts/checkpoint.py",
-        "Open KPI definitions": "portfolio/A2_trust_dashboard/trust_metrics_spec.yml",
+        "Open KPI definitions": "portfolio/B2_trust_dashboard/trust_metrics_spec.yml",
         "Open decision log": "ROADMAP.md",
         "Open query": "scripts/checkpoint.py",
         "Open failing rows": "data/derived/patient_identity_map.json",
         "Open dbt test": "dbt-project/tests/assert_valid_readmission_logic.sql",
-        "Open owner": "portfolio/A2_trust_dashboard/evidence_links.md",
+        "Open owner": "portfolio/B2_trust_dashboard/evidence_links.md",
         "Show rows": "data/raw/healthcare_dataset_enriched.csv",
         "Open model": "dbt-project/models/marts/core/schema.yml",
-        "Open runbook": "portfolio/A4_airflow_dag/runbook.md",
-        "Open rollback plan": "portfolio/A4_airflow_dag/runbook.md",
+        "Open runbook": "portfolio/B4_airflow_dag/runbook.md",
+        "Open rollback plan": "portfolio/B4_airflow_dag/runbook.md",
         "Open incident thread": "ROADMAP.md",
         "Open ticket": "ROADMAP.md",
         "Open data contract": "docs/contracts.md",
         "Open upstream owner": "README.md",
         "Open retry logs": ".github/workflows/quality.yml",
         "Open refresh job": ".github/workflows/quality.yml",
-        "Open snapshot id": "portfolio/A2_trust_dashboard/trust_room_payload.json",
+        "Open snapshot id": "portfolio/B2_trust_dashboard/trust_room_payload.json",
         "Open diff": "ROADMAP.md",
-        "Open dashboard link": "portfolio/A2_trust_dashboard/screenshots/trust_dashboard.png",
+        "Open dashboard link": "portfolio/B2_trust_dashboard/screenshots/trust_dashboard.png",
     }
 
 
@@ -120,7 +120,7 @@ def _build_click_audit(payload: dict[str, Any]) -> dict[str, Any]:
 
 
 def build_trust_room_payload() -> dict[str, Any]:
-    """Return the A2 payload that powers the trust investigation room."""
+    """Return the B2 payload that powers the trust investigation room."""
     checkpoint = _load_json(CHECKPOINT_PATH)
     identity = _load_json(IDENTITY_PATH)
     checks = checkpoint.get("checks", {})
@@ -149,7 +149,7 @@ def build_trust_room_payload() -> dict[str, Any]:
     owner_compliance = "Compliance"
 
     payload = {
-        "artifact": "A2_trust_dashboard",
+        "artifact": "B2_trust_dashboard",
         "display_mode": "trust-investigation-room",
         "generated_at": generated_at,
         "source_truth": {

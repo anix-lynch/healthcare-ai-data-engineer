@@ -1,11 +1,11 @@
 {
-  "artifact": "A5_bigquery_dataset",
+  "artifact": "B5_bigquery_dataset",
   "display_mode": "warehouse-explorer",
   "generated_at": "2026-05-29T15:28:03-07:00",
   "source_truth": {
     "checkpoint_report": "data/quality/l1_checkpoint_report.json",
     "dbt_models_root": "dbt-project/models",
-    "sample_queries": "portfolio/A5_bigquery_dataset/sample_queries.sql"
+    "sample_queries": "portfolio/B5_bigquery_dataset/sample_queries.sql"
   },
   "header": {
     "title": "\ud83c\udfed BIGQUERY WAREHOUSE EXPLORER",
@@ -66,7 +66,7 @@
     }
   ],
   "sample_query": {
-    "query": "-- Proof queries aligned to real dbt core models in this repo.\n-- A5 portfolio panel should point to these instead of synthetic placeholders.\n\nselect\n  medical_condition,\n  count(*) as encounters\nfrom fact_patient_encounters\ngroup by 1\norder by encounters desc;",
+    "query": "-- Proof queries aligned to real dbt core models in this repo.\n-- B5 portfolio panel should point to these instead of synthetic placeholders.\n\nselect\n  medical_condition,\n  count(*) as encounters\nfrom fact_patient_encounters\ngroup by 1\norder by encounters desc;",
     "status": "\ud83d\udfe2 Query shape verified from repo SQL",
     "runtime": "n/a (offline portfolio layer)",
     "rows_returned": "n/a"
@@ -80,20 +80,20 @@
     "warehouse_health": "Healthy \ud83d\udfe2"
   },
   "related_artifacts": [
-    "A3 Data Marketplace",
-    "A4 Pipeline Operations",
-    "A1 Executive Dashboard"
+    "B3 Data Marketplace",
+    "B4 Pipeline Operations",
+    "B1 Executive Dashboard"
   ],
   "notes": [
-    "A5 is a storytelling/explorer layer over existing root dbt + checkpoint artifacts.",
+    "B5 is a storytelling/explorer layer over existing root dbt + checkpoint artifacts.",
     "No parallel warehouse is created under portfolio.",
     "Metrics and model inventory are derived from existing repo assets."
   ],
   "link_targets": {
-    "A1 Executive Dashboard": "portfolio/A1_executive_dashboard/README.md",
-    "A3 Data Marketplace": "portfolio/A3_dbt_documentation/README.md",
-    "A4 Pipeline Operations": "portfolio/A4_airflow_dag/README.md",
-    "Open SQL": "portfolio/A5_bigquery_dataset/sample_queries.sql",
+    "B1 Executive Dashboard": "portfolio/B1_executive_dashboard/README.md",
+    "B3 Data Marketplace": "portfolio/B3_dbt_documentation/README.md",
+    "B4 Pipeline Operations": "portfolio/B4_airflow_dag/README.md",
+    "Open SQL": "portfolio/B5_bigquery_dataset/sample_queries.sql",
     "Open Lineage": "docs/dag.md",
     "Preview Data": "dbt-project/models/marts/core/fact_patient_encounters.sql"
   },
@@ -103,18 +103,18 @@
     "coverage_pct": 100.0,
     "resolved": [
       {
-        "label": "A1 Executive Dashboard",
-        "target": "portfolio/A1_executive_dashboard/README.md",
+        "label": "B1 Executive Dashboard",
+        "target": "portfolio/B1_executive_dashboard/README.md",
         "exists": true
       },
       {
-        "label": "A3 Data Marketplace",
-        "target": "portfolio/A3_dbt_documentation/README.md",
+        "label": "B3 Data Marketplace",
+        "target": "portfolio/B3_dbt_documentation/README.md",
         "exists": true
       },
       {
-        "label": "A4 Pipeline Operations",
-        "target": "portfolio/A4_airflow_dag/README.md",
+        "label": "B4 Pipeline Operations",
+        "target": "portfolio/B4_airflow_dag/README.md",
         "exists": true
       },
       {
@@ -124,7 +124,7 @@
       },
       {
         "label": "Open SQL",
-        "target": "portfolio/A5_bigquery_dataset/sample_queries.sql",
+        "target": "portfolio/B5_bigquery_dataset/sample_queries.sql",
         "exists": true
       },
       {

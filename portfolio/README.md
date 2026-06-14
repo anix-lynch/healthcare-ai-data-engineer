@@ -4,12 +4,12 @@ This folder is the human-eye layer for the repo.
 
 Open these first:
 
-1. [A1_executive_dashboard/README.md](A1_executive_dashboard/README.md)
-1. [A2_trust_dashboard/README.md](A2_trust_dashboard/README.md)
-1. [A3_dbt_documentation/README.md](A3_dbt_documentation/README.md)
-1. [A4_airflow_dag/README.md](A4_airflow_dag/README.md)
-1. [A5_bigquery_dataset/README.md](A5_bigquery_dataset/README.md)
-1. [A6_architecture_diagram/README.md](A6_architecture_diagram/README.md)
+1. [B1_executive_dashboard/README.md](B1_executive_dashboard/README.md)
+1. [B2_trust_dashboard/README.md](B2_trust_dashboard/README.md)
+1. [B3_dbt_documentation/README.md](B3_dbt_documentation/README.md)
+1. [B4_airflow_dag/README.md](B4_airflow_dag/README.md)
+1. [B5_bigquery_dataset/README.md](B5_bigquery_dataset/README.md)
+1. [B6_architecture_diagram/README.md](B6_architecture_diagram/README.md)
 
 What this layer does:
 
@@ -20,12 +20,12 @@ What this layer does:
 
 Artifact legend:
 
-- A1 Executive Dashboard: "Can we trust the hospital data today?"
-- A2 Trust Dashboard: "Can we trust the patient and visit numbers?"
-- A3 Data Model Explorer: "Where did this number come from?"
-- A4 Airflow DAG: "Does the pipeline run every day?"
-- A5 BigQuery Dataset: "What tables or queries actually exist?"
-- A6 Architecture Diagram: "How does the whole machine connect?"
+- B1 Executive Dashboard: "Can we trust the hospital data today?"
+- B2 Trust Dashboard: "Can we trust the patient and visit numbers?"
+- B3 Data Model Explorer: "Where did this number come from?"
+- B4 Airflow DAG: "Does the pipeline run every day?"
+- B5 BigQuery Dataset: "What tables or queries actually exist?"
+- B6 Architecture Diagram: "How does the whole machine connect?"
 
 Machine-readable index:
 
@@ -38,7 +38,7 @@ The actual evidence stays in:
 - [ROADMAP.md](../ROADMAP.md)
 - [data/quality/l1_checkpoint_report.json](../data/quality/l1_checkpoint_report.json)
 - [data/derived/patient_identity_map.json](../data/derived/patient_identity_map.json)
-- [A1_executive_dashboard/control_room_payload.json](A1_executive_dashboard/control_room_payload.json)
+- [B1_executive_dashboard/control_room_payload.json](B1_executive_dashboard/control_room_payload.json)
 - [dbt-project/](../dbt-project/)
 - [docs/contracts.md](../docs/contracts.md)
 - [docs/dag.md](../docs/dag.md)

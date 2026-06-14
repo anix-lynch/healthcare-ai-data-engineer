@@ -1,4 +1,4 @@
-# A5 BigQuery Dataset
+# B5 BigQuery Dataset
 
 Purpose
 
@@ -25,7 +25,7 @@ Proof files
 Backend endpoint
 
 - `/api/warehouse-room`
-- `/api/portfolio/a5`
+- `/api/portfolio/b5`
 
 Final visual proof
 

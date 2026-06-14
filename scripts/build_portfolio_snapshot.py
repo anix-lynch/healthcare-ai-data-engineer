@@ -6,9 +6,9 @@ import sys
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-OUT_PATH_A1 = REPO_ROOT / "portfolio" / "A1_executive_dashboard" / "control_room_payload.json"
-OUT_PATH_A2 = REPO_ROOT / "portfolio" / "A2_trust_dashboard" / "trust_room_payload.json"
-OUT_PATH_A5 = REPO_ROOT / "portfolio" / "A5_bigquery_dataset" / "warehouse_room_payload.json"
+OUT_PATH_A1 = REPO_ROOT / "portfolio" / "B1_executive_dashboard" / "control_room_payload.json"
+OUT_PATH_A2 = REPO_ROOT / "portfolio" / "B2_trust_dashboard" / "trust_room_payload.json"
+OUT_PATH_A5 = REPO_ROOT / "portfolio" / "B5_bigquery_dataset" / "warehouse_room_payload.json"
 sys.path.insert(0, str(REPO_ROOT))
 
 from api.app.control_room import build_control_room_payload

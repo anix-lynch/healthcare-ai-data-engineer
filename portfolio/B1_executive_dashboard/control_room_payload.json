@@ -1,5 +1,5 @@
 {
-  "artifact": "A1_executive_dashboard",
+  "artifact": "B1_executive_dashboard",
   "display_mode": "control-room-mock",
   "generated_at": "2026-05-29T15:28:03-07:00",
   "source_truth": {
@@ -28,11 +28,11 @@
   "sections": [
     {
       "title": "\u2764\ufe0f CAN WE TRUST THE NUMBERS?",
-      "button": "[Open A2]",
+      "button": "[Open B2]",
       "button_targets": [
         {
-          "label": "Open A2",
-          "target": "portfolio/A2_trust_dashboard/README.md"
+          "label": "Open B2",
+          "target": "portfolio/B2_trust_dashboard/README.md"
         }
       ],
       "metrics": [
@@ -64,11 +64,11 @@
     },
     {
       "title": "\u23f1 IS THE DATA FRESH?",
-      "button": "[Open A4]",
+      "button": "[Open B4]",
       "button_targets": [
         {
-          "label": "Open A4",
-          "target": "portfolio/A4_airflow_dag/README.md"
+          "label": "Open B4",
+          "target": "portfolio/B4_airflow_dag/README.md"
         }
       ],
       "metrics": [
@@ -100,11 +100,11 @@
     },
     {
       "title": "\ud83d\udd27 IS THE PLATFORM ALIVE?",
-      "button": "[Open A4]",
+      "button": "[Open B4]",
       "button_targets": [
         {
-          "label": "Open A4",
-          "target": "portfolio/A4_airflow_dag/README.md"
+          "label": "Open B4",
+          "target": "portfolio/B4_airflow_dag/README.md"
         }
       ],
       "metrics": [
@@ -136,15 +136,15 @@
     },
     {
       "title": "\ud83e\uddec CAN PEOPLE + SYSTEMS USE THIS?",
-      "button": "[Open A3] [Open A5]",
+      "button": "[Open B3] [Open B5]",
       "button_targets": [
         {
-          "label": "Open A3",
-          "target": "portfolio/A3_dbt_documentation/README.md"
+          "label": "Open B3",
+          "target": "portfolio/B3_dbt_documentation/README.md"
         },
         {
-          "label": "Open A5",
-          "target": "portfolio/A5_bigquery_dataset/README.md"
+          "label": "Open B5",
+          "target": "portfolio/B5_bigquery_dataset/README.md"
         }
       ],
       "metrics": [
@@ -169,22 +169,22 @@
         {
           "label": "Agent-ready views",
           "display_value": "YES \ud83d\udfe2",
-          "truth_value": "A2/A5 payloads expose machine-readable trust surfaces",
+          "truth_value": "B2/B5 payloads expose machine-readable trust surfaces",
           "evidence": "portfolio/manifest.json"
         }
       ]
     },
     {
       "title": "\ud83d\udd10 WILL COMPLIANCE YELL TODAY?",
-      "button": "[Open A2] [Open A6]",
+      "button": "[Open B2] [Open B6]",
       "button_targets": [
         {
-          "label": "Open A2",
-          "target": "portfolio/A2_trust_dashboard/README.md"
+          "label": "Open B2",
+          "target": "portfolio/B2_trust_dashboard/README.md"
         },
         {
-          "label": "Open A6",
-          "target": "portfolio/A6_architecture_diagram/README.md"
+          "label": "Open B6",
+          "target": "portfolio/B6_architecture_diagram/README.md"
         }
       ],
       "metrics": [
@@ -218,28 +218,28 @@
   "routing": [
     {
       "label": "Trust issue",
-      "target": "Open A2",
-      "target_path": "portfolio/A2_trust_dashboard/README.md"
+      "target": "Open B2",
+      "target_path": "portfolio/B2_trust_dashboard/README.md"
     },
     {
       "label": "Modeling / contract issue",
-      "target": "Open A3",
-      "target_path": "portfolio/A3_dbt_documentation/README.md"
+      "target": "Open B3",
+      "target_path": "portfolio/B3_dbt_documentation/README.md"
     },
     {
       "label": "Freshness / pipeline issue",
-      "target": "Open A4",
-      "target_path": "portfolio/A4_airflow_dag/README.md"
+      "target": "Open B4",
+      "target_path": "portfolio/B4_airflow_dag/README.md"
     },
     {
       "label": "Warehouse / query issue",
-      "target": "Open A5",
-      "target_path": "portfolio/A5_bigquery_dataset/README.md"
+      "target": "Open B5",
+      "target_path": "portfolio/B5_bigquery_dataset/README.md"
     },
     {
       "label": "Architecture / ownership",
-      "target": "Open A6",
-      "target_path": "portfolio/A6_architecture_diagram/README.md"
+      "target": "Open B6",
+      "target_path": "portfolio/B6_architecture_diagram/README.md"
     }
   ],
   "notes": [
@@ -248,11 +248,11 @@
     "Dataset evidence row count: 497"
   ],
   "link_targets": {
-    "Open A2": "portfolio/A2_trust_dashboard/README.md",
-    "Open A3": "portfolio/A3_dbt_documentation/README.md",
-    "Open A4": "portfolio/A4_airflow_dag/README.md",
-    "Open A5": "portfolio/A5_bigquery_dataset/README.md",
-    "Open A6": "portfolio/A6_architecture_diagram/README.md"
+    "Open B2": "portfolio/B2_trust_dashboard/README.md",
+    "Open B3": "portfolio/B3_dbt_documentation/README.md",
+    "Open B4": "portfolio/B4_airflow_dag/README.md",
+    "Open B5": "portfolio/B5_bigquery_dataset/README.md",
+    "Open B6": "portfolio/B6_architecture_diagram/README.md"
   },
   "click_audit": {
     "resolved_count": 5,
@@ -260,28 +260,28 @@
     "coverage_pct": 100.0,
     "resolved": [
       {
-        "label": "Open A2",
-        "target": "portfolio/A2_trust_dashboard/README.md",
+        "label": "Open B2",
+        "target": "portfolio/B2_trust_dashboard/README.md",
         "exists": true
       },
       {
-        "label": "Open A3",
-        "target": "portfolio/A3_dbt_documentation/README.md",
+        "label": "Open B3",
+        "target": "portfolio/B3_dbt_documentation/README.md",
         "exists": true
       },
       {
-        "label": "Open A4",
-        "target": "portfolio/A4_airflow_dag/README.md",
+        "label": "Open B4",
+        "target": "portfolio/B4_airflow_dag/README.md",
         "exists": true
       },
       {
-        "label": "Open A5",
-        "target": "portfolio/A5_bigquery_dataset/README.md",
+        "label": "Open B5",
+        "target": "portfolio/B5_bigquery_dataset/README.md",
         "exists": true
       },
       {
-        "label": "Open A6",
-        "target": "portfolio/A6_architecture_diagram/README.md",
+        "label": "Open B6",
+        "target": "portfolio/B6_architecture_diagram/README.md",
         "exists": true
       }
     ],

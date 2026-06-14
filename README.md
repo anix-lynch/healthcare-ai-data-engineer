@@ -15,7 +15,7 @@ and a human cockpit where every displayed number links to the file that proves i
 
 ![Demo](demo.gif)
 
-**Live cockpit (A1–A6):** https://healthcare-ai-data-819957310168.us-west1.run.app/app
+**Live cockpit (B1–B6):** https://healthcare-ai-data-819957310168.us-west1.run.app/app
 &nbsp;·&nbsp; **API docs:** [/docs](https://healthcare-ai-data-819957310168.us-west1.run.app/docs)
 &nbsp;·&nbsp; **Grounded agent:** [`/api/ask?q=…`](https://healthcare-ai-data-819957310168.us-west1.run.app/api/ask?q=which%20patients%20show%20cardiac%20red%20flags)
 
@@ -26,10 +26,10 @@ cockpit traces to a test or a committed artifact — not a vibe.**
 
 ## Architecture
 
-![Architecture](portfolio/A6_architecture_diagram/architecture.png)
+![Architecture](portfolio/B6_architecture_diagram/architecture.png)
 
 Raw synthetic data → identity + enrichment → **L1 quality gate** → dbt medallion
-marts → FastAPI on Cloud Run → consumed by **humans** (A1/A2 cockpit) and
+marts → FastAPI on Cloud Run → consumed by **humans** (B1/B2 cockpit) and
 **agents** (BM25 retrieval + grounded Gemini, redacted surfaces only).
 
 ---
@@ -42,13 +42,13 @@ What lives where, at a glance:
 healthcare-ai-data-engineer/
 ├── api/                              the live FastAPI service
 │   ├── app/
-│   │   ├── main.py                   ✅ entry point — wires routes + serves the A1–A6 cockpit
+│   │   ├── main.py                   ✅ entry point — wires routes + serves the B1–B6 cockpit
 │   │   ├── ask.py                    ✅ the /api/ask grounded-agent answer logic
 │   │   ├── retrieval.py              ✅ BM25 — pulls the records that match the question
 │   │   ├── classifier.py             ✅ tags each encounter (ESI tier / red-flag)
-│   │   ├── control_room.py           ✅ builds the A1 executive dashboard numbers live
-│   │   ├── trust_room.py             ✅ builds the A2 trust / data-quality panel live
-│   │   └── warehouse_room.py         ✅ builds the A5 warehouse-inventory panel live
+│   │   ├── control_room.py           ✅ builds the B1 executive dashboard numbers live
+│   │   ├── trust_room.py             ✅ builds the B2 trust / data-quality panel live
+│   │   └── warehouse_room.py         ✅ builds the B5 warehouse-inventory panel live
 │   ├── requirements.txt              ✅ API-only deps
 │   └── README.md                     📖 how the API layer works
 ├── dbt-project/                      the warehouse (raw → clean → gold)
@@ -86,7 +86,7 @@ healthcare-ai-data-engineer/
 │   ├── load_bigquery.py              ✅ loads the marts into BigQuery
 │   ├── stratified_sampler.py         ✅ picks a representative slice
 │   ├── split_holdout.py              ✅ carves out an eval hold-out set
-│   ├── build_portfolio_snapshot.py   ✅ regenerates the A1/A2/A5 dashboard payloads
+│   ├── build_portfolio_snapshot.py   ✅ regenerates the B1/B2/B5 dashboard payloads
 │   └── edge_cases.json               ✅ tricky inputs the scripts guard against
 ├── tests/                            pytest — proves it all works
 │   ├── test_api.py · test_ask.py     ✅ API + grounded-agent answers
@@ -99,11 +99,11 @@ healthcare-ai-data-engineer/
 │   ├── quality/                      ✅ checkpoint report + eval/golden sets (the proof JSONs)
 │   └── derived/patient_identity_map  ✅ the resolved encounter→patient map
 ├── docs/                             📖 contracts.md · dag.md · L1_HARDENING.md (the "why")
-├── portfolio/                        🖼️  A1–A6 — one folder per cockpit panel
-│   ├── A1…A6/screenshots/*.png       🖼️  proof shots of each live panel
-│   ├── A1…A6/*_ascii.md · *.md       📖 panel notes + ASCII mockups
-│   ├── A1/A2/A5/*_payload.json       🖼️  captured dashboard data behind each shot
-│   └── A6/architecture.png           🖼️  the system diagram used up top
+├── portfolio/                        🖼️  B1–B6 — one folder per cockpit panel
+│   ├── B1…B6/screenshots/*.png       🖼️  proof shots of each live panel
+│   ├── B1…B6/*_ascii.md · *.md       📖 panel notes + ASCII mockups
+│   ├── B1/B2/B5/*_payload.json       🖼️  captured dashboard data behind each shot
+│   └── B6/architecture.png           🖼️  the system diagram used up top
 ├── web/                              ✅ index.html · app.js · styles.css (the static cockpit)
 ├── deploy/cloudrun.sh · Dockerfile   ✅ how it ships to Cloud Run
 ├── demo/quickstart.sh                ✅ clone-to-running in one script

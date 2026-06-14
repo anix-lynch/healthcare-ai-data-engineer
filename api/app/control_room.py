@@ -1,4 +1,4 @@
-"""Build the A1 control-room payload from existing evidence artifacts.
+"""Build the B1 control-room payload from existing evidence artifacts.
 
 This module is the bridge between the backend proof and the portfolio cockpit.
 It intentionally separates:
@@ -57,11 +57,11 @@ def _freshness_emoji(delay_min: int | None) -> str:
 
 def _a1_link_targets() -> dict[str, str]:
     return {
-        "Open A2": "portfolio/A2_trust_dashboard/README.md",
-        "Open A3": "portfolio/A3_dbt_documentation/README.md",
-        "Open A4": "portfolio/A4_airflow_dag/README.md",
-        "Open A5": "portfolio/A5_bigquery_dataset/README.md",
-        "Open A6": "portfolio/A6_architecture_diagram/README.md",
+        "Open B2": "portfolio/B2_trust_dashboard/README.md",
+        "Open B3": "portfolio/B3_dbt_documentation/README.md",
+        "Open B4": "portfolio/B4_airflow_dag/README.md",
+        "Open B5": "portfolio/B5_bigquery_dataset/README.md",
+        "Open B6": "portfolio/B6_architecture_diagram/README.md",
     }
 
 
@@ -99,7 +99,7 @@ def _a1_click_audit(payload: dict[str, Any]) -> dict[str, Any]:
 
 
 def build_control_room_payload() -> dict[str, Any]:
-    """Return a single payload that powers the A1 operational mock."""
+    """Return a single payload that powers the B1 operational mock."""
     checkpoint = _load_json(CHECKPOINT_PATH)
     identity = _load_json(IDENTITY_PATH)
     openapi = _load_json(OPENAPI_PATH)
@@ -121,7 +121,7 @@ def build_control_room_payload() -> dict[str, Any]:
     freshness_emoji = _freshness_emoji(data_delay_min)
 
     payload = {
-        "artifact": "A1_executive_dashboard",
+        "artifact": "B1_executive_dashboard",
         "display_mode": "control-room-mock",
         "generated_at": generated_at.isoformat(timespec="seconds"),
         "source_truth": {
@@ -150,8 +150,8 @@ def build_control_room_payload() -> dict[str, Any]:
         "sections": [
             {
                 "title": "❤️ CAN WE TRUST THE NUMBERS?",
-                "button": "[Open A2]",
-                "button_targets": [{"label": "Open A2", "target": "portfolio/A2_trust_dashboard/README.md"}],
+                "button": "[Open B2]",
+                "button_targets": [{"label": "Open B2", "target": "portfolio/B2_trust_dashboard/README.md"}],
                 "metrics": [
                     {
                         "label": "QC passed?",
@@ -181,8 +181,8 @@ def build_control_room_payload() -> dict[str, Any]:
             },
             {
                 "title": "⏱ IS THE DATA FRESH?",
-                "button": "[Open A4]",
-                "button_targets": [{"label": "Open A4", "target": "portfolio/A4_airflow_dag/README.md"}],
+                "button": "[Open B4]",
+                "button_targets": [{"label": "Open B4", "target": "portfolio/B4_airflow_dag/README.md"}],
                 "metrics": [
                     {
                         "label": "Latest ingest",
@@ -212,8 +212,8 @@ def build_control_room_payload() -> dict[str, Any]:
             },
             {
                 "title": "🔧 IS THE PLATFORM ALIVE?",
-                "button": "[Open A4]",
-                "button_targets": [{"label": "Open A4", "target": "portfolio/A4_airflow_dag/README.md"}],
+                "button": "[Open B4]",
+                "button_targets": [{"label": "Open B4", "target": "portfolio/B4_airflow_dag/README.md"}],
                 "metrics": [
                     {
                         "label": "Uptime",
@@ -243,10 +243,10 @@ def build_control_room_payload() -> dict[str, Any]:
             },
             {
                 "title": "🧬 CAN PEOPLE + SYSTEMS USE THIS?",
-                "button": "[Open A3] [Open A5]",
+                "button": "[Open B3] [Open B5]",
                 "button_targets": [
-                    {"label": "Open A3", "target": "portfolio/A3_dbt_documentation/README.md"},
-                    {"label": "Open A5", "target": "portfolio/A5_bigquery_dataset/README.md"},
+                    {"label": "Open B3", "target": "portfolio/B3_dbt_documentation/README.md"},
+                    {"label": "Open B5", "target": "portfolio/B5_bigquery_dataset/README.md"},
                 ],
                 "metrics": [
                     {
@@ -270,17 +270,17 @@ def build_control_room_payload() -> dict[str, Any]:
                     {
                         "label": "Agent-ready views",
                         "display_value": "YES 🟢",
-                        "truth_value": "A2/A5 payloads expose machine-readable trust surfaces",
+                        "truth_value": "B2/B5 payloads expose machine-readable trust surfaces",
                         "evidence": "portfolio/manifest.json",
                     },
                 ],
             },
             {
                 "title": "🔐 WILL COMPLIANCE YELL TODAY?",
-                "button": "[Open A2] [Open A6]",
+                "button": "[Open B2] [Open B6]",
                 "button_targets": [
-                    {"label": "Open A2", "target": "portfolio/A2_trust_dashboard/README.md"},
-                    {"label": "Open A6", "target": "portfolio/A6_architecture_diagram/README.md"},
+                    {"label": "Open B2", "target": "portfolio/B2_trust_dashboard/README.md"},
+                    {"label": "Open B6", "target": "portfolio/B6_architecture_diagram/README.md"},
                 ],
                 "metrics": [
                     {
@@ -311,11 +311,11 @@ def build_control_room_payload() -> dict[str, Any]:
             },
         ],
         "routing": [
-            {"label": "Trust issue", "target": "Open A2", "target_path": "portfolio/A2_trust_dashboard/README.md"},
-            {"label": "Modeling / contract issue", "target": "Open A3", "target_path": "portfolio/A3_dbt_documentation/README.md"},
-            {"label": "Freshness / pipeline issue", "target": "Open A4", "target_path": "portfolio/A4_airflow_dag/README.md"},
-            {"label": "Warehouse / query issue", "target": "Open A5", "target_path": "portfolio/A5_bigquery_dataset/README.md"},
-            {"label": "Architecture / ownership", "target": "Open A6", "target_path": "portfolio/A6_architecture_diagram/README.md"},
+            {"label": "Trust issue", "target": "Open B2", "target_path": "portfolio/B2_trust_dashboard/README.md"},
+            {"label": "Modeling / contract issue", "target": "Open B3", "target_path": "portfolio/B3_dbt_documentation/README.md"},
+            {"label": "Freshness / pipeline issue", "target": "Open B4", "target_path": "portfolio/B4_airflow_dag/README.md"},
+            {"label": "Warehouse / query issue", "target": "Open B5", "target_path": "portfolio/B5_bigquery_dataset/README.md"},
+            {"label": "Architecture / ownership", "target": "Open B6", "target_path": "portfolio/B6_architecture_diagram/README.md"},
         ],
         "notes": [
             "Display values are computed from repo evidence artifacts, not hardcoded numbers.",

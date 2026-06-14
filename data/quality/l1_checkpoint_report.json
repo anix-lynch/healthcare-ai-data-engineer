@@ -1,7 +1,7 @@
 {
   "checkpoint_version": 1,
-  "scanned_at": "2026-05-29T15:37:31",
-  "input_file": "healthcare-ai-data-engineer/data/raw/healthcare_dataset_enriched.csv",
+  "scanned_at": "2026-06-13T20:26:28",
+  "input_file": "/Users/anixlynch/dev/healthcare-ai-data-engineer/data/raw/healthcare_dataset_enriched.csv",
   "n_rows": 497,
   "checks": {
     "schema_drift": {
@@ -28,12 +28,12 @@
     },
     "critical_nulls": {
       "null_counts": {
-        "Discharge Date": 0,
         "Age": 0,
         "Medical Condition": 0,
-        "Name": 0,
         "Date of Admission": 0,
-        "Gender": 0
+        "Gender": 0,
+        "Name": 0,
+        "Discharge Date": 0
       },
       "failing_columns": {},
       "verdict_critical": false

@@ -1,4 +1,4 @@
-"""Build the A5 warehouse explorer payload from real repo artifacts.
+"""Build the B5 warehouse explorer payload from real repo artifacts.
 
 When the runtime can reach BigQuery (project bchan-genai-lab, dataset
 healthcare_analytics), the warehouse summary + table inventory are overlaid with
@@ -16,7 +16,7 @@ from typing import Any
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 CHECKPOINT_PATH = REPO_ROOT / "data" / "quality" / "l1_checkpoint_report.json"
-SAMPLE_QUERIES_PATH = REPO_ROOT / "portfolio" / "A5_bigquery_dataset" / "sample_queries.sql"
+SAMPLE_QUERIES_PATH = REPO_ROOT / "portfolio" / "B5_bigquery_dataset" / "sample_queries.sql"
 DBT_MODELS_ROOT = REPO_ROOT / "dbt-project" / "models"
 
 BQ_PROJECT = os.environ.get("GCP_PROJECT_ID", "bchan-genai-lab")
@@ -72,10 +72,10 @@ def _to_display_time(iso_ts: str) -> str:
 
 def _related_links() -> dict[str, str]:
     return {
-        "A1 Executive Dashboard": "portfolio/A1_executive_dashboard/README.md",
-        "A3 Data Marketplace": "portfolio/A3_dbt_documentation/README.md",
-        "A4 Pipeline Operations": "portfolio/A4_airflow_dag/README.md",
-        "Open SQL": "portfolio/A5_bigquery_dataset/sample_queries.sql",
+        "B1 Executive Dashboard": "portfolio/B1_executive_dashboard/README.md",
+        "B3 Data Marketplace": "portfolio/B3_dbt_documentation/README.md",
+        "B4 Pipeline Operations": "portfolio/B4_airflow_dag/README.md",
+        "Open SQL": "portfolio/B5_bigquery_dataset/sample_queries.sql",
         "Open Lineage": "docs/dag.md",
         "Preview Data": "dbt-project/models/marts/core/fact_patient_encounters.sql",
     }
@@ -122,7 +122,7 @@ def build_warehouse_room_payload() -> dict[str, Any]:
     first_query = sample_query_block.split(";")[0].strip() + ";"
 
     payload = {
-        "artifact": "A5_bigquery_dataset",
+        "artifact": "B5_bigquery_dataset",
         "display_mode": "warehouse-explorer",
         "generated_at": datetime.now().astimezone().isoformat(timespec="seconds"),
         "source_truth": {
@@ -171,12 +171,12 @@ def build_warehouse_room_payload() -> dict[str, Any]:
             "warehouse_health": "Healthy 🟢" if checkpoint.get("passed") else "Degraded 🔴",
         },
         "related_artifacts": [
-            "A3 Data Marketplace",
-            "A4 Pipeline Operations",
-            "A1 Executive Dashboard",
+            "B3 Data Marketplace",
+            "B4 Pipeline Operations",
+            "B1 Executive Dashboard",
         ],
         "notes": [
-            "A5 is a storytelling/explorer layer over existing root dbt + checkpoint artifacts.",
+            "B5 is a storytelling/explorer layer over existing root dbt + checkpoint artifacts.",
             "No parallel warehouse is created under portfolio.",
             "Metrics and model inventory are derived from existing repo assets.",
         ],
@@ -209,7 +209,7 @@ def build_warehouse_room_payload() -> dict[str, Any]:
             "fact_patient_encounters_rows": live["fact_rows"],
         }
         payload["notes"] = [
-            f"A5 is LIVE on BigQuery: {live['dataset_fqn']} "
+            f"B5 is LIVE on BigQuery: {live['dataset_fqn']} "
             f"({live['n_objects']} objects, fact = {live['fact_rows']:,} rows).",
             "Built by dbt (staging → intermediate → marts) with passing tests.",
         ]

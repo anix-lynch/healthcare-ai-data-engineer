@@ -6,21 +6,21 @@ async function getJson(url) {
 
 function endpointForArtifact(id) {
   const map = {
-    A1_executive_dashboard: "/api/portfolio/a1",
-    A2_trust_dashboard: "/api/portfolio/a2",
-    A5_bigquery_dataset: "/api/portfolio/a5",
+    B1_executive_dashboard: "/api/portfolio/b1",
+    B2_trust_dashboard: "/api/portfolio/b2",
+    B5_bigquery_dataset: "/api/portfolio/b5",
   };
   return map[id] || null;
 }
 
 function readmePathForArtifact(id) {
   const map = {
-    A1_executive_dashboard: "A1_executive_dashboard/README.md",
-    A2_trust_dashboard: "A2_trust_dashboard/README.md",
-    A3_data_model_explorer: "A3_dbt_documentation/README.md",
-    A4_airflow_dag: "A4_airflow_dag/README.md",
-    A5_bigquery_dataset: "A5_bigquery_dataset/README.md",
-    A6_architecture_diagram: "A6_architecture_diagram/README.md",
+    B1_executive_dashboard: "B1_executive_dashboard/README.md",
+    B2_trust_dashboard: "B2_trust_dashboard/README.md",
+    B3_data_model_explorer: "B3_dbt_documentation/README.md",
+    B4_airflow_dag: "B4_airflow_dag/README.md",
+    B5_bigquery_dataset: "B5_bigquery_dataset/README.md",
+    B6_architecture_diagram: "B6_architecture_diagram/README.md",
   };
   return map[id] || `${id}/README.md`;
 }
@@ -130,7 +130,7 @@ async function buildCards() {
 }
 
 function summarizePayload(id, payload) {
-  if (id === "A1_executive_dashboard") {
+  if (id === "B1_executive_dashboard") {
     const out = [];
     out.push(`Updated: ${payload.header?.updated_at || "n/a"} | ${payload.header?.status || ""}`);
     const sections = payload.sections || [];
@@ -141,7 +141,7 @@ function summarizePayload(id, payload) {
     return out;
   }
 
-  if (id === "A2_trust_dashboard") {
+  if (id === "B2_trust_dashboard") {
     const out = [];
     out.push(`Status: ${payload.current_status?.traffic_light || ""} ${payload.current_status?.headline || ""}`);
     for (const m of (payload.trust_vitals || []).slice(0, 4)) {
@@ -153,7 +153,7 @@ function summarizePayload(id, payload) {
     return out;
   }
 
-  if (id === "A5_bigquery_dataset") {
+  if (id === "B5_bigquery_dataset") {
     const ws = payload.warehouse_summary || {};
     const td = payload.table_details || {};
     return [

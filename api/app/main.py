@@ -499,37 +499,37 @@ def get_statistics():
 
 @app.get("/api/control-room")
 def get_control_room():
-    """Return the display payload used by the A1 operational dashboard mock."""
+    """Return the display payload used by the B1 operational dashboard mock."""
     return build_control_room_payload()
 
 
-@app.get("/api/portfolio/a1")
+@app.get("/api/portfolio/b1")
 def get_portfolio_a1():
-    """Alias for the A1 control-room payload."""
+    """Alias for the B1 control-room payload."""
     return build_control_room_payload()
 
 
 @app.get("/api/trust-room")
 def get_trust_room():
-    """Return the display payload used by the A2 trust dashboard mock."""
+    """Return the display payload used by the B2 trust dashboard mock."""
     return build_trust_room_payload()
 
 
-@app.get("/api/portfolio/a2")
+@app.get("/api/portfolio/b2")
 def get_portfolio_a2():
-    """Alias for the A2 trust-investigation payload."""
+    """Alias for the B2 trust-investigation payload."""
     return build_trust_room_payload()
 
 
 @app.get("/api/warehouse-room")
 def get_warehouse_room():
-    """Return the display payload used by the A5 warehouse explorer."""
+    """Return the display payload used by the B5 warehouse explorer."""
     return build_warehouse_room_payload()
 
 
-@app.get("/api/portfolio/a5")
+@app.get("/api/portfolio/b5")
 def get_portfolio_a5():
-    """Alias for the A5 warehouse-explorer payload."""
+    """Alias for the B5 warehouse-explorer payload."""
     return build_warehouse_room_payload()
 
 

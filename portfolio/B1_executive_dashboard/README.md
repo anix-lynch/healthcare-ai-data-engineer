@@ -1,4 +1,4 @@
-# A1 Executive Dashboard
+# B1 Executive Dashboard
 
 Purpose
 
@@ -23,7 +23,7 @@ Proof files
 Backend endpoint
 
 - `/api/control-room`
-- `/api/portfolio/a1`
+- `/api/portfolio/b1`
 
 Final visual proof
 

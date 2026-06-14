@@ -1,4 +1,4 @@
-"""Tests for the A1 control-room payload."""
+"""Tests for the B1 control-room payload."""
 from __future__ import annotations
 
 import importlib.util
@@ -23,7 +23,7 @@ def test_control_room_endpoint_returns_payload():
     r = client.get("/api/control-room")
     assert r.status_code == 200
     body = r.json()
-    assert body["artifact"] == "A1_executive_dashboard"
+    assert body["artifact"] == "B1_executive_dashboard"
     assert body["header"]["title"].startswith("📊 EXECUTIVE CONTROL ROOM")
     assert len(body["sections"]) == 5
     # first metric is the L1 quality-gate pass rate, evidence-computed by the snapshot builder
@@ -33,6 +33,6 @@ def test_control_room_endpoint_returns_payload():
 def test_portfolio_alias_matches_control_room():
     client = TestClient(api_main.app)
     a = client.get("/api/control-room").json()
-    b = client.get("/api/portfolio/a1").json()
+    b = client.get("/api/portfolio/b1").json()
     assert a["header"]["subtitle"] == b["header"]["subtitle"]
     assert a["routing"] == b["routing"]

@@ -4,11 +4,11 @@
   "purpose": "Machine-readable index for the human cockpit layer.",
   "artifacts": [
     {
-      "id": "A1_executive_dashboard",
+      "id": "B1_executive_dashboard",
       "title": "Executive Control Room",
       "question": "Can humans and AI trust hospital data today?",
-      "visual_asset": "A1_executive_dashboard/screenshots/executive_dashboard.png",
-      "payload": "A1_executive_dashboard/control_room_payload.json",
+      "visual_asset": "B1_executive_dashboard/screenshots/executive_dashboard.png",
+      "payload": "B1_executive_dashboard/control_room_payload.json",
       "generator": "scripts/build_portfolio_snapshot.py",
       "endpoint": "/api/control-room",
       "proof_files": [
@@ -23,11 +23,11 @@
       ]
     },
     {
-      "id": "A2_trust_dashboard",
+      "id": "B2_trust_dashboard",
       "title": "Trust Investigation Room",
       "question": "Can we trust the patient and visit numbers?",
-      "visual_asset": "A2_trust_dashboard/screenshots/trust_dashboard.png",
-      "payload": "A2_trust_dashboard/trust_room_payload.json",
+      "visual_asset": "B2_trust_dashboard/screenshots/trust_dashboard.png",
+      "payload": "B2_trust_dashboard/trust_room_payload.json",
       "generator": "scripts/build_portfolio_snapshot.py",
       "endpoint": "/api/trust-room",
       "proof_files": [
@@ -43,10 +43,10 @@
       ]
     },
     {
-      "id": "A3_data_model_explorer",
+      "id": "B3_data_model_explorer",
       "title": "Data Model Explorer",
       "question": "Where did this number come from?",
-      "visual_asset": "A3_dbt_documentation/screenshots/mart_catalog.png",
+      "visual_asset": "B3_dbt_documentation/screenshots/mart_catalog.png",
       "payload": null,
       "generator": null,
       "endpoint": null,
@@ -56,7 +56,7 @@
         "dbt-project/models/staging/sources.yml",
         "dbt-project/models/marts/core/schema.yml",
         "dbt-project/tests/assert_valid_readmission_logic.sql",
-        "portfolio/A3_dbt_documentation/sample_queries.sql"
+        "portfolio/B3_dbt_documentation/sample_queries.sql"
       ],
       "notes": [
         "Marketplace first, lineage second.",
@@ -64,10 +64,10 @@
       ]
     },
     {
-      "id": "A4_airflow_dag",
+      "id": "B4_airflow_dag",
       "title": "Pipeline Operations",
       "question": "Does the pipeline run every day?",
-      "visual_asset": "A4_airflow_dag/screenshots/airflow_dag.png",
+      "visual_asset": "B4_airflow_dag/screenshots/airflow_dag.png",
       "payload": null,
       "generator": null,
       "endpoint": null,
@@ -84,11 +84,11 @@
       ]
     },
     {
-      "id": "A5_bigquery_dataset",
+      "id": "B5_bigquery_dataset",
       "title": "Warehouse Explorer",
       "question": "What tables and queries actually exist?",
-      "visual_asset": "A5_bigquery_dataset/screenshots/bigquery_tables.png",
-      "payload": "A5_bigquery_dataset/warehouse_room_payload.json",
+      "visual_asset": "B5_bigquery_dataset/screenshots/bigquery_tables.png",
+      "payload": "B5_bigquery_dataset/warehouse_room_payload.json",
       "generator": "scripts/build_portfolio_snapshot.py",
       "endpoint": "/api/warehouse-room",
       "proof_files": [
@@ -96,15 +96,15 @@
         "dbt-project/models/intermediate/int_encounters_enriched.sql",
         "dbt-project/models/marts/core/fact_patient_encounters.sql",
         "dbt-project/models/marts/core/schema.yml",
-        "portfolio/A5_bigquery_dataset/sample_queries.sql"
+        "portfolio/B5_bigquery_dataset/sample_queries.sql"
       ],
       "notes": [
         "Treat the dbt models as the inventory.",
-        "A5 is a storytelling explorer over existing root dbt/checkpoint assets."
+        "B5 is a storytelling explorer over existing root dbt/checkpoint assets."
       ]
     },
     {
-      "id": "A6_architecture_diagram",
+      "id": "B6_architecture_diagram",
       "title": "LA City Map",
       "question": "How does the whole machine connect?",
       "visual_asset": null,
@@ -118,8 +118,8 @@
         "docs/dag.md",
         "data/quality/l1_checkpoint_report.json",
         "openapi_snapshot.json",
-        "portfolio/A6_architecture_diagram/dependency_map_ascii.md",
-        "portfolio/A6_architecture_diagram/dependency_map.mmd"
+        "portfolio/B6_architecture_diagram/dependency_map_ascii.md",
+        "portfolio/B6_architecture_diagram/dependency_map.mmd"
       ],
       "notes": [
         "This is the end-to-end city map.",

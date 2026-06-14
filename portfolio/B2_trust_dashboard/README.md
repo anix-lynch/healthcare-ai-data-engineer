@@ -1,4 +1,4 @@
-# A2 Trust Dashboard
+# B2 Trust Dashboard
 
 Purpose
 
@@ -23,7 +23,7 @@ Proof files
 Backend endpoint
 
 - `/api/trust-room`
-- `/api/portfolio/a2`
+- `/api/portfolio/b2`
 
 Final visual proof
 

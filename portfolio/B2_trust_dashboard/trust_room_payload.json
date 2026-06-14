@@ -1,5 +1,5 @@
 {
-  "artifact": "A2_trust_dashboard",
+  "artifact": "B2_trust_dashboard",
   "display_mode": "trust-investigation-room",
   "generated_at": "2026-05-29T15:28:03-07:00",
   "source_truth": {
@@ -272,12 +272,12 @@
     "resolved": [
       {
         "label": "Open KPI definitions",
-        "target": "portfolio/A2_trust_dashboard/trust_metrics_spec.yml",
+        "target": "portfolio/B2_trust_dashboard/trust_metrics_spec.yml",
         "exists": true
       },
       {
         "label": "Open dashboard link",
-        "target": "portfolio/A2_trust_dashboard/screenshots/trust_dashboard.png",
+        "target": "portfolio/B2_trust_dashboard/screenshots/trust_dashboard.png",
         "exists": true
       },
       {
@@ -357,7 +357,7 @@
       },
       {
         "label": "Open owner",
-        "target": "portfolio/A2_trust_dashboard/evidence_links.md",
+        "target": "portfolio/B2_trust_dashboard/evidence_links.md",
         "exists": true
       },
       {
@@ -387,7 +387,7 @@
       },
       {
         "label": "Open rollback plan",
-        "target": "portfolio/A4_airflow_dag/runbook.md",
+        "target": "portfolio/B4_airflow_dag/runbook.md",
         "exists": true
       },
       {
@@ -397,12 +397,12 @@
       },
       {
         "label": "Open runbook",
-        "target": "portfolio/A4_airflow_dag/runbook.md",
+        "target": "portfolio/B4_airflow_dag/runbook.md",
         "exists": true
       },
       {
         "label": "Open snapshot id",
-        "target": "portfolio/A2_trust_dashboard/trust_room_payload.json",
+        "target": "portfolio/B2_trust_dashboard/trust_room_payload.json",
         "exists": true
       },
       {
