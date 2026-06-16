@@ -69,6 +69,71 @@ try:
 except ImportError:
     from reliability import run_reliability_probe  # type: ignore
 
+try:
+    from .signals import build_signals_payload
+except Exception:
+    try:
+        from signals import build_signals_payload  # type: ignore
+    except Exception:
+        build_signals_payload = None  # type: ignore
+
+try:
+    from .state_diff import build_state_diff
+except Exception:
+    try:
+        from state_diff import build_state_diff  # type: ignore
+    except Exception:
+        build_state_diff = None  # type: ignore
+
+try:
+    from .drug_risk import build_drug_risk
+except Exception:  # pragma: no cover
+    try:
+        from drug_risk import build_drug_risk  # type: ignore
+    except Exception:
+        build_drug_risk = None  # type: ignore
+
+try:
+    from . import case_manager
+except Exception:  # pragma: no cover
+    try:
+        import case_manager  # type: ignore
+    except Exception:
+        case_manager = None  # type: ignore
+
+try:
+    from .baymax_organs import (
+        build_bed_ops,
+        build_lab_status,
+        build_tradeoff,
+        get_case_status,
+        get_goal,
+        get_outcome,
+        get_trajectory,
+        upsert_goal,
+    )
+except Exception:
+    try:
+        from baymax_organs import (  # type: ignore
+            build_bed_ops,
+            build_lab_status,
+            build_tradeoff,
+            get_case_status,
+            get_goal,
+            get_outcome,
+            get_trajectory,
+            upsert_goal,
+        )
+    except Exception:
+        build_bed_ops = None  # type: ignore
+        build_lab_status = None  # type: ignore
+        build_tradeoff = None  # type: ignore
+        get_case_status = None  # type: ignore
+        get_goal = None  # type: ignore
+        get_outcome = None  # type: ignore
+        get_trajectory = None  # type: ignore
+        upsert_goal = None  # type: ignore
+
 # Typed response contracts live in api/app/schemas.py.
 # They are reference contracts (publishable as OpenAPI components manually if
 # needed) — NOT wired as `response_model=` decorators, because the existing
@@ -657,6 +722,128 @@ def platform_reliability():
         return run_reliability_probe()
     except Exception as exc:
         raise HTTPException(status_code=503, detail=f"reliability probe failed: {str(exc)[:300]}")
+
+
+@app.get("/api/signals")
+def get_signals():
+    """
+    Baymax NOSE 👃 — 5 evaluated openFDA signals (anomaly · cluster · classify ·
+    rank · retrieval) + the cost/quality router, from the sibling
+    healthcare-signal-platform proof. Cross-domain pharmacovigilance smell.
+    """
+    if build_signals_payload is None:
+        raise HTTPException(status_code=503, detail="signals adapter unavailable")
+    return build_signals_payload()
+
+
+@app.get("/api/state-diff")
+def get_state_diff(patient_id: str = Query(..., description="patient id")):
+    """
+    Baymax NERVES ⚡ — longitudinal state-diff (completes Yellow).
+    Returns past vs now + changed fields (e.g. CKD Stage 2 → 3). STUB: demo
+    timeline; CODEX wires to real longitudinal EHR diff.
+    """
+    if build_state_diff is None:
+        raise HTTPException(status_code=503, detail="state-diff adapter unavailable")
+    return build_state_diff(patient_id)
+
+
+@app.get("/api/drug-risk")
+def get_drug_risk(patient_id: str = Query(..., description="patient id")):
+    """
+    Baymax CROSS-DOMAIN JOIN 👂×👃 — joins THIS patient's medications against real
+    openFDA FAERS adverse-event reports (serious + renal reactions) and flags a
+    drug-vs-kidney conflict. The real "openFDA whisper", not platform ML stats.
+    """
+    if build_drug_risk is None:
+        raise HTTPException(status_code=503, detail="drug-risk adapter unavailable")
+    return build_drug_risk(patient_id)
+
+
+@app.get("/api/ops/bed")
+def get_bed_ops(patient_id: str = Query(..., description="patient id")):
+    """
+    Baymax ORANGE: workflow ACK truth.
+
+    "Nurse said sent" is not enough. This returns the receiver-side bed ops
+    registration state so Baymax can wait instead of claiming the action
+    happened.
+    """
+    if build_bed_ops is None:
+        raise HTTPException(status_code=503, detail="bed ops adapter unavailable")
+    return build_bed_ops(patient_id)
+
+
+@app.get("/api/lab-status")
+def get_lab_status(patient_id: str = Query(..., description="patient id")):
+    """Baymax ORANGE: lab readiness gate for kidney-risk decisions."""
+    if build_lab_status is None:
+        raise HTTPException(status_code=503, detail="lab status adapter unavailable")
+    return build_lab_status(patient_id)
+
+
+@app.post("/api/tradeoff")
+def post_tradeoff(payload: Optional[dict] = Body(None)):
+    """Baymax GREEN: compare reasonable actions, then explain the chosen path."""
+    if build_tradeoff is None:
+        raise HTTPException(status_code=503, detail="tradeoff adapter unavailable")
+    return build_tradeoff(payload)
+
+
+@app.get("/api/goal")
+def read_goal(patient_id: str = Query(..., description="patient id")):
+    """Baymax BLUE: recall the patient's/family's goal from memory."""
+    if get_goal is None:
+        raise HTTPException(status_code=503, detail="goal memory unavailable")
+    return get_goal(patient_id)
+
+
+@app.post("/api/goal")
+def write_goal(payload: dict = Body(...)):
+    """Baymax BLUE: upsert goal/preference memory."""
+    if upsert_goal is None:
+        raise HTTPException(status_code=503, detail="goal memory unavailable")
+    return upsert_goal(payload)
+
+
+@app.get("/api/outcome")
+def read_outcome(action_id: str = Query(..., description="action id")):
+    """Baymax BLACK: verify whether a side effect happened, not only submitted."""
+    if get_outcome is None:
+        raise HTTPException(status_code=503, detail="outcome adapter unavailable")
+    return get_outcome(action_id)
+
+
+@app.get("/api/trajectory")
+def read_trajectory(patient_id: str = Query(..., description="patient id")):
+    """Baymax BLACK: multi-timepoint patient trajectory with branch risks."""
+    if get_trajectory is None:
+        raise HTTPException(status_code=503, detail="trajectory adapter unavailable")
+    return get_trajectory(patient_id)
+
+
+@app.get("/v1/cases/{correlation_id}/status")
+def read_case_status(correlation_id: str):
+    """Baymax NERVES: visible execution state for one case."""
+    if get_case_status is None:
+        raise HTTPException(status_code=503, detail="case status adapter unavailable")
+    return get_case_status(correlation_id)
+
+
+@app.get("/api/case/{case_id}")
+def read_case(case_id: str):
+    """Baymax CASE OWNERSHIP: the durable case Baymax owns across time."""
+    if case_manager is None:
+        raise HTTPException(status_code=503, detail="case manager unavailable")
+    return case_manager.get_case(case_id)
+
+
+@app.post("/api/case/{case_id}/advance")
+def advance_case(case_id: str):
+    """One tick: Baymax observes the real outcome and decides the next transition itself."""
+    if case_manager is None or get_outcome is None:
+        raise HTTPException(status_code=503, detail="case manager unavailable")
+    return case_manager.advance_case(case_id, get_outcome)
 
 
 if __name__ == "__main__":

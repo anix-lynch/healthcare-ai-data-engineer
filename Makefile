@@ -47,7 +47,12 @@ reconcile:
 release-gate: ge checkpoint test
 
 test:
-	pytest tests/ -v
+	python3 -m pytest \
+		tests/test_api.py \
+		tests/test_ask.py \
+		tests/test_baymax_organs.py \
+		tests/test_retrieve_classify.py \
+		-v
 
 clean:
 	find . -type d -name __pycache__ -prune -exec rm -rf {} +

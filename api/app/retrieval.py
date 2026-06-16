@@ -15,9 +15,45 @@ Why this lives in repo#2 (data engineer lane), not repo#1 (genai lane):
 import json
 import os
 import re
+import math
+from collections import Counter
 from typing import List, Dict, Any
 
-from rank_bm25 import BM25Okapi
+try:
+    from rank_bm25 import BM25Okapi
+except ImportError:
+    class BM25Okapi:  # type: ignore[no-redef]
+        """Small fallback BM25 so the demo API does not 503 when deps drift."""
+
+        def __init__(self, corpus: List[List[str]], k1: float = 1.5, b: float = 0.75):
+            self.corpus = corpus
+            self.k1 = k1
+            self.b = b
+            self.doc_len = [len(doc) for doc in corpus]
+            self.avgdl = sum(self.doc_len) / len(self.doc_len) if self.doc_len else 0.0
+            self.freqs = [Counter(doc) for doc in corpus]
+            doc_freq: Counter[str] = Counter()
+            for doc in corpus:
+                doc_freq.update(set(doc))
+            n_docs = len(corpus)
+            self.idf = {
+                term: math.log(1 + (n_docs - freq + 0.5) / (freq + 0.5))
+                for term, freq in doc_freq.items()
+            }
+
+        def get_scores(self, query_tokens: List[str]) -> List[float]:
+            scores: List[float] = []
+            for idx, freqs in enumerate(self.freqs):
+                doc_len = self.doc_len[idx] or 1
+                score = 0.0
+                for term in query_tokens:
+                    tf = freqs.get(term, 0)
+                    if not tf:
+                        continue
+                    denom = tf + self.k1 * (1 - self.b + self.b * doc_len / (self.avgdl or 1.0))
+                    score += self.idf.get(term, 0.0) * (tf * (self.k1 + 1)) / denom
+                scores.append(score)
+            return scores
 
 _TOKEN_RE = re.compile(r"[a-z0-9]+")
 
