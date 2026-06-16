@@ -1,0 +1,150 @@
+{
+  "registry_version": "1.0.0",
+  "generated_at": "2026-06-16",
+  "total_contracts": 7,
+  "blocking_contracts": 6,
+  "warning_contracts": 1,
+  "all_pass": true,
+  "overall_trust_posture": "TRUSTED",
+  "contracts": [
+    {
+      "contract_id": "C-001",
+      "name": "source_release_contract",
+      "version": "1.0.0",
+      "type": "SOURCE_INTEGRITY",
+      "severity": "BLOCKING",
+      "owner": "Data Platform",
+      "description": "55,500-row source CSV must pass all 27 GE expectations before any data lands in BigQuery",
+      "enforced_by": "gx/checkpoints/source_release_contract_checkpoint.yml",
+      "expectations_count": 27,
+      "last_evaluated": "2026-06-16",
+      "last_result": "PASS",
+      "input_boundary": "data/raw/healthcare_dataset.csv",
+      "output_boundary": "BigQuery:healthcare_analytics.raw_healthcare_data",
+      "downstream_contracts": [
+        "C-003",
+        "C-005",
+        "C-006"
+      ],
+      "failure_impact": "Halts entire ingestion pipeline; no data lands in warehouse",
+      "soft_exception": "Billing Amount 108 rows (0.19%) via mostly:0.995 -- tracked, not blocking"
+    },
+    {
+      "contract_id": "C-002",
+      "name": "l1_data_quality_contract",
+      "version": "1.0.0",
+      "type": "SCHEMA_STABILITY",
+      "severity": "BLOCKING",
+      "owner": "Analytics Engineering",
+      "description": "33-column enriched schema: vitals ranges, ESI tier enum, PII cleared, row_hash unique",
+      "enforced_by": "gx/expectations/l1_data_quality.json",
+      "expectations_count": 21,
+      "last_evaluated": "2026-06-16",
+      "last_result": "PASS",
+      "input_boundary": "BigQuery:healthcare_analytics.raw_healthcare_data (enriched rows)",
+      "output_boundary": "dbt:stg_healthcare -> marts",
+      "downstream_contracts": [
+        "C-004",
+        "C-007"
+      ],
+      "failure_impact": "Blocks dbt mart builds; AI-facing API serves stale data",
+      "soft_exception": null
+    },
+    {
+      "contract_id": "C-003",
+      "name": "clinical_plausibility_hard_block",
+      "version": "1.0.0",
+      "type": "SEMANTIC_CORRECTNESS",
+      "severity": "BLOCKING",
+      "owner": "Clinical Data",
+      "description": "Age x medication combinations must be medically plausible. Under-18 + adult-only drugs = hard block regardless of schema validity.",
+      "enforced_by": "scripts/clinical_plausibility.py + data/quality/clinical_plausibility.yaml",
+      "rules_count": 6,
+      "last_evaluated": "2026-06-16",
+      "last_result": "PASS -- 0 hard violations in enriched corpus",
+      "input_boundary": "Any ingestion boundary (batch + stream + API)",
+      "output_boundary": "BigQuery:quarantine_records (violations) OR BigQuery:raw_ingest_clean (accepted)",
+      "downstream_contracts": [
+        "C-004",
+        "C-007"
+      ],
+      "failure_impact": "Semantically absurd rows reach AI layer; agent gives clinically dangerous responses",
+      "soft_exception": null
+    },
+    {
+      "contract_id": "C-004",
+      "name": "enriched_ai_contract",
+      "version": "1.0.0",
+      "type": "ENRICHMENT_READINESS",
+      "severity": "BLOCKING",
+      "owner": "AI Data",
+      "description": "497-row AI-facing corpus must have all 21 enrichment columns populated. Last gate before agents consume data.",
+      "enforced_by": "gx/checkpoints/enriched_ai_contract_checkpoint.yml",
+      "expectations_count": 21,
+      "last_evaluated": "2026-06-16",
+      "last_result": "PASS -- 0 exceptions",
+      "input_boundary": "data/raw/healthcare_dataset_enriched.csv",
+      "output_boundary": "api/app/retrieval.py corpus + Feast feature store",
+      "downstream_contracts": [
+        "C-007"
+      ],
+      "failure_impact": "BM25 retrieval returns incomplete context; agent responses are ungrounded",
+      "soft_exception": null
+    },
+    {
+      "contract_id": "C-005",
+      "name": "patient_identity_contract",
+      "version": "1.0.0",
+      "type": "ENTITY_RESOLUTION",
+      "severity": "WARNING",
+      "owner": "Data Platform",
+      "description": "Every encounter must resolve to a stable patient_id. Unresolved < 0.1%.",
+      "enforced_by": "scripts/patient_identity.py + data/derived/patient_identity_map.json",
+      "last_evaluated": "2026-06-16",
+      "last_result": "PASS -- 40,235 canonical patients; 47 unresolved (0.12% WARN band)",
+      "input_boundary": "BigQuery:healthcare_analytics.raw_healthcare_data",
+      "output_boundary": "BigQuery:healthcare_analytics.dim_patient",
+      "downstream_contracts": [
+        "C-006",
+        "C-007"
+      ],
+      "failure_impact": "Patient count KPI inflated; RAG lookup returns cross-patient context",
+      "soft_exception": "47 unresolved (0.12%) -- above strong threshold 0.10%; tracked in l1_checkpoint_report.json"
+    },
+    {
+      "contract_id": "C-006",
+      "name": "source_to_warehouse_reconciliation",
+      "version": "1.0.0",
+      "type": "RECONCILIATION",
+      "severity": "BLOCKING",
+      "owner": "Data Platform",
+      "description": "Every source row must be accounted for: source_rows == clean_rows + quarantine_rows. No silent row loss.",
+      "enforced_by": "quality/reconcile.py",
+      "checks_count": 4,
+      "last_evaluated": "2026-06-16",
+      "last_result": "PASS -- 55,500 == 49,986 + 5,514; all_pass=true",
+      "input_boundary": "data/raw/healthcare_dataset.csv (55,500 rows)",
+      "output_boundary": "BigQuery:healthcare_analytics.dim_patient (40,235 patients)",
+      "downstream_contracts": [],
+      "failure_impact": "Silent data loss; incorrect patient counts; audit failure",
+      "soft_exception": null
+    },
+    {
+      "contract_id": "C-007",
+      "name": "ai_safety_no_bad_data",
+      "version": "1.0.0",
+      "type": "AI_SAFETY",
+      "severity": "BLOCKING",
+      "owner": "AI Data",
+      "description": "Zero semantically incorrect records must reach the agent-facing API. gate_publish() blocks all CRITICAL faults. stale_data_incidents must equal 0.",
+      "enforced_by": "reliability/core.py:gate_publish() + tests/test_reliability_suite.py:test_cardinal_invariant_no_bad_data_ever()",
+      "last_evaluated": "2026-06-16",
+      "last_result": "PASS -- stale_data_incidents=0 across 1,000 fault-injection runs",
+      "input_boundary": "Any data promotion event",
+      "output_boundary": "api/app/main.py agent-facing endpoints",
+      "downstream_contracts": [],
+      "failure_impact": "Agent serves clinically incorrect data to downstream consumers",
+      "soft_exception": null
+    }
+  ]
+}

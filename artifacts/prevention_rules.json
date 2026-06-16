@@ -1,0 +1,59 @@
+{
+  "generated_at": "2026-06-16",
+  "total_rules": 5,
+  "high_priority": 2,
+  "medium_priority": 2,
+  "rules": [
+    {
+      "rule_id": "PREVENT-001",
+      "fault_kind": "transient_api",
+      "trigger": "rate > 5% of runs",
+      "prevention": "Implement circuit breaker (failure_threshold=5, recovery_timeout=60s) on API client layer",
+      "implementation": "Add tenacity or pybreaker around API calls; bounded_retry remains as backstop",
+      "expected_impact": "Reduce transient_api incidents by ~40% through fast-fail and connection reset",
+      "priority": "HIGH",
+      "status": "RECOMMENDED"
+    },
+    {
+      "rule_id": "PREVENT-002",
+      "fault_kind": "transient_bigquery",
+      "trigger": "rate > 2% of runs",
+      "prevention": "Enable google.api_core.retry.Retry as BigQuery client middleware",
+      "implementation": "from google.api_core import retry; client.query(sql, retry=retry.Retry())",
+      "expected_impact": "Offload retry to SDK layer; reduce platform retry budget consumption",
+      "priority": "MEDIUM",
+      "status": "RECOMMENDED"
+    },
+    {
+      "rule_id": "PREVENT-003",
+      "fault_kind": "stale_partition",
+      "trigger": "any stale_partition incident",
+      "prevention": "Upstream partition freshness monitor: alert if partition not refreshed by T-2h before pipeline window",
+      "implementation": "Add check_partition_freshness() to Airflow DAG pre-ingest; SLA_HOURS configurable",
+      "expected_impact": "Convert reactive recovery into proactive alert",
+      "priority": "MEDIUM",
+      "status": "RECOMMENDED"
+    },
+    {
+      "rule_id": "PREVENT-004",
+      "fault_kind": "failed_validation",
+      "trigger": "any failed_validation incident",
+      "prevention": "Pre-ingest schema drift detection: compare source columns to last-known-good manifest",
+      "implementation": "Add validate_schema_against_manifest() before bulk load",
+      "expected_impact": "Catch schema drift at source boundary, not inside pipeline",
+      "priority": "HIGH",
+      "status": "RECOMMENDED"
+    },
+    {
+      "rule_id": "PREVENT-005",
+      "fault_kind": "elevated_quarantine",
+      "trigger": "quarantine_rate > 15% for 3 consecutive runs",
+      "prevention": "Escalate elevated_quarantine from WARNING to CRITICAL if trend persists",
+      "implementation": "Add quarantine_rate_trend() to metrics.py; if 3-run moving average > threshold, reclassify",
+      "expected_impact": "Leading-indicator escalation before quality degrades to CRITICAL",
+      "priority": "LOW",
+      "status": "CANDIDATE"
+    }
+  ],
+  "philosophy": "Prevention rules are derived from measured patterns, not hypothetical risks. Every rule has a fault_kind that appeared in the ledger with a count justifying the investment."
+}

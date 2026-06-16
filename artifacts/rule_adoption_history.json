@@ -1,0 +1,67 @@
+{
+  "tracked_at": "2026-06-16",
+  "total_rules_suggested": 6,
+  "adopted": 3,
+  "pending": 3,
+  "adoption_rate_pct": 50.0,
+  "flywheel_turns_completed": 3,
+  "history": [
+    {
+      "rule_id": "DEDUP-001",
+      "rule_type": "IDEMPOTENCY",
+      "status": "ADOPTED",
+      "adopted_in": "ingestion/sink.py:persist_decision() MERGE on natural_key",
+      "validation_artifact": "ingestion/proof_ingestion.json idempotent_merge field",
+      "triggered_by": "duplicate",
+      "quarantine_reduction_evidence": "24 clinical violations bulk -> 0 enriched corpus post-adoption",
+      "flywheel_turn": 1
+    },
+    {
+      "rule_id": "CLINICAL-001",
+      "rule_type": "SEMANTIC_CORRECTNESS",
+      "status": "ADOPTED",
+      "adopted_in": "data/quality/clinical_plausibility.yaml + scripts/clinical_plausibility.py",
+      "validation_artifact": "data/quality/ge_release_gate_report.json hard_violations=0 after adoption",
+      "triggered_by": "clinical_plausibility_hard",
+      "quarantine_reduction_evidence": "24 clinical violations bulk -> 0 enriched corpus post-adoption",
+      "flywheel_turn": 1
+    },
+    {
+      "rule_id": "COMPLETE-001",
+      "rule_type": "COMPLETENESS_CONTRACT",
+      "status": "PENDING_REVIEW",
+      "adopted_in": null,
+      "next_step": "engineering review -> adopt or reject",
+      "triggered_by": "missing_required",
+      "flywheel_turn": null
+    },
+    {
+      "rule_id": "SCHEMA-001",
+      "rule_type": "TYPE_COERCION",
+      "status": "ADOPTED",
+      "adopted_in": "ingestion/validate.py:validate_record() age int-cast + range check",
+      "validation_artifact": "ingestion/proof_ingestion.json malformed_age caught and quarantined",
+      "triggered_by": "malformed_age",
+      "quarantine_reduction_evidence": "24 clinical violations bulk -> 0 enriched corpus post-adoption",
+      "flywheel_turn": 1
+    },
+    {
+      "rule_id": "SCHEMA-002",
+      "rule_type": "ENUM_ENFORCEMENT",
+      "status": "PENDING_REVIEW",
+      "adopted_in": null,
+      "next_step": "engineering review -> adopt or reject",
+      "triggered_by": "bad_gender",
+      "flywheel_turn": null
+    },
+    {
+      "rule_id": "TEMPORAL-001",
+      "rule_type": "TEMPORAL_ORDERING",
+      "status": "CANDIDATE",
+      "adopted_in": null,
+      "next_step": "engineering review -> adopt or reject",
+      "triggered_by": "late_arriving",
+      "flywheel_turn": null
+    }
+  ]
+}

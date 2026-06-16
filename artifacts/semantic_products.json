@@ -1,0 +1,244 @@
+{
+  "generated_at": "2026-06-16",
+  "version": "1.0.0",
+  "total_products": 4,
+  "products": [
+    {
+      "product_id": "SP-001",
+      "name": "PatientProfile",
+      "version": "1.0.0",
+      "description": "Complete patient identity + longitudinal history from dim_patient + stg_healthcare + feature store",
+      "grain": "1 object per canonical patient_id",
+      "owner": "Analytics Engineering",
+      "consumed_by": [
+        "Baymax case manager",
+        "RAG retrieval layer",
+        "ESI classifier"
+      ],
+      "api_endpoint": "/api/patients/{patient_id}",
+      "freshness_sla_hours": 24,
+      "contract_id": "SP-001-v1",
+      "breaking_change_policy": "semver major bump required; 30-day deprecation notice to consumers",
+      "schema": {
+        "patient_id": {
+          "type": "string",
+          "format": "P-{10hex}",
+          "source": "scripts/patient_identity.py"
+        },
+        "demographics": {
+          "type": "object",
+          "fields": {
+            "age": "integer",
+            "gender": "string",
+            "blood_type": "string"
+          }
+        },
+        "identity": {
+          "type": "object",
+          "fields": {
+            "canonical_name_hash": "string",
+            "first_admission": "date",
+            "last_admission": "date",
+            "total_encounters": "integer"
+          }
+        },
+        "encounter_history": {
+          "type": "array",
+          "item_fields": {
+            "encounter_id": "string",
+            "admission_date": "date",
+            "medical_condition": "string",
+            "admission_type": "string",
+            "length_of_stay_days": "integer"
+          }
+        },
+        "current_conditions": {
+          "type": "array",
+          "items": "string"
+        },
+        "current_medications": {
+          "type": "array",
+          "items": "string"
+        }
+      },
+      "source_tables": [
+        "BigQuery:healthcare_analytics.dim_patient",
+        "BigQuery:healthcare_analytics.stg_healthcare"
+      ],
+      "versioning": "semver; schema changes require version bump"
+    },
+    {
+      "product_id": "SP-002",
+      "name": "RiskProfile",
+      "version": "1.0.0",
+      "description": "Readmission risk + medication safety + comorbidity flags from Feast feature store + openFDA signals",
+      "grain": "1 object per canonical patient_id",
+      "owner": "AI Data",
+      "consumed_by": [
+        "Baymax advance() decision loop",
+        "high-utilizer signal detector"
+      ],
+      "api_endpoint": "/api/patients/{patient_id}/risk",
+      "freshness_sla_hours": 24,
+      "contract_id": "SP-002-v1",
+      "breaking_change_policy": "semver major bump required",
+      "schema": {
+        "patient_id": {
+          "type": "string"
+        },
+        "readmission_risk": {
+          "type": "object",
+          "fields": {
+            "is_readmission": "boolean",
+            "days_since_last_admission": "integer",
+            "previous_admission_count": "integer",
+            "prior_avg_los": "float"
+          }
+        },
+        "medication_risk": {
+          "type": "object",
+          "fields": {
+            "flagged_medications": {
+              "type": "array",
+              "items": "string"
+            },
+            "openfda_serious_rate": "float",
+            "openfda_router_decision": "string"
+          }
+        },
+        "comorbidity": {
+          "type": "object",
+          "fields": {
+            "conditions": {
+              "type": "array",
+              "items": "string"
+            },
+            "high_utilizer_flag": "boolean"
+          }
+        },
+        "feature_freshness_ts": {
+          "type": "timestamp"
+        }
+      },
+      "source_tables": [
+        "Feast:patient_encounter_features",
+        "openFDA:FAERS signals"
+      ],
+      "feature_view": "patient_encounter_features (Feast)",
+      "versioning": "semver"
+    },
+    {
+      "product_id": "SP-003",
+      "name": "MedicationProfile",
+      "version": "1.0.0",
+      "description": "Medication safety: clinical plausibility status + openFDA FAERS adverse event signals",
+      "grain": "1 object per (patient_id, medication)",
+      "owner": "AI Data",
+      "consumed_by": [
+        "Baymax drug_risk organ",
+        "clinical plausibility gate"
+      ],
+      "api_endpoint": "/api/patients/{patient_id}/medications",
+      "freshness_sla_hours": 72,
+      "contract_id": "SP-003-v1",
+      "breaking_change_policy": "semver major bump required",
+      "schema": {
+        "patient_id": {
+          "type": "string"
+        },
+        "medications": {
+          "type": "array",
+          "item_fields": {
+            "medication_name": "string",
+            "plausibility_status": {
+              "type": "enum",
+              "values": [
+                "CLEAR",
+                "SOFT_WARNING",
+                "HARD_BLOCK"
+              ]
+            },
+            "openfda_serious_rate": "float",
+            "openfda_flagged": "boolean",
+            "age_gate_applies": "boolean",
+            "age_gate_min": "integer"
+          }
+        }
+      },
+      "source_tables": [
+        "data/quality/clinical_plausibility.yaml",
+        "data/quality/openfda_signal_proof.json"
+      ],
+      "versioning": "semver"
+    },
+    {
+      "product_id": "SP-004",
+      "name": "EncounterSummary",
+      "version": "1.0.0",
+      "description": "Enriched single-encounter knowledge: LLM-generated narrative + vitals + ESI tier + BM25 retrieval score",
+      "grain": "1 object per encounter_id",
+      "owner": "AI Data",
+      "consumed_by": [
+        "BM25 retrieval layer",
+        "ESI classifier",
+        "physician note grounding"
+      ],
+      "api_endpoint": "/api/encounters/{encounter_id}",
+      "freshness_sla_hours": 168,
+      "contract_id": "SP-004-v1",
+      "breaking_change_policy": "semver major bump required",
+      "schema": {
+        "encounter_id": {
+          "type": "string"
+        },
+        "patient_id": {
+          "type": "string"
+        },
+        "admission_date": {
+          "type": "date"
+        },
+        "clinical_narrative": {
+          "type": "object",
+          "fields": {
+            "chief_complaint": "string",
+            "hpi": "string",
+            "physician_note": "string"
+          }
+        },
+        "vitals": {
+          "type": "object",
+          "fields": {
+            "bp_systolic": "integer",
+            "bp_diastolic": "integer",
+            "heart_rate": "integer",
+            "respiratory_rate": "integer",
+            "temperature_f": "float",
+            "spo2_pct": "float"
+          }
+        },
+        "acuity": {
+          "type": "object",
+          "fields": {
+            "esi_tier_truth": "integer",
+            "acuity_red_flags": {
+              "type": "array",
+              "items": "string"
+            }
+          }
+        },
+        "enrichment_source": {
+          "type": "enum",
+          "values": [
+            "gemini-2.5-flash",
+            "synthetic"
+          ]
+        },
+        "holdout": "boolean"
+      },
+      "source_tables": [
+        "data/raw/enriched_use_397.jsonl"
+      ],
+      "versioning": "semver"
+    }
+  ]
+}

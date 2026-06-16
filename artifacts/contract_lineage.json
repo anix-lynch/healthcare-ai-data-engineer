@@ -1,0 +1,77 @@
+{
+  "generated_at": "2026-06-16",
+  "description": "Every contract in the trust chain with upstream and downstream dependencies",
+  "chain": [
+    {
+      "step": 1,
+      "contract_id": "C-001",
+      "name": "source_release_contract",
+      "boundary": "CSV -> BigQuery",
+      "gates_downstream": [
+        "C-003",
+        "C-005",
+        "C-006"
+      ]
+    },
+    {
+      "step": 2,
+      "contract_id": "C-003",
+      "name": "clinical_plausibility_hard_block",
+      "boundary": "Any ingest boundary",
+      "gates_downstream": [
+        "C-004",
+        "C-007"
+      ]
+    },
+    {
+      "step": 3,
+      "contract_id": "C-005",
+      "name": "patient_identity_contract",
+      "boundary": "raw_healthcare_data -> dim_patient",
+      "gates_downstream": [
+        "C-006",
+        "C-007"
+      ]
+    },
+    {
+      "step": 4,
+      "contract_id": "C-006",
+      "name": "source_to_warehouse_reconciliation",
+      "boundary": "CSV -> dim_patient",
+      "gates_downstream": []
+    },
+    {
+      "step": 5,
+      "contract_id": "C-002",
+      "name": "l1_data_quality_contract",
+      "boundary": "raw enriched -> dbt marts",
+      "gates_downstream": [
+        "C-004",
+        "C-007"
+      ]
+    },
+    {
+      "step": 6,
+      "contract_id": "C-004",
+      "name": "enriched_ai_contract",
+      "boundary": "enriched CSV -> agent corpus",
+      "gates_downstream": [
+        "C-007"
+      ]
+    },
+    {
+      "step": 7,
+      "contract_id": "C-007",
+      "name": "ai_safety_no_bad_data",
+      "boundary": "any promotion event -> agent API",
+      "gates_downstream": []
+    }
+  ],
+  "critical_path": [
+    "C-001",
+    "C-003",
+    "C-004",
+    "C-007"
+  ],
+  "interpretation": "A failure in C-001 or C-003 propagates through the entire chain. C-007 is the terminal gate -- the last line of defence before agents consume data."
+}

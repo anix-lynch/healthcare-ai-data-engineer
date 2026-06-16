@@ -1,0 +1,64 @@
+{
+  "generated_at": "2026-06-16",
+  "analyzed_runs": 1000,
+  "recurring_incidents": [
+    {
+      "fault_kind": "transient_api",
+      "count": 45,
+      "rate_pct": 4.5,
+      "classification": "RECURRING",
+      "clusters_detected": 30,
+      "structural_recommendation": "Monitor trend -- acceptable if stable; escalate if rate increases"
+    },
+    {
+      "fault_kind": "transient_bigquery",
+      "count": 20,
+      "rate_pct": 2.0,
+      "classification": "RECURRING",
+      "clusters_detected": 4,
+      "structural_recommendation": "Monitor trend -- acceptable if stable; escalate if rate increases"
+    },
+    {
+      "fault_kind": "stale_partition",
+      "count": 5,
+      "rate_pct": 0.5,
+      "classification": "OCCASIONAL",
+      "clusters_detected": 0,
+      "structural_recommendation": "Within normal range -- retry policy sufficient"
+    },
+    {
+      "fault_kind": "elevated_quarantine",
+      "count": 2,
+      "rate_pct": 0.2,
+      "classification": "OCCASIONAL",
+      "clusters_detected": 0,
+      "structural_recommendation": "Within normal range -- retry policy sufficient"
+    },
+    {
+      "fault_kind": "reconciliation_mismatch",
+      "count": 1,
+      "rate_pct": 0.1,
+      "classification": "OCCASIONAL",
+      "clusters_detected": 0,
+      "structural_recommendation": "Within normal range -- retry policy sufficient"
+    },
+    {
+      "fault_kind": "stale_source",
+      "count": 1,
+      "rate_pct": 0.1,
+      "classification": "OCCASIONAL",
+      "clusters_detected": 0,
+      "structural_recommendation": "Within normal range -- retry policy sufficient"
+    },
+    {
+      "fault_kind": "failed_validation",
+      "count": 1,
+      "rate_pct": 0.1,
+      "classification": "OCCASIONAL",
+      "clusters_detected": 0,
+      "structural_recommendation": "Within normal range -- retry policy sufficient"
+    }
+  ],
+  "structural_faults": [],
+  "interpretation": "transient_api and transient_bigquery are STRUCTURAL (>5% of runs). Retry handles them but their frequency signals infrastructure-level fixes needed."
+}

@@ -1,0 +1,88 @@
+{
+  "mined_at": "2026-06-16",
+  "sources": [
+    "data/quality/proof_bulk_load.json",
+    "ingestion/proof_ingestion.json"
+  ],
+  "total_quarantine_events_analyzed": 5521,
+  "distinct_patterns": 7,
+  "patterns": [
+    {
+      "pattern": "duplicate",
+      "count": 5491,
+      "frequency_pct": 99.46,
+      "root_cause_class": "DATA_QUALITY",
+      "root_cause_description": "Source system emits duplicate records; no dedup at origin",
+      "is_recurring": true,
+      "seen_in_batch": true,
+      "seen_in_stream": true,
+      "signal_strength": "HIGH"
+    },
+    {
+      "pattern": "clinical_plausibility_hard",
+      "count": 25,
+      "frequency_pct": 0.45,
+      "root_cause_class": "SEMANTIC_CORRECTNESS",
+      "root_cause_description": "Age x medication combination fails medical plausibility",
+      "is_recurring": true,
+      "seen_in_batch": true,
+      "seen_in_stream": true,
+      "signal_strength": "MEDIUM"
+    },
+    {
+      "pattern": "missing_required",
+      "count": 2,
+      "frequency_pct": 0.04,
+      "root_cause_class": "COMPLETENESS",
+      "root_cause_description": "Required field absent; upstream extraction failure",
+      "is_recurring": false,
+      "seen_in_batch": false,
+      "seen_in_stream": true,
+      "signal_strength": "LOW"
+    },
+    {
+      "pattern": "malformed_age",
+      "count": 1,
+      "frequency_pct": 0.02,
+      "root_cause_class": "SCHEMA_VIOLATION",
+      "root_cause_description": "Age field is non-numeric; upstream system bug",
+      "is_recurring": false,
+      "seen_in_batch": false,
+      "seen_in_stream": true,
+      "signal_strength": "LOW"
+    },
+    {
+      "pattern": "bad_gender",
+      "count": 1,
+      "frequency_pct": 0.02,
+      "root_cause_class": "SCHEMA_VIOLATION",
+      "root_cause_description": "Gender not in {male, female}; enum mismatch with source",
+      "is_recurring": false,
+      "seen_in_batch": false,
+      "seen_in_stream": true,
+      "signal_strength": "LOW"
+    },
+    {
+      "pattern": "bad_admission_type",
+      "count": 1,
+      "frequency_pct": 0.02,
+      "root_cause_class": "SCHEMA_VIOLATION",
+      "root_cause_description": "Admission type not in valid set; enum drift",
+      "is_recurring": false,
+      "seen_in_batch": false,
+      "seen_in_stream": true,
+      "signal_strength": "LOW"
+    },
+    {
+      "pattern": "late_arriving",
+      "count": 1,
+      "frequency_pct": 0.02,
+      "root_cause_class": "TEMPORAL_ORDERING",
+      "root_cause_description": "Record arrived after a newer version was already accepted",
+      "is_recurring": false,
+      "seen_in_batch": false,
+      "seen_in_stream": true,
+      "signal_strength": "LOW"
+    }
+  ]
+}

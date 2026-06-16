@@ -1,0 +1,64 @@
+{
+  "product_id": "SP-001",
+  "name": "PatientProfile",
+  "version": "1.0.0",
+  "description": "Complete patient identity + longitudinal history from dim_patient + stg_healthcare + feature store",
+  "grain": "1 object per canonical patient_id",
+  "owner": "Analytics Engineering",
+  "consumed_by": [
+    "Baymax case manager",
+    "RAG retrieval layer",
+    "ESI classifier"
+  ],
+  "api_endpoint": "/api/patients/{patient_id}",
+  "freshness_sla_hours": 24,
+  "contract_id": "SP-001-v1",
+  "breaking_change_policy": "semver major bump required; 30-day deprecation notice to consumers",
+  "schema": {
+    "patient_id": {
+      "type": "string",
+      "format": "P-{10hex}",
+      "source": "scripts/patient_identity.py"
+    },
+    "demographics": {
+      "type": "object",
+      "fields": {
+        "age": "integer",
+        "gender": "string",
+        "blood_type": "string"
+      }
+    },
+    "identity": {
+      "type": "object",
+      "fields": {
+        "canonical_name_hash": "string",
+        "first_admission": "date",
+        "last_admission": "date",
+        "total_encounters": "integer"
+      }
+    },
+    "encounter_history": {
+      "type": "array",
+      "item_fields": {
+        "encounter_id": "string",
+        "admission_date": "date",
+        "medical_condition": "string",
+        "admission_type": "string",
+        "length_of_stay_days": "integer"
+      }
+    },
+    "current_conditions": {
+      "type": "array",
+      "items": "string"
+    },
+    "current_medications": {
+      "type": "array",
+      "items": "string"
+    }
+  },
+  "source_tables": [
+    "BigQuery:healthcare_analytics.dim_patient",
+    "BigQuery:healthcare_analytics.stg_healthcare"
+  ],
+  "versioning": "semver; schema changes require version bump"
+}

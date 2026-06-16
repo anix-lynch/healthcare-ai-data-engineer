@@ -1,0 +1,86 @@
+{
+  "generated_at": "2026-06-16",
+  "total_rules": 6,
+  "adopted": 3,
+  "pending_review": 3,
+  "rules": [
+    {
+      "rule_id": "DEDUP-001",
+      "rule_type": "IDEMPOTENCY",
+      "description": "Source systems should deduplicate or flag revisions with event_ts > prior",
+      "proposed_implementation": "Already handled: ingestion/sink.py MERGE on natural_key",
+      "estimated_impact": "Eliminates ~99% of duplicate quarantine volume if fixed upstream",
+      "status": "ADOPTED",
+      "adopted_in": "ingestion/sink.py:persist_decision() MERGE on natural_key",
+      "validation_artifact": "ingestion/proof_ingestion.json idempotent_merge field",
+      "triggered_by_pattern": "duplicate",
+      "pattern_frequency_pct": 99.46,
+      "signal_strength": "HIGH"
+    },
+    {
+      "rule_id": "CLINICAL-001",
+      "rule_type": "SEMANTIC_CORRECTNESS",
+      "description": "Block under-18 patients prescribed adult-only medications",
+      "proposed_implementation": "data/quality/clinical_plausibility.yaml adult_only_medications.names",
+      "estimated_impact": "Catches semantic errors that pass all GE schema checks",
+      "status": "ADOPTED",
+      "adopted_in": "data/quality/clinical_plausibility.yaml + scripts/clinical_plausibility.py",
+      "validation_artifact": "data/quality/ge_release_gate_report.json hard_violations=0 after adoption",
+      "triggered_by_pattern": "clinical_plausibility_hard",
+      "pattern_frequency_pct": 0.45,
+      "signal_strength": "MEDIUM"
+    },
+    {
+      "rule_id": "COMPLETE-001",
+      "rule_type": "COMPLETENESS_CONTRACT",
+      "description": "CANDIDATE: add upstream null-check probe that runs before batch window closes",
+      "proposed_implementation": "Pre-ingest probe checks source CSV for nulls in REQUIRED fields",
+      "estimated_impact": "Early-warning catches missing_required before batch window closes",
+      "status": "PENDING_REVIEW",
+      "adopted_in": null,
+      "validation_artifact": null,
+      "triggered_by_pattern": "missing_required",
+      "pattern_frequency_pct": 0.04,
+      "signal_strength": "LOW"
+    },
+    {
+      "rule_id": "SCHEMA-001",
+      "rule_type": "TYPE_COERCION",
+      "description": "Age must be integer 0-120; reject non-numeric at ingest boundary",
+      "proposed_implementation": "ingestion/validate.py already implements; upstream fix: add int cast at ETL origin",
+      "estimated_impact": "Eliminates malformed_age class when fixed upstream",
+      "status": "ADOPTED",
+      "adopted_in": "ingestion/validate.py:validate_record() age int-cast + range check",
+      "validation_artifact": "ingestion/proof_ingestion.json malformed_age caught and quarantined",
+      "triggered_by_pattern": "malformed_age",
+      "pattern_frequency_pct": 0.02,
+      "signal_strength": "LOW"
+    },
+    {
+      "rule_id": "SCHEMA-002",
+      "rule_type": "ENUM_ENFORCEMENT",
+      "description": "CANDIDATE: expand VALID_GENDER to include other/non_binary/unknown as soft-accept",
+      "proposed_implementation": "ingestion/validate.py VALID_GENDER set expansion",
+      "estimated_impact": "Reclassifies some quarantines as soft warnings vs hard rejects",
+      "status": "PENDING_REVIEW",
+      "adopted_in": null,
+      "validation_artifact": null,
+      "triggered_by_pattern": "bad_gender",
+      "pattern_frequency_pct": 0.02,
+      "signal_strength": "LOW"
+    },
+    {
+      "rule_id": "TEMPORAL-001",
+      "rule_type": "TEMPORAL_ORDERING",
+      "description": "CANDIDATE: define late_arriving_window_hours config for explicit policy",
+      "proposed_implementation": "Add late_arriving_window_hours to validate.py",
+      "estimated_impact": "Formalizes late-arriving policy; removes ambiguity",
+      "status": "CANDIDATE",
+      "adopted_in": null,
+      "validation_artifact": null,
+      "triggered_by_pattern": "late_arriving",
+      "pattern_frequency_pct": 0.02,
+      "signal_strength": "LOW"
+    }
+  ]
+}

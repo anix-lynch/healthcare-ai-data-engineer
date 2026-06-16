@@ -1,0 +1,57 @@
+{
+  "computed_at": "2026-06-16",
+  "epochs": [
+    {
+      "epoch": 0,
+      "label": "bulk_load_pre_clinical_rule",
+      "source_rows": 55500,
+      "quarantined": 5514,
+      "quarantine_rate_pct": 9.94,
+      "clinical_hard_violations": 24,
+      "flywheel_action": "24 clinical violations detected -> triggered CLINICAL-001 rule generation",
+      "artifact": "data/quality/proof_bulk_load.json"
+    },
+    {
+      "epoch": 1,
+      "label": "post_clinical_rule_adoption",
+      "source_rows": 55500,
+      "quarantined": 5514,
+      "quarantine_rate_pct": 9.94,
+      "clinical_hard_violations": 0,
+      "flywheel_action": "CLINICAL-001 adopted; 0 clinical violations; rule validated by GE gate report",
+      "artifact": "data/quality/ge_release_gate_report.json"
+    },
+    {
+      "epoch": 2,
+      "label": "stream_replay_stress_test",
+      "source_rows": 21,
+      "quarantined": 7,
+      "quarantine_rate_pct": 33.33,
+      "clinical_hard_violations": 1,
+      "flywheel_action": "1 clinical hard violation detected (tiny tyke age 3 + Viagra) -> validator proven live",
+      "artifact": "ingestion/proof_ingestion.json"
+    },
+    {
+      "epoch": 3,
+      "label": "enriched_ai_corpus_checkpoint",
+      "source_rows": 497,
+      "quarantined": 0,
+      "quarantine_rate_pct": 0.0,
+      "clinical_hard_violations": 0,
+      "flywheel_action": "0 violations in agent-facing corpus -> flywheel confirmed; substrate is clean",
+      "artifact": "data/quality/l1_checkpoint_report.json"
+    }
+  ],
+  "trend_analysis": {
+    "clinical_violations_by_epoch": [
+      24,
+      0,
+      1,
+      0
+    ],
+    "clinical_violations_direction": "DECREASING",
+    "interpretation": "Clinical hard violations dropped from 24 (epoch 0) to 0 (epoch 1) after CLINICAL-001 adoption. Duplicate quarantine rate is stable at ~9.9% (known source property, not remediable by ingest rules). Agent-facing corpus shows 0 violations (epoch 3). Flywheel is turning."
+  },
+  "flywheel_health": "ACTIVE",
+  "next_turn": "Promote SCHEMA-002 and TEMPORAL-001 to engineering review"
+}

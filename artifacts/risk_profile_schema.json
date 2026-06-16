@@ -1,0 +1,60 @@
+{
+  "product_id": "SP-002",
+  "name": "RiskProfile",
+  "version": "1.0.0",
+  "description": "Readmission risk + medication safety + comorbidity flags from Feast feature store + openFDA signals",
+  "grain": "1 object per canonical patient_id",
+  "owner": "AI Data",
+  "consumed_by": [
+    "Baymax advance() decision loop",
+    "high-utilizer signal detector"
+  ],
+  "api_endpoint": "/api/patients/{patient_id}/risk",
+  "freshness_sla_hours": 24,
+  "contract_id": "SP-002-v1",
+  "breaking_change_policy": "semver major bump required",
+  "schema": {
+    "patient_id": {
+      "type": "string"
+    },
+    "readmission_risk": {
+      "type": "object",
+      "fields": {
+        "is_readmission": "boolean",
+        "days_since_last_admission": "integer",
+        "previous_admission_count": "integer",
+        "prior_avg_los": "float"
+      }
+    },
+    "medication_risk": {
+      "type": "object",
+      "fields": {
+        "flagged_medications": {
+          "type": "array",
+          "items": "string"
+        },
+        "openfda_serious_rate": "float",
+        "openfda_router_decision": "string"
+      }
+    },
+    "comorbidity": {
+      "type": "object",
+      "fields": {
+        "conditions": {
+          "type": "array",
+          "items": "string"
+        },
+        "high_utilizer_flag": "boolean"
+      }
+    },
+    "feature_freshness_ts": {
+      "type": "timestamp"
+    }
+  },
+  "source_tables": [
+    "Feast:patient_encounter_features",
+    "openFDA:FAERS signals"
+  ],
+  "feature_view": "patient_encounter_features (Feast)",
+  "versioning": "semver"
+}

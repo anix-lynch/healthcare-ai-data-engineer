@@ -1,0 +1,43 @@
+{
+  "contract_id": "C-003",
+  "contract_type": "SEMANTIC_CORRECTNESS",
+  "version": "1.0.0",
+  "generated_at": "2026-06-16",
+  "policy": {
+    "name": "clinical_plausibility",
+    "description": "Medical plausibility rules that GE cannot express -- semantic layer above schema",
+    "rationale": "A 3-year-old prescribed Viagra passes all GE schema checks (age 0-120, medication column present) but is clinically impossible. Schema contracts catch syntax; plausibility contracts catch semantics.",
+    "rules": [
+      {
+        "rule_id": "CLINICAL-001",
+        "rule_name": "adult_only_medications_age_gate",
+        "hard_min_age": 18,
+        "soft_min_age": 18,
+        "blocked_medications": [
+          "lipitor",
+          "atorvastatin",
+          "viagra",
+          "sildenafil",
+          "cialis",
+          "tadalafil"
+        ],
+        "action_hard": "QUARANTINE -- never reaches clean table or agent",
+        "action_soft": "QUARANTINE with soft tag -- reviewable",
+        "evidence": "24 violations caught in bulk load; 1 in stream replay; 0 in enriched AI corpus post-adoption",
+        "config_file": "data/quality/clinical_plausibility.yaml",
+        "code_file": "scripts/clinical_plausibility.py"
+      }
+    ],
+    "enforcement_points": [
+      "ingestion/validate.py -- every record (batch + stream + API)",
+      "scripts/load_bigquery.py -- bulk load path",
+      "dbt-project/tests/assert_clinical_plausibility.sql -- warehouse layer",
+      "scripts/checkpoint.py -- L1 checkpoint scan"
+    ],
+    "proof_artifacts": [
+      "data/quality/ge_release_gate_report.json -- hard_violations=0 after adoption",
+      "data/quality/l1_checkpoint_report.json -- clinical_plausibility.verdict_critical=false",
+      "ingestion/proof_ingestion.json -- tiny tyke quarantined with clinical_plausibility_hard reason"
+    ]
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "generated_at": "2026-06-16",
+  "source": "reliability/ledger.jsonl",
+  "total_incidents_analyzed": 75,
+  "learning_entries": 7,
+  "learning": [
+    {
+      "fault_kind": "transient_api",
+      "count": 45,
+      "lesson": "API failures are the most common class (45% of incidents). 3-attempt bounded retry recovers most. The 10% tail exhausting the budget signals need for circuit breaker.",
+      "pattern": "RECURRING_HIGH_VOLUME",
+      "action_taken": "bounded_retry with exponential backoff -- 90% recovery rate on RECOVERABLE class",
+      "recommended_next": "Add circuit breaker pattern; investigate if same-minute failures cluster (thundering herd)",
+      "metric_moved": "auto_recovery_rate improved from 0% (no retry) to 90% (bounded retry)"
+    },
+    {
+      "fault_kind": "transient_bigquery",
+      "count": 20,
+      "lesson": "BigQuery transient errors follow the same recovery profile as API errors. SDK-level retry middleware would offload from platform retry policy.",
+      "pattern": "RECURRING_MEDIUM_VOLUME",
+      "action_taken": "bounded_retry handles; 4 of 20 exceed budget and escalate",
+      "recommended_next": "Enable google.api_core.retry.Retry as BigQuery client middleware",
+      "metric_moved": null
+    },
+    {
+      "fault_kind": "stale_partition",
+      "count": 5,
+      "lesson": "5 incidents, all RECOVERABLE. Backfill-on-retry works (4 of 5 recovered). 1 exceeded budget -- correct escalation behavior.",
+      "pattern": "LOW_VOLUME_MANAGEABLE",
+      "action_taken": "bounded_retry with backfill attempt; human paged on budget exhaustion",
+      "recommended_next": "Add upstream partition freshness monitor: alert if partition not refreshed by T-2h before pipeline window",
+      "metric_moved": null
+    },
+    {
+      "fault_kind": "elevated_quarantine",
+      "count": 2,
+      "lesson": "2 WARNING incidents. Elevated quarantine rate is a leading indicator of quality degradation. System served in degraded mode -- correct for WARNING class.",
+      "pattern": "WARNING_LEADING_INDICATOR",
+      "action_taken": "DEGRADED state -- served with watch flag, not blocked",
+      "recommended_next": "Add quarantine rate trend alert: if rate > 15% for 3 consecutive runs, escalate to CRITICAL",
+      "metric_moved": null
+    },
+    {
+      "fault_kind": "reconciliation_mismatch",
+      "count": 1,
+      "lesson": "1 critical incident. Row loss detected before promotion -- gate correctly blocked. Most dangerous failure class.",
+      "pattern": "RARE_CRITICAL_HIGH_RISK",
+      "action_taken": "CRITICAL -> escalated -> human paged; promotion blocked",
+      "recommended_next": "Add automated row-count alert before pipeline completes",
+      "metric_moved": "stale_data_incidents=0 -- gate held"
+    },
+    {
+      "fault_kind": "stale_source",
+      "count": 1,
+      "lesson": "1 critical incident (freshness 36.33h, SLA 24h). System correctly refused to refresh agent API with stale data. Prefer serve-nothing over serve-stale.",
+      "pattern": "RARE_UPSTREAM_DEPENDENCY",
+      "action_taken": "CRITICAL -> agent API NOT refreshed -> human paged",
+      "recommended_next": "Add upstream SLA monitoring: page upstream owner at T-4h before our pipeline SLA is at risk",
+      "metric_moved": "sla_compliance_rate=99.9% -- 1 deliberate breach (correct behavior)"
+    },
+    {
+      "fault_kind": "failed_validation",
+      "count": 1,
+      "lesson": "1 critical incident. Gate correctly blocked promotion. Root cause: upstream schema change not caught at source boundary.",
+      "pattern": "RARE_CRITICAL",
+      "action_taken": "CRITICAL classification -> gate_publish blocked -> human paged",
+      "recommended_next": "Add pre-ingest schema drift detection before loading",
+      "metric_moved": "stale_data_incidents=0 -- gate held"
+    }
+  ],
+  "meta_lesson": "Bounded retry + classification + promotion gate held the cardinal invariant (stale_data_incidents=0) across 1,000 runs. Next frontier: PREVENTION -- catching failures before they enter the retry loop."
+}

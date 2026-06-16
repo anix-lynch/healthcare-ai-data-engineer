@@ -1,0 +1,92 @@
+{
+  "generated_at": "2026-06-16",
+  "source": "reliability/ledger.jsonl",
+  "total_failure_events": 75,
+  "distinct_fault_kinds": 7,
+  "root_cause_distribution": {
+    "INFRASTRUCTURE": 2,
+    "DATA_QUALITY": 2,
+    "DATA_FRESHNESS": 1,
+    "DATA_INTEGRITY": 1,
+    "UPSTREAM_DEPENDENCY": 1
+  },
+  "catalog": [
+    {
+      "fault_kind": "transient_api",
+      "count": 45,
+      "frequency_pct": 60.0,
+      "root_cause": "INFRASTRUCTURE",
+      "category": "Network/API instability",
+      "preventable": true,
+      "escalated": 3,
+      "recovered": 42,
+      "recovery_rate_pct": 93.3
+    },
+    {
+      "fault_kind": "transient_bigquery",
+      "count": 20,
+      "frequency_pct": 26.67,
+      "root_cause": "INFRASTRUCTURE",
+      "category": "BigQuery transient errors",
+      "preventable": true,
+      "escalated": 3,
+      "recovered": 17,
+      "recovery_rate_pct": 85.0
+    },
+    {
+      "fault_kind": "stale_partition",
+      "count": 5,
+      "frequency_pct": 6.67,
+      "root_cause": "DATA_FRESHNESS",
+      "category": "Upstream partition not refreshed in time",
+      "preventable": true,
+      "escalated": 1,
+      "recovered": 4,
+      "recovery_rate_pct": 80.0
+    },
+    {
+      "fault_kind": "elevated_quarantine",
+      "count": 2,
+      "frequency_pct": 2.67,
+      "root_cause": "DATA_QUALITY",
+      "category": "Quarantine rate trending up",
+      "preventable": true,
+      "escalated": 0,
+      "recovered": 0,
+      "recovery_rate_pct": 0.0
+    },
+    {
+      "fault_kind": "reconciliation_mismatch",
+      "count": 1,
+      "frequency_pct": 1.33,
+      "root_cause": "DATA_INTEGRITY",
+      "category": "Row loss between source and warehouse",
+      "preventable": true,
+      "escalated": 1,
+      "recovered": 0,
+      "recovery_rate_pct": 0.0
+    },
+    {
+      "fault_kind": "stale_source",
+      "count": 1,
+      "frequency_pct": 1.33,
+      "root_cause": "UPSTREAM_DEPENDENCY",
+      "category": "Source system not delivering fresh data",
+      "preventable": false,
+      "escalated": 1,
+      "recovered": 0,
+      "recovery_rate_pct": 0.0
+    },
+    {
+      "fault_kind": "failed_validation",
+      "count": 1,
+      "frequency_pct": 1.33,
+      "root_cause": "DATA_QUALITY",
+      "category": "Bad data passed source boundary",
+      "preventable": true,
+      "escalated": 1,
+      "recovered": 0,
+      "recovery_rate_pct": 0.0
+    }
+  ]
+}
