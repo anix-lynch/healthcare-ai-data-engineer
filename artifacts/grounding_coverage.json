@@ -1,0 +1,25 @@
+{
+  "eval_date": "2026-05-18",
+  "eval_source": "data/quality/retrieval_baseline_multi.json",
+  "method": "bm25_okapi",
+  "corpus": "data/raw/enriched_use_397.jsonl",
+  "corpus_size_rows": 497,
+  "enriched_fields": ["chief_complaint", "hpi", "physician_note", "Medical Condition", "Medication", "esi_tier_truth"],
+  "golden_query_set": "data/quality/golden_retrieval_set.json",
+  "n_queries": 20,
+  "metrics": {
+    "hit_at_5": 0.95,
+    "mrr": 0.90,
+    "ndcg_at_10": 0.8921,
+    "p95_latency_ms": 1
+  },
+  "grounding_endpoint": "/api/ask",
+  "grounding_mechanism": "BM25 top-K retrieval → numbered [doc N] context block → Gemini answer constrained to retrieved evidence with mandatory [doc N] citations; returns grounded=false gracefully when Vertex unavailable",
+  "vertex_dependency": "gemini-2.5-flash via vertexai SDK; grounded=false fallback when unavailable",
+  "bragable_bar_check": {
+    "industry_baseline_hit_at_5_sparse": 0.70,
+    "achieved": 0.95,
+    "verdict": "ABOVE_BAR"
+  },
+  "note": "BM25 chosen over Vertex AI Search because corpus is 497 rows — managed index adds no retrieval quality benefit at this scale while adding operational overhead."
+}
