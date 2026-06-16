@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Baymax retrieves hidden context, checks workflow state, weighs safety tradeoffs, and verifies outcomes before answering.">
+  <title>Baymax · live reasoning theater</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><circle cx='32' cy='32' r='30' fill='white' stroke='%237bb3d9'/><circle cx='22' cy='32' r='4' fill='%230f1923'/><path d='M26 32h12' stroke='%230f1923'/><circle cx='42' cy='32' r='4' fill='%230f1923'/></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --color-background-primary:#ffffff;
+      --color-background-secondary:#f4f2ec;
+      --color-border-tertiary:#e7e4da;
+      --color-border-secondary:#d7d3c6;
+      --color-text-secondary:#6b6960;
+      --color-text-tertiary:#9a978c;
+      --color-text-info:#0c447c;
+      --color-background-info:#e6f1fb;
+      --color-text-success:#085041;
+      --color-background-success:#e1f5ee;
+      --color-text-danger:#791f1f;
+      --color-background-danger:#fcebeb;
+      --color-background-warning:#faeeda;
+      --color-text-warning:#633806;
+      --color-background-purple:#eeedfe;
+      --color-text-purple:#26215c;
+      --border-radius-lg:14px;
+      --border-radius-md:9px;
+      --page-bg:#ece9e0;
+      --ink:#1f1d18;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--page-bg);color:var(--ink);font-family:"Geist",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased}
+    .wrap{max-width:900px;margin:0 auto;padding:28px 20px 48px}
+    header.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+    .id{display:flex;align-items:center;gap:11px}
+    .mark{width:34px;height:34px;border-radius:50%;background:#fff;border:1.5px solid #7bb3d9;display:flex;align-items:center;justify-content:center;gap:4px;flex:none}
+    .mark i{width:5px;height:5px;border-radius:50%;background:#0f1923;display:block}
+    .eyebrow{margin:0;font-size:10px;letter-spacing:.22em;color:var(--color-text-tertiary);font-weight:600}
+    .id h1{margin:1px 0 0;font-size:16px;font-weight:600;letter-spacing:-.01em}
+    .src,.api-pill{font-size:12px;color:var(--color-text-secondary);text-decoration:none;border:.5px solid var(--color-border-secondary);padding:5px 10px;border-radius:var(--border-radius-md);background:#fff}
+    .src:hover{color:var(--ink)}
+    .theater{background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:1rem}
+    .theater-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:10px}
+    .statusline{display:flex;align-items:center;gap:8px}
+    .replay{font:inherit;font-size:12px;cursor:pointer;background:#fff;border:.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:5px 10px}
+    .grid{display:flex;gap:10px;align-items:stretch;flex-wrap:wrap}
+    .stream-card{flex:1.7;min-width:290px;background:var(--color-background-primary);border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:12px 14px;min-height:520px}
+    .organ-card{flex:1;min-width:220px;background:var(--color-background-primary);border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:12px}
+    .patient-line{display:flex;align-items:center;gap:8px;padding-bottom:8px;border-bottom:.5px solid var(--color-border-tertiary);margin-bottom:10px}
+    .stream{display:flex;flex-direction:column;gap:10px}
+    .organ-list{display:flex;flex-direction:column;gap:6px}
+    .organ{display:flex;align-items:center;gap:8px;padding:6px 9px;border-radius:var(--border-radius-md);background:var(--color-background-secondary);opacity:.45;transition:all .3s}
+    .organ .name{font-size:12px;flex:1}
+    .dot{width:8px;height:8px;border-radius:50%;background:var(--color-border-secondary)}
+    .step{opacity:0;transform:translateY(6px);transition:all .35s;font-size:13px;line-height:1.5}
+    .step.show{opacity:1;transform:none}
+    .step.danger{background:var(--color-background-danger);border-radius:var(--border-radius-md);padding:8px 10px}
+    .step.warn{background:var(--color-background-warning);border-radius:var(--border-radius-md);padding:8px 10px}
+    .chiprow{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+    .chip{font-size:12px;padding:3px 9px;border-radius:var(--border-radius-md);background:var(--color-background-secondary);color:var(--color-text-secondary)}
+    .dual{opacity:0;transform:translateY(6px);transition:all .35s;display:flex;flex-direction:column;gap:8px}
+    .dual.show{opacity:1;transform:none}
+    .voice{border-radius:var(--border-radius-md);padding:9px 11px}
+    .voice p{margin:0;font-size:12px;line-height:1.5}
+    .voice .label{margin:0 0 3px;font-size:11px;font-weight:600}
+    .proof{margin-top:14px;background:var(--color-background-primary);border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:14px 16px;display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;justify-content:space-between}
+    .proof .b{font-size:12px;color:var(--color-text-secondary);max-width:560px;margin:0}
+    .proof strong{color:var(--ink)}
+    .pill{font-size:10px;letter-spacing:.08em;font-weight:700;color:var(--color-text-success);background:var(--color-background-success);padding:3px 9px;border-radius:999px}
+    .foot{margin:12px 0 0;font-size:11px;color:var(--color-text-tertiary);text-align:center}
+    code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.95em}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header class="top">
+      <div class="id">
+        <span class="mark" aria-hidden="true"><i></i><i></i></span>
+        <div>
+          <p class="eyebrow">B A Y M A X</p>
+          <h1>What did Baymax find that nobody mentioned?</h1>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+        <span class="api-pill" id="bf-api-status">checking API...</span>
+        <a class="src" href="https://github.com/anix-lynch/baymax" target="_blank" rel="noopener">&lt;/&gt; source</a>
+      </div>
+    </header>
+
+    <section class="theater" aria-label="Baymax live reasoning theater">
+      <div class="theater-head">
+        <div class="statusline"><span style="font-size:18px;">🚑</span><span style="font-size:14px;font-weight:500;">Baymax is thinking...</span><span id="bf-status" style="font-size:11px;color:var(--color-text-secondary);"></span></div>
+        <button id="bf-replay" class="replay">▶ replay</button>
+      </div>
+
+      <div class="grid">
+        <div class="stream-card">
+          <div class="patient-line">
+            <span style="font-size:15px;">👵</span>
+            <span style="font-size:13px;">"My mother's legs are swollen."</span>
+            <span style="font-size:11px;color:var(--color-text-tertiary);">one sentence</span>
+          </div>
+          <div id="bf-stream" class="stream"></div>
+        </div>
+
+        <aside class="organ-card">
+          <p style="margin:0 0 10px;font-size:11px;font-weight:600;color:var(--color-text-secondary);letter-spacing:.04em;">ACTIVE ORGANS</p>
+          <div id="bf-organs" class="organ-list"></div>
+        </aside>
+      </div>
+
+      <p class="foot">Live API-backed simulation. Baymax prepares, explains, waits, and escalates; it is not a clinician.</p>
+    </section>
+
+    <section class="proof">
+      <p class="b"><span class="pill">LIVE PROOF</span> Baymax is calling Cloud Run endpoints for retrieval, signals, workflow ACK, tradeoffs, memory, authority, outcome, and status. <strong>Tool success is not treated as real-world success.</strong></p>
+      <span class="api-pill" id="bf-api-base"></span>
+    </section>
+  </main>
+  <script src="/ui/baymax/baymax_live.js"></script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+{
+  "_meta": {
+    "source": "DISCLOSED synthetic seed — not the upstream EHR",
+    "why": "the 55k synthetic encounter set has no longitudinal CKD/lung staging; this store carries timepoints so the GENERIC differ has something to diff. Swap for a real longitudinal EHR query later without touching state_diff.py.",
+    "rule": "values live in DATA, the differ stays generic; add a patient here and Baymax runs for them"
+  },
+  "mom-001": {
+    "label": "synthetic (disclosed) — swollen-legs demo",
+    "timepoints": [
+      {"date": "2024", "ckd_stage": 2, "egfr": 62, "context": "leg swelling / fluid overload — mild diuretic worked"},
+      {"date": "2026", "ckd_stage": 3, "egfr": 44, "context": "recurrent swelling — less renal reserve"}
+    ]
+  },
+  "dad-002": {
+    "label": "synthetic (disclosed) — generalization proof, different organ system",
+    "timepoints": [
+      {"date": "2023", "fev1_pct": 68, "context": "COPD baseline, stable on inhalers"},
+      {"date": "2026", "fev1_pct": 52, "context": "worsening dyspnea, declining lung function"}
+    ]
+  }
+}
