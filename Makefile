@@ -44,7 +44,10 @@ load-bq:
 reconcile:
 	python quality/reconcile.py
 
-release-gate: ge checkpoint test
+reliability:
+	python3 -m reliability.run_suite
+
+release-gate: ge checkpoint test reliability
 
 test:
 	python3 -m pytest \

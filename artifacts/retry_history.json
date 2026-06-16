@@ -1,0 +1,663 @@
+{
+  "max_attempts": 3,
+  "backoff": "exponential, base 1ms, cap 1000ms \u2014 bounded, never infinite",
+  "runs_with_retries": [
+    {
+      "run_id": "run-0039",
+      "fault_kind": "transient_bigquery",
+      "reason": "transient_bigquery",
+      "retry_attempts": 2,
+      "backoff_ms": 1,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    },
+    {
+      "run_id": "run-0048",
+      "fault_kind": "transient_api",
+      "reason": "transient_api",
+      "retry_attempts": 2,
+      "backoff_ms": 1,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    },
+    {
+      "run_id": "run-0058",
+      "fault_kind": "transient_bigquery",
+      "reason": "transient_bigquery",
+      "retry_attempts": 3,
+      "backoff_ms": 3,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    },
+    {
+      "run_id": "run-0074",
+      "fault_kind": "transient_bigquery",
+      "reason": "transient_bigquery",
+      "retry_attempts": 3,
+      "backoff_ms": 3,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    },
+    {
+      "run_id": "run-0098",
+      "fault_kind": "transient_api",
+      "reason": "transient_api",
+      "retry_attempts": 2,
+      "backoff_ms": 1,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    },
+    {
+      "run_id": "run-0111",
+      "fault_kind": "transient_bigquery",
+      "reason": "transient_bigquery",
+      "retry_attempts": 3,
+      "backoff_ms": 3,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    },
+    {
+      "run_id": "run-0131",
+      "fault_kind": "transient_api",
+      "reason": "transient_api",
+      "retry_attempts": 3,
+      "backoff_ms": 3,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    },
+    {
+      "run_id": "run-0157",
+      "fault_kind": "transient_api",
+      "reason": "transient_api",
+      "retry_attempts": 3,
+      "backoff_ms": 3,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    },
+    {
+      "run_id": "run-0200",
+      "fault_kind": "transient_api",
+      "reason": "transient_api",
+      "retry_attempts": 2,
+      "backoff_ms": 1,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    },
+    {
+      "run_id": "run-0203",
+      "fault_kind": "transient_api",
+      "reason": "transient_api",
+      "retry_attempts": 4,
+      "backoff_ms": 7,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    },
+    {
+      "run_id": "run-0209",
+      "fault_kind": "stale_partition",
+      "reason": "stale_partition",
+      "retry_attempts": 3,
+      "backoff_ms": 3,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    },
+    {
+      "run_id": "run-0236",
+      "fault_kind": "reconciliation_mismatch",
+      "reason": "reconciliation_mismatch",
+      "retry_attempts": 4,
+      "backoff_ms": 7,
+      "retry_succeeded": false,
+      "final_state": "ESCALATED"
+    },
+    {
+      "run_id": "run-0255",
+      "fault_kind": "transient_api",
+      "reason": "transient_api",
+      "retry_attempts": 4,
+      "backoff_ms": 7,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    },
+    {
+      "run_id": "run-0261",
+      "fault_kind": "transient_api",
+      "reason": "transient_api",
+      "retry_attempts": 2,
+      "backoff_ms": 1,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    },
+    {
+      "run_id": "run-0281",
+      "fault_kind": "stale_source",
+      "reason": "stale_source",
+      "retry_attempts": 4,
+      "backoff_ms": 7,
+      "retry_succeeded": false,
+      "final_state": "ESCALATED"
+    },
+    {
+      "run_id": "run-0282",
+      "fault_kind": "stale_partition",
+      "reason": "stale_partition",
+      "retry_attempts": 3,
+      "backoff_ms": 3,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    },
+    {
+      "run_id": "run-0283",
+      "fault_kind": "transient_api",
+      "reason": "transient_api",
+      "retry_attempts": 2,
+      "backoff_ms": 1,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    },
+    {
+      "run_id": "run-0284",
+      "fault_kind": "transient_bigquery",
+      "reason": "transient_bigquery",
+      "retry_attempts": 3,
+      "backoff_ms": 3,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    },
+    {
+      "run_id": "run-0291",
+      "fault_kind": "transient_api",
+      "reason": "transient_api",
+      "retry_attempts": 2,
+      "backoff_ms": 1,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    },
+    {
+      "run_id": "run-0313",
+      "fault_kind": "transient_api",
+      "reason": "transient_api",
+      "retry_attempts": 3,
+      "backoff_ms": 3,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    },
+    {
+      "run_id": "run-0351",
+      "fault_kind": "transient_bigquery",
+      "reason": "transient_bigquery",
+      "retry_attempts": 4,
+      "backoff_ms": 7,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    },
+    {
+      "run_id": "run-0358",
+      "fault_kind": "transient_api",
+      "reason": "transient_api",
+      "retry_attempts": 3,
+      "backoff_ms": 3,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    },
+    {
+      "run_id": "run-0373",
+      "fault_kind": "transient_bigquery",
+      "reason": "transient_bigquery",
+      "retry_attempts": 2,
+      "backoff_ms": 1,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    },
+    {
+      "run_id": "run-0399",
+      "fault_kind": "transient_api",
+      "reason": "transient_api",
+      "retry_attempts": 4,
+      "backoff_ms": 7,
+      "retry_succeeded": false,
+      "final_state": "ESCALATED"
+    },
+    {
+      "run_id": "run-0406",
+      "fault_kind": "transient_api",
+      "reason": "transient_api",
+      "retry_attempts": 2,
+      "backoff_ms": 1,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    },
+    {
+      "run_id": "run-0408",
+      "fault_kind": "transient_bigquery",
+      "reason": "transient_bigquery",
+      "retry_attempts": 4,
+      "backoff_ms": 7,
+      "retry_succeeded": false,
+      "final_state": "ESCALATED"
+    },
+    {
+      "run_id": "run-0416",
+      "fault_kind": "transient_api",
+      "reason": "transient_api",
+      "retry_attempts": 4,
+      "backoff_ms": 7,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    },
+    {
+      "run_id": "run-0437",
+      "fault_kind": "transient_bigquery",
+      "reason": "transient_bigquery",
+      "retry_attempts": 2,
+      "backoff_ms": 1,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    },
+    {
+      "run_id": "run-0440",
+      "fault_kind": "transient_api",
+      "reason": "transient_api",
+      "retry_attempts": 2,
+      "backoff_ms": 1,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    },
+    {
+      "run_id": "run-0452",
+      "fault_kind": "transient_bigquery",
+      "reason": "transient_bigquery",
+      "retry_attempts": 2,
+      "backoff_ms": 1,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    },
+    {
+      "run_id": "run-0457",
+      "fault_kind": "transient_api",
+      "reason": "transient_api",
+      "retry_attempts": 2,
+      "backoff_ms": 1,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    },
+    {
+      "run_id": "run-0459",
+      "fault_kind": "transient_api",
+      "reason": "transient_api",
+      "retry_attempts": 3,
+      "backoff_ms": 3,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    },
+    {
+      "run_id": "run-0464",
+      "fault_kind": "transient_api",
+      "reason": "transient_api",
+      "retry_attempts": 4,
+      "backoff_ms": 7,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    },
+    {
+      "run_id": "run-0491",
+      "fault_kind": "transient_bigquery",
+      "reason": "transient_bigquery",
+      "retry_attempts": 2,
+      "backoff_ms": 1,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    },
+    {
+      "run_id": "run-0499",
+      "fault_kind": "transient_api",
+      "reason": "transient_api",
+      "retry_attempts": 4,
+      "backoff_ms": 7,
+      "retry_succeeded": false,
+      "final_state": "ESCALATED"
+    },
+    {
+      "run_id": "run-0500",
+      "fault_kind": "transient_api",
+      "reason": "transient_api",
+      "retry_attempts": 2,
+      "backoff_ms": 1,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    },
+    {
+      "run_id": "run-0515",
+      "fault_kind": "transient_api",
+      "reason": "transient_api",
+      "retry_attempts": 3,
+      "backoff_ms": 3,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    },
+    {
+      "run_id": "run-0517",
+      "fault_kind": "transient_bigquery",
+      "reason": "transient_bigquery",
+      "retry_attempts": 3,
+      "backoff_ms": 3,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    },
+    {
+      "run_id": "run-0519",
+      "fault_kind": "transient_bigquery",
+      "reason": "transient_bigquery",
+      "retry_attempts": 3,
+      "backoff_ms": 3,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    },
+    {
+      "run_id": "run-0545",
+      "fault_kind": "transient_api",
+      "reason": "transient_api",
+      "retry_attempts": 3,
+      "backoff_ms": 3,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    },
+    {
+      "run_id": "run-0561",
+      "fault_kind": "transient_api",
+      "reason": "transient_api",
+      "retry_attempts": 4,
+      "backoff_ms": 7,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    },
+    {
+      "run_id": "run-0569",
+      "fault_kind": "transient_bigquery",
+      "reason": "transient_bigquery",
+      "retry_attempts": 3,
+      "backoff_ms": 3,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    },
+    {
+      "run_id": "run-0579",
+      "fault_kind": "stale_partition",
+      "reason": "stale_partition",
+      "retry_attempts": 2,
+      "backoff_ms": 1,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    },
+    {
+      "run_id": "run-0581",
+      "fault_kind": "transient_api",
+      "reason": "transient_api",
+      "retry_attempts": 2,
+      "backoff_ms": 1,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    },
+    {
+      "run_id": "run-0607",
+      "fault_kind": "transient_api",
+      "reason": "transient_api",
+      "retry_attempts": 3,
+      "backoff_ms": 3,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    },
+    {
+      "run_id": "run-0630",
+      "fault_kind": "transient_api",
+      "reason": "transient_api",
+      "retry_attempts": 2,
+      "backoff_ms": 1,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    },
+    {
+      "run_id": "run-0647",
+      "fault_kind": "stale_partition",
+      "reason": "stale_partition",
+      "retry_attempts": 3,
+      "backoff_ms": 3,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    },
+    {
+      "run_id": "run-0657",
+      "fault_kind": "transient_bigquery",
+      "reason": "transient_bigquery",
+      "retry_attempts": 3,
+      "backoff_ms": 3,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    },
+    {
+      "run_id": "run-0664",
+      "fault_kind": "transient_api",
+      "reason": "transient_api",
+      "retry_attempts": 2,
+      "backoff_ms": 1,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    },
+    {
+      "run_id": "run-0695",
+      "fault_kind": "transient_api",
+      "reason": "transient_api",
+      "retry_attempts": 2,
+      "backoff_ms": 1,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    },
+    {
+      "run_id": "run-0700",
+      "fault_kind": "transient_bigquery",
+      "reason": "transient_bigquery",
+      "retry_attempts": 4,
+      "backoff_ms": 7,
+      "retry_succeeded": false,
+      "final_state": "ESCALATED"
+    },
+    {
+      "run_id": "run-0702",
+      "fault_kind": "failed_validation",
+      "reason": "failed_validation",
+      "retry_attempts": 4,
+      "backoff_ms": 7,
+      "retry_succeeded": false,
+      "final_state": "ESCALATED"
+    },
+    {
+      "run_id": "run-0728",
+      "fault_kind": "transient_api",
+      "reason": "transient_api",
+      "retry_attempts": 2,
+      "backoff_ms": 1,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    },
+    {
+      "run_id": "run-0729",
+      "fault_kind": "transient_api",
+      "reason": "transient_api",
+      "retry_attempts": 4,
+      "backoff_ms": 7,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    },
+    {
+      "run_id": "run-0742",
+      "fault_kind": "transient_api",
+      "reason": "transient_api",
+      "retry_attempts": 2,
+      "backoff_ms": 1,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    },
+    {
+      "run_id": "run-0780",
+      "fault_kind": "transient_api",
+      "reason": "transient_api",
+      "retry_attempts": 4,
+      "backoff_ms": 7,
+      "retry_succeeded": false,
+      "final_state": "ESCALATED"
+    },
+    {
+      "run_id": "run-0792",
+      "fault_kind": "transient_api",
+      "reason": "transient_api",
+      "retry_attempts": 2,
+      "backoff_ms": 1,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    },
+    {
+      "run_id": "run-0797",
+      "fault_kind": "transient_api",
+      "reason": "transient_api",
+      "retry_attempts": 3,
+      "backoff_ms": 3,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    },
+    {
+      "run_id": "run-0813",
+      "fault_kind": "transient_bigquery",
+      "reason": "transient_bigquery",
+      "retry_attempts": 4,
+      "backoff_ms": 7,
+      "retry_succeeded": false,
+      "final_state": "ESCALATED"
+    },
+    {
+      "run_id": "run-0821",
+      "fault_kind": "transient_api",
+      "reason": "transient_api",
+      "retry_attempts": 2,
+      "backoff_ms": 1,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    },
+    {
+      "run_id": "run-0831",
+      "fault_kind": "transient_api",
+      "reason": "transient_api",
+      "retry_attempts": 2,
+      "backoff_ms": 1,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    },
+    {
+      "run_id": "run-0844",
+      "fault_kind": "transient_api",
+      "reason": "transient_api",
+      "retry_attempts": 2,
+      "backoff_ms": 1,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    },
+    {
+      "run_id": "run-0863",
+      "fault_kind": "transient_api",
+      "reason": "transient_api",
+      "retry_attempts": 2,
+      "backoff_ms": 1,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    },
+    {
+      "run_id": "run-0872",
+      "fault_kind": "transient_api",
+      "reason": "transient_api",
+      "retry_attempts": 2,
+      "backoff_ms": 1,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    },
+    {
+      "run_id": "run-0895",
+      "fault_kind": "stale_partition",
+      "reason": "stale_partition",
+      "retry_attempts": 4,
+      "backoff_ms": 7,
+      "retry_succeeded": false,
+      "final_state": "ESCALATED"
+    },
+    {
+      "run_id": "run-0925",
+      "fault_kind": "transient_bigquery",
+      "reason": "transient_bigquery",
+      "retry_attempts": 3,
+      "backoff_ms": 3,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    },
+    {
+      "run_id": "run-0926",
+      "fault_kind": "transient_api",
+      "reason": "transient_api",
+      "retry_attempts": 2,
+      "backoff_ms": 1,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    },
+    {
+      "run_id": "run-0932",
+      "fault_kind": "transient_api",
+      "reason": "transient_api",
+      "retry_attempts": 3,
+      "backoff_ms": 3,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    },
+    {
+      "run_id": "run-0959",
+      "fault_kind": "transient_bigquery",
+      "reason": "transient_bigquery",
+      "retry_attempts": 2,
+      "backoff_ms": 1,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    },
+    {
+      "run_id": "run-0964",
+      "fault_kind": "transient_bigquery",
+      "reason": "transient_bigquery",
+      "retry_attempts": 2,
+      "backoff_ms": 1,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    },
+    {
+      "run_id": "run-0970",
+      "fault_kind": "transient_api",
+      "reason": "transient_api",
+      "retry_attempts": 2,
+      "backoff_ms": 1,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    },
+    {
+      "run_id": "run-0971",
+      "fault_kind": "transient_api",
+      "reason": "transient_api",
+      "retry_attempts": 3,
+      "backoff_ms": 3,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    },
+    {
+      "run_id": "run-0987",
+      "fault_kind": "transient_api",
+      "reason": "transient_api",
+      "retry_attempts": 3,
+      "backoff_ms": 3,
+      "retry_succeeded": true,
+      "final_state": "RECOVERED"
+    }
+  ]
+}

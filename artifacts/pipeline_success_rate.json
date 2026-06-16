@@ -1,0 +1,9 @@
+{
+  "pipeline_success_rate_pct": 99.0,
+  "sla_target_pct": 99.0,
+  "meets_sla": true,
+  "delivered": 990,
+  "escalated_blocked": 10,
+  "total_runs": 1000,
+  "definition": "delivered = runs that served correct/fresh data (SUCCESS|RECOVERED|DEGRADED)"
+}

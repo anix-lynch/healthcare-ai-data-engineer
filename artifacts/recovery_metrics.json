@@ -1,0 +1,12 @@
+{
+  "recoverable_incidents": 70,
+  "recovery_attempted_total": 73,
+  "recovery_successful": 63,
+  "recovery_failed": 10,
+  "auto_recovery_rate_pct": 90.0,
+  "auto_recovery_rate_incl_critical_pct": 86.3,
+  "target_pct": 80.0,
+  "meets_target": true,
+  "denominator": "RECOVERABLE-class incidents only (CRITICAL faults are escalations by design, not recovery targets \u2014 standard SRE auto-remediation rate). incl_critical variant adds CRITICAL retry attempts as a conservative check.",
+  "measured_by": "real bounded_retry against a drawn transient clear-time distribution \u2014 a buggy retry policy would lower this number"
+}

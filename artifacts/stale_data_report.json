@@ -1,0 +1,65 @@
+{
+  "stale_data_incidents": 0,
+  "invariant": "served_bad_data must be 0 \u2014 system prefers 'serve nothing' over 'serve bad data'",
+  "invariant_holds": true,
+  "blocked_promotions": [
+    {
+      "run_id": "run-0236",
+      "fault_kind": "reconciliation_mismatch",
+      "published": false
+    },
+    {
+      "run_id": "run-0281",
+      "fault_kind": "stale_source",
+      "published": false
+    },
+    {
+      "run_id": "run-0399",
+      "fault_kind": "transient_api",
+      "published": false
+    },
+    {
+      "run_id": "run-0408",
+      "fault_kind": "transient_bigquery",
+      "published": false
+    },
+    {
+      "run_id": "run-0499",
+      "fault_kind": "transient_api",
+      "published": false
+    },
+    {
+      "run_id": "run-0700",
+      "fault_kind": "transient_bigquery",
+      "published": false
+    },
+    {
+      "run_id": "run-0702",
+      "fault_kind": "failed_validation",
+      "published": false
+    },
+    {
+      "run_id": "run-0780",
+      "fault_kind": "transient_api",
+      "published": false
+    },
+    {
+      "run_id": "run-0813",
+      "fault_kind": "transient_bigquery",
+      "published": false
+    },
+    {
+      "run_id": "run-0895",
+      "fault_kind": "stale_partition",
+      "published": false
+    }
+  ],
+  "stale_source_handling": [
+    {
+      "run_id": "run-0281",
+      "note": [
+        "agent-facing API NOT refreshed \u2014 consumers kept last-good data"
+      ]
+    }
+  ]
+}

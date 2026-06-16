@@ -74,6 +74,13 @@ healthcare-ai-data-engineer/
 │   ├── anomaly.py                     ✅ IsolationForest auto-quarantine
 │   ├── explain.py                     ✅ Gemini explains a failure in plain language
 │   └── README.md · proof_*.json       📖 run-verified detect→recover→escalate
+├── reliability/                      Self-healing — failure taxonomy + bounded retry + SLA
+│   ├── core.py                       ✅ FailureSeverity · bounded_retry (exp backoff) · check_sla
+│   ├── harness.py                    ✅ fault-injection over real primitives → ledger.jsonl
+│   ├── metrics.py                    ✅ computes success/recovery/SLA from the ledger
+│   └── run_suite.py                  ✅ `make reliability` → artifacts/ (no hand-typed numbers)
+├── artifacts/                        🖼️  reliability evidence (success/recovery/SLA/failures)
+│   └── reliability_summary.md        📖 99% success · 86% recovery · 0 stale-data incidents
 ├── governance/                       Bullet 4 — least-privilege + masking
 │   ├── setup_governance.py            ✅ masked authorized view + view-only grant + retention
 │   ├── least_privilege_demo.py        ✅ 200 on safe view · 403 on base table

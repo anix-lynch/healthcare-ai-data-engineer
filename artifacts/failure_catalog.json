@@ -1,0 +1,78 @@
+{
+  "taxonomy": {
+    "transient_api": {
+      "severity": "RECOVERABLE",
+      "recovery_attempted": true
+    },
+    "transient_bigquery": {
+      "severity": "RECOVERABLE",
+      "recovery_attempted": true
+    },
+    "stale_partition": {
+      "severity": "RECOVERABLE",
+      "recovery_attempted": true
+    },
+    "failed_validation": {
+      "severity": "CRITICAL",
+      "recovery_attempted": false
+    },
+    "reconciliation_mismatch": {
+      "severity": "CRITICAL",
+      "recovery_attempted": false
+    },
+    "schema_drift": {
+      "severity": "CRITICAL",
+      "recovery_attempted": false
+    },
+    "quality_gate_breach": {
+      "severity": "CRITICAL",
+      "recovery_attempted": false
+    },
+    "stale_source": {
+      "severity": "CRITICAL",
+      "recovery_attempted": false
+    },
+    "elevated_quarantine": {
+      "severity": "WARNING",
+      "recovery_attempted": false
+    }
+  },
+  "severities": [
+    "INFO",
+    "WARNING",
+    "RECOVERABLE",
+    "CRITICAL"
+  ],
+  "this_batch_failures": {
+    "transient_bigquery": 20,
+    "transient_api": 45,
+    "elevated_quarantine": 2,
+    "stale_partition": 5,
+    "reconciliation_mismatch": 1,
+    "stale_source": 1,
+    "failed_validation": 1
+  },
+  "critical_blocked": [
+    {
+      "run_id": "run-0236",
+      "fault_kind": "reconciliation_mismatch",
+      "severity": "CRITICAL",
+      "published": false,
+      "escalation_reason": "reconciliation_mismatch: CRITICAL \u2014 promotion blocked, human paged"
+    },
+    {
+      "run_id": "run-0281",
+      "fault_kind": "stale_source",
+      "severity": "CRITICAL",
+      "published": false,
+      "escalation_reason": "stale_source: CRITICAL \u2014 promotion blocked, human paged"
+    },
+    {
+      "run_id": "run-0702",
+      "fault_kind": "failed_validation",
+      "severity": "CRITICAL",
+      "published": false,
+      "escalation_reason": "failed_validation: CRITICAL \u2014 promotion blocked, human paged"
+    }
+  ]
+}

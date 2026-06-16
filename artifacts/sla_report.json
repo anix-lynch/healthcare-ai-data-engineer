@@ -1,0 +1,38 @@
+{
+  "platform_slas": {
+    "freshness_hours": {
+      "threshold": 24.0,
+      "unit": "hours",
+      "comparator": "<="
+    },
+    "dbt_completion_min": {
+      "threshold": 10.0,
+      "unit": "minutes",
+      "comparator": "<="
+    },
+    "api_availability_pct": {
+      "threshold": 99.0,
+      "unit": "percent",
+      "comparator": ">="
+    },
+    "pipeline_success_pct": {
+      "threshold": 99.0,
+      "unit": "percent",
+      "comparator": ">="
+    }
+  },
+  "freshness_sla_hours": 24.0,
+  "runs_within_freshness_sla": 999,
+  "runs_breaching_freshness_sla": 1,
+  "sla_compliance_rate_pct": 99.9,
+  "pipeline_success_sla_pct": 99.0,
+  "meets_sla_compliance": true,
+  "sla_breach_events": [
+    {
+      "run_id": "run-0281",
+      "fault_kind": "stale_source",
+      "freshness_hours": 36.33,
+      "escalation_reason": "stale_source: CRITICAL \u2014 promotion blocked, human paged"
+    }
+  ]
+}
