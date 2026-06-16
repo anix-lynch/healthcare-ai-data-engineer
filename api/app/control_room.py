@@ -21,6 +21,8 @@ CHECKPOINT_PATH = REPO_ROOT / "data" / "quality" / "l1_checkpoint_report.json"
 IDENTITY_PATH = REPO_ROOT / "data" / "derived" / "patient_identity_map.json"
 OPENAPI_PATH = REPO_ROOT / "openapi_snapshot.json"
 
+from api.app.ingestion_evidence import build_ingestion_summary  # noqa: E402
+
 
 def _load_json(path: Path) -> dict[str, Any]:
     with path.open() as fh:
@@ -103,6 +105,10 @@ def build_control_room_payload() -> dict[str, Any]:
     checkpoint = _load_json(CHECKPOINT_PATH)
     identity = _load_json(IDENTITY_PATH)
     openapi = _load_json(OPENAPI_PATH)
+    ingestion = build_ingestion_summary()
+    batch = ingestion.get("worry_before_load", {}).get("batch", {})
+    stream = ingestion.get("worry_before_load", {}).get("stream", {})
+    clinical = checkpoint.get("checks", {}).get("clinical_plausibility", {})
 
     scanned_at = checkpoint.get("scanned_at", "")
     generated_at = datetime.now().astimezone()
@@ -128,7 +134,11 @@ def build_control_room_payload() -> dict[str, Any]:
             "checkpoint_report": str(CHECKPOINT_PATH.relative_to(REPO_ROOT)),
             "identity_map": str(IDENTITY_PATH.relative_to(REPO_ROOT)),
             "openapi_snapshot": str(OPENAPI_PATH.relative_to(REPO_ROOT)),
+            "bulk_load_proof": batch.get("proof"),
+            "stream_ingest_proof": stream.get("proof"),
+            "reconciliation_proof": ingestion.get("reconciliation", {}).get("proof"),
         },
+        "ingestion_gates": ingestion,
         "header": {
             "title": "📊 EXECUTIVE CONTROL ROOM",
             "subtitle": "Can humans, dashboards, apps, and AI trust hospital data right now?",
@@ -164,6 +174,40 @@ def build_control_room_payload() -> dict[str, Any]:
                         "display_value": f"{missing_keys_pct:.2f}% {'🟢' if missing_keys_pct < 1 else '🟡'}",
                         "truth_value": f"{unresolved_count}/{n_unique_patients} unresolved patient ids",
                         "evidence": "data/derived/patient_identity_map.json",
+                    },
+                    {
+                        "label": "Clinical nonsense blocked?",
+                        "display_value": (
+                            f"0 hard in enriched {'🟢' if clinical.get('n_hard_violations', 1) == 0 else '🔴'}"
+                        ),
+                        "truth_value": (
+                            f"{clinical.get('n_hard_violations', 'n/a')} hard · "
+                            f"{clinical.get('n_soft_warnings', 0)} soft in AI-facing slice"
+                        ),
+                        "evidence": "data/quality/clinical_plausibility.yaml",
+                    },
+                    {
+                        "label": "Batch worry-before-load?",
+                        "display_value": (
+                            f"{'PASS 🟢' if batch.get('reconcile_match') else 'FAIL 🔴'}"
+                        ),
+                        "truth_value": (
+                            f"{batch.get('source_rows', 'n/a')} source → "
+                            f"{batch.get('clean_rows', 'n/a')} clean + "
+                            f"{batch.get('quarantined_rows', 'n/a')} quarantine (BigQuery)"
+                        ),
+                        "evidence": batch.get("proof", "data/quality/proof_bulk_load.json"),
+                    },
+                    {
+                        "label": "Stream worry-before-load?",
+                        "display_value": (
+                            f"{'PASS 🟢' if stream.get('reconcile_match') else 'FAIL 🔴'}"
+                        ),
+                        "truth_value": (
+                            f"{stream.get('source_rows_streamed', 'n/a')} streamed · "
+                            f"clinical hard block={'yes' if stream.get('clinical_hard_block_exercised') else 'no'}"
+                        ),
+                        "evidence": stream.get("proof", "ingestion/proof_ingestion.json"),
                     },
                     {
                         "label": "Duplicate visits?",

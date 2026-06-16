@@ -1,18 +1,72 @@
 {
   "artifact": "B1_executive_dashboard",
   "display_mode": "control-room-mock",
-  "generated_at": "2026-05-29T15:28:03-07:00",
+  "generated_at": "2026-06-16T12:33:13-07:00",
   "source_truth": {
     "checkpoint_report": "data/quality/l1_checkpoint_report.json",
     "identity_map": "data/derived/patient_identity_map.json",
-    "openapi_snapshot": "openapi_snapshot.json"
+    "openapi_snapshot": "openapi_snapshot.json",
+    "bulk_load_proof": "data/quality/proof_bulk_load.json",
+    "stream_ingest_proof": "ingestion/proof_ingestion.json",
+    "reconciliation_proof": "quality/proof_reconciliation.json"
+  },
+  "ingestion_gates": {
+    "worry_before_load": {
+      "batch": {
+        "proof": "data/quality/proof_bulk_load.json",
+        "topology": "CSV \u2192 validate.py \u2192 clean \u2192 bchan-genai-lab.healthcare_analytics.raw_healthcare_data | quarantine \u2192 bchan-genai-lab.healthcare_analytics.quarantine_records",
+        "source_rows": 55500,
+        "clean_rows": 49986,
+        "quarantined_rows": 5514,
+        "reconcile_match": true,
+        "clinical_quarantine": true,
+        "verdict": "GREEN \u2014 55500 source rows \u2192 49986 in raw_healthcare_data + 5514 in quarantine_records; reconcile match=True; bad rows visible in BigQuery, not silently dropped."
+      },
+      "stream": {
+        "proof": "ingestion/proof_ingestion.json",
+        "source_rows_streamed": 21,
+        "decisions": {
+          "accepted_new": 13,
+          "accepted_revised": 1,
+          "quarantined": 7
+        },
+        "quarantine_reasons": {
+          "duplicate": 1,
+          "malformed_age": 1,
+          "bad_gender": 1,
+          "bad_admission_type": 1,
+          "missing_required": 2,
+          "late_arriving": 1,
+          "clinical_plausibility_hard": 1
+        },
+        "reconcile_match": true,
+        "clinical_hard_block_exercised": true,
+        "verdict": "GREEN \u2014 21 streamed rows reconcile to 13 new + 1 revised + 7 quarantined; messy modes + clinical hard blocks isolated with reasons; idempotent MERGE keeps the clean table at 14 rows on re-run."
+      }
+    },
+    "reconciliation": {
+      "proof": "quality/proof_reconciliation.json",
+      "grain_chain": {
+        "source_csv_rows": 55500,
+        "clean_raw_rows": 49986,
+        "bulk_quarantine_rows": 5514,
+        "total_quarantine_rows": 5521,
+        "exact_dupes_removed": 0,
+        "encounters_staging": 49986,
+        "canonical_patients_dim": 40235,
+        "resolver_artifact_patients": 40235
+      },
+      "all_pass": true,
+      "verdict": "GREEN \u2014 full grain chain reconciles end to end; warehouse dim_patient matches the resolver exactly."
+    },
+    "both_paths_green": true
   },
   "header": {
     "title": "\ud83d\udcca EXECUTIVE CONTROL ROOM",
     "subtitle": "Can humans, dashboards, apps, and AI trust hospital data right now?",
     "status": "PROD \ud83d\udfe2",
-    "updated_at": "12:51",
-    "truth_updated_at": "2026-05-29T12:51:59"
+    "updated_at": "12:31",
+    "truth_updated_at": "2026-06-16T12:31:10"
   },
   "panic": {
     "title": "\ud83d\ude42 SHOULD WE PANIC TODAY?",
@@ -39,7 +93,7 @@
         {
           "label": "QC passed?",
           "display_value": "100.0% \ud83d\udfe2",
-          "truth_value": "7/7 PASS",
+          "truth_value": "8/8 PASS",
           "evidence": "data/quality/l1_checkpoint_report.json"
         },
         {
@@ -47,6 +101,24 @@
           "display_value": "0.12% \ud83d\udfe2",
           "truth_value": "47/40235 unresolved patient ids",
           "evidence": "data/derived/patient_identity_map.json"
+        },
+        {
+          "label": "Clinical nonsense blocked?",
+          "display_value": "0 hard in enriched \ud83d\udfe2",
+          "truth_value": "0 hard \u00b7 0 soft in AI-facing slice",
+          "evidence": "data/quality/clinical_plausibility.yaml"
+        },
+        {
+          "label": "Batch worry-before-load?",
+          "display_value": "PASS \ud83d\udfe2",
+          "truth_value": "55500 source \u2192 49986 clean + 5514 quarantine (BigQuery)",
+          "evidence": "data/quality/proof_bulk_load.json"
+        },
+        {
+          "label": "Stream worry-before-load?",
+          "display_value": "PASS \ud83d\udfe2",
+          "truth_value": "21 streamed \u00b7 clinical hard block=yes",
+          "evidence": "ingestion/proof_ingestion.json"
         },
         {
           "label": "Duplicate visits?",
@@ -74,26 +146,26 @@
       "metrics": [
         {
           "label": "Latest ingest",
-          "display_value": "12:51 \ud83d\udfe1",
-          "truth_value": "2026-05-29T12:51:59",
+          "display_value": "12:31 \ud83d\udfe2",
+          "truth_value": "2026-06-16T12:31:10",
           "evidence": "data/quality/l1_checkpoint_report.json"
         },
         {
           "label": "Data delay",
-          "display_value": "156m \ud83d\udfe1",
+          "display_value": "2m \ud83d\udfe2",
           "truth_value": "generated_at - scanned_at",
           "evidence": "data/quality/l1_checkpoint_report.json"
         },
         {
           "label": "Stale alert",
-          "display_value": "ON \ud83d\udd34",
+          "display_value": "OFF \ud83d\udfe2",
           "truth_value": "freshness gate: <=60m means no stale alert",
           "evidence": "data/quality/l1_checkpoint_report.json"
         },
         {
           "label": "SLA met",
           "display_value": "100.0% \ud83d\udfe2",
-          "truth_value": "quality gate pass rate 7/7",
+          "truth_value": "quality gate pass rate 8/8",
           "evidence": "data/quality/l1_checkpoint_report.json"
         }
       ]

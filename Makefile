@@ -8,7 +8,7 @@ help:
 	@echo "  checkpoint         run healthcare-specific quality guards"
 	@echo "  patient-id         (re)build encounter→patient identity map"
 	@echo "  portfolio-snapshot generate A1 control-room payload"
-	@echo "  feast-apply        register L1.25 feature definitions (needs BigQuery)"
+	@echo "  load-bq             classify + load clean/quarantine to BigQuery (needs ADC)"
 	@echo "  enrich-sample      enrich 5 rows via Vertex (needs GCP_PROJECT_ID env)"
 	@echo "  test               pytest tests/"
 	@echo "  clean              remove __pycache__ + .pytest_cache"
@@ -37,6 +37,14 @@ enrich-sample:
 # Definitions are unit-tested offline by `make test`; this is the live apply.
 feast-apply:
 	cd feature-store && GOOGLE_CLOUD_PROJECT=bchan-genai-lab feast apply
+
+load-bq:
+	python scripts/load_bigquery.py
+
+reconcile:
+	python quality/reconcile.py
+
+release-gate: ge checkpoint test
 
 test:
 	pytest tests/ -v

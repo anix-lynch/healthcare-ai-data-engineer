@@ -87,6 +87,20 @@ def validate_record(rec: dict, seen: dict[tuple, datetime]) -> Decision:
         except (ValueError, TypeError, KeyError):
             reasons.append(f"malformed_date:{rec.get('date_of_admission')!r}")
 
+    if not reasons:
+        import sys
+        from pathlib import Path
+        scripts = Path(__file__).resolve().parents[1] / "scripts"
+        if str(scripts) not in sys.path:
+            sys.path.insert(0, str(scripts))
+        from clinical_plausibility import check_row, is_hard_violation
+        clinical = check_row(rec)
+        hard = [r for r in clinical if is_hard_violation(r)]
+        if hard:
+            reasons.extend(hard)
+        elif clinical:
+            reasons.extend(clinical)  # soft — quarantine on ingest path too
+
     if reasons:
         return Decision(record=rec, status="quarantined", reasons=reasons)
 

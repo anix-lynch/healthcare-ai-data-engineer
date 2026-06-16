@@ -1,7 +1,7 @@
 {
   "artifact": "B5_bigquery_dataset",
   "display_mode": "warehouse-explorer",
-  "generated_at": "2026-05-29T15:28:03-07:00",
+  "generated_at": "2026-06-16T12:33:13-07:00",
   "source_truth": {
     "checkpoint_report": "data/quality/l1_checkpoint_report.json",
     "dbt_models_root": "dbt-project/models",
@@ -9,8 +9,8 @@
   },
   "header": {
     "title": "\ud83c\udfed BIGQUERY WAREHOUSE EXPLORER",
-    "dataset": "healthcare_dw (storytelling alias over dbt core models)",
-    "subtitle": "BigQuery Data Warehouse"
+    "dataset": "bchan-genai-lab.healthcare_analytics (live BigQuery)",
+    "subtitle": "BigQuery Data Warehouse \u00b7 LIVE"
   },
   "datasets_panel": {
     "bronze": [
@@ -24,6 +24,7 @@
       "int_readmissions"
     ],
     "gold": [
+      "dim_admission_type",
       "dim_date",
       "dim_diagnosis",
       "dim_doctor",
@@ -40,8 +41,8 @@
     "grain": "1 row = 1 encounter",
     "owner": "Analytics Engineering",
     "purpose": "Encounter analytics + downstream API serving",
-    "last_refresh": "12:51",
-    "rows": 497,
+    "last_refresh": "12:33",
+    "rows": 49986,
     "actions": [
       "Preview Data",
       "Open SQL",
@@ -66,17 +67,17 @@
     }
   ],
   "sample_query": {
-    "query": "-- Proof queries aligned to real dbt core models in this repo.\n-- B5 portfolio panel should point to these instead of synthetic placeholders.\n\nselect\n  medical_condition,\n  count(*) as encounters\nfrom fact_patient_encounters\ngroup by 1\norder by encounters desc;",
-    "status": "\ud83d\udfe2 Query shape verified from repo SQL",
-    "runtime": "n/a (offline portfolio layer)",
-    "rows_returned": "n/a"
+    "query": "-- Proof queries aligned to real dbt core models in this repo.\n-- A5 portfolio panel should point to these instead of synthetic placeholders.\n\nselect\n  medical_condition,\n  count(*) as encounters\nfrom fact_patient_encounters\ngroup by 1\norder by encounters desc;",
+    "status": "\ud83d\udfe2 Ran live on BigQuery",
+    "runtime": "live",
+    "rows_returned": 49986
   },
   "warehouse_summary": {
     "datasets": 1,
-    "tables": 11,
-    "gold_models": 8,
-    "views": 0,
-    "last_refresh": "12:51",
+    "tables": 35,
+    "gold_models": 9,
+    "views": 11,
+    "last_refresh": "12:31",
     "warehouse_health": "Healthy \ud83d\udfe2"
   },
   "related_artifacts": [
@@ -85,10 +86,51 @@
     "B1 Executive Dashboard"
   ],
   "notes": [
-    "B5 is a storytelling/explorer layer over existing root dbt + checkpoint artifacts.",
-    "No parallel warehouse is created under portfolio.",
-    "Metrics and model inventory are derived from existing repo assets."
+    "B5 is LIVE on BigQuery: bchan-genai-lab.healthcare_analytics (35 objects, fact = 49,986 rows).",
+    "Built by dbt (staging \u2192 intermediate \u2192 marts) with passing tests."
   ],
+  "live_source": {
+    "backend": "bigquery",
+    "dataset": "bchan-genai-lab.healthcare_analytics",
+    "objects": [
+      "_stg_ingest_clean",
+      "bridge_report_reaction",
+      "bronze_adverse_events",
+      "dim_admission_type",
+      "dim_country",
+      "dim_date",
+      "dim_diagnosis",
+      "dim_doctor",
+      "dim_drug",
+      "dim_hospital",
+      "dim_insurance",
+      "dim_medication",
+      "dim_patient",
+      "dim_reaction",
+      "ext_dim_date",
+      "fact_adverse_events",
+      "fact_encounters_incremental",
+      "fact_encounters_optimized",
+      "fact_patient_encounters",
+      "governance_audit_log",
+      "int_encounters_enriched",
+      "int_readmissions",
+      "mart_drug_safety_kpis",
+      "mart_reaction_signals",
+      "mv_daily_encounters",
+      "pipeline_run_history",
+      "quarantine_records",
+      "raw_healthcare_data",
+      "raw_ingest_clean",
+      "raw_openfda_events",
+      "silver_adverse_events",
+      "stg_healthcare",
+      "stg_openfda_events",
+      "streaming_vitals",
+      "streaming_vitals_df"
+    ],
+    "fact_patient_encounters_rows": 49986
+  },
   "link_targets": {
     "B1 Executive Dashboard": "portfolio/B1_executive_dashboard/README.md",
     "B3 Data Marketplace": "portfolio/B3_dbt_documentation/README.md",

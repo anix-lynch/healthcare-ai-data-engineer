@@ -1,0 +1,135 @@
+{
+  "proof": "bulk_load_worry_before_load_bigquery",
+  "ts": "2026-06-16T19:30:50.549552+00:00",
+  "topology": "CSV \u2192 validate.py \u2192 clean \u2192 bchan-genai-lab.healthcare_analytics.raw_healthcare_data | quarantine \u2192 bchan-genai-lab.healthcare_analytics.quarantine_records",
+  "source_rows": 55500,
+  "clean_rows": 49986,
+  "quarantined_rows": 5514,
+  "quarantine_reasons": {
+    "duplicate": 5490,
+    "clinical_plausibility_hard": 24
+  },
+  "reconciliation": {
+    "source": 55500,
+    "clean_plus_quarantined": 55500,
+    "match": true
+  },
+  "shared_validator": "ingestion/validate.py + scripts/clinical_plausibility.py \u2014 same rules as /pubsub/push",
+  "sample_quarantined": [
+    {
+      "name": "VEroNicA jORdan",
+      "status": "quarantined",
+      "reasons": [
+        "duplicate:key_already_ingested"
+      ]
+    },
+    {
+      "name": "mIChaeL daviS",
+      "status": "quarantined",
+      "reasons": [
+        "duplicate:key_already_ingested"
+      ]
+    },
+    {
+      "name": "SaRAh JOhNsON",
+      "status": "quarantined",
+      "reasons": [
+        "duplicate:key_already_ingested"
+      ]
+    },
+    {
+      "name": "CHriSTOpheR RiCE",
+      "status": "quarantined",
+      "reasons": [
+        "duplicate:key_already_ingested"
+      ]
+    },
+    {
+      "name": "crySTal jOhNson",
+      "status": "quarantined",
+      "reasons": [
+        "duplicate:key_already_ingested"
+      ]
+    },
+    {
+      "name": "bRENDA StewArt",
+      "status": "quarantined",
+      "reasons": [
+        "duplicate:key_already_ingested"
+      ]
+    },
+    {
+      "name": "DaVId SmiTh",
+      "status": "quarantined",
+      "reasons": [
+        "duplicate:key_already_ingested"
+      ]
+    },
+    {
+      "name": "MichaEl jiMeNEz",
+      "status": "quarantined",
+      "reasons": [
+        "duplicate:key_already_ingested"
+      ]
+    },
+    {
+      "name": "EMILY KIng",
+      "status": "quarantined",
+      "reasons": [
+        "duplicate:key_already_ingested"
+      ]
+    },
+    {
+      "name": "chrisTOPHer smiTH",
+      "status": "quarantined",
+      "reasons": [
+        "duplicate:key_already_ingested"
+      ]
+    },
+    {
+      "name": "WalTER joHnsOn",
+      "status": "quarantined",
+      "reasons": [
+        "duplicate:key_already_ingested"
+      ]
+    },
+    {
+      "name": "DaNiEl MiLLer",
+      "status": "quarantined",
+      "reasons": [
+        "duplicate:key_already_ingested"
+      ]
+    },
+    {
+      "name": "JEFFrEy GaRCIA",
+      "status": "quarantined",
+      "reasons": [
+        "duplicate:key_already_ingested"
+      ]
+    },
+    {
+      "name": "michAEL gEORgE",
+      "status": "quarantined",
+      "reasons": [
+        "duplicate:key_already_ingested"
+      ]
+    },
+    {
+      "name": "KRISTa GiBsoN",
+      "status": "quarantined",
+      "reasons": [
+        "duplicate:key_already_ingested"
+      ]
+    }
+  ],
+  "bigquery": {
+    "project": "bchan-genai-lab",
+    "dataset": "healthcare_analytics",
+    "clean_table": "raw_healthcare_data",
+    "quarantine_table": "quarantine_records",
+    "clean_table_rows": 49986,
+    "quarantine_table_rows": 5514,
+    "enriched_rows_on_clean": 450
+  },
+  "verdict": "GREEN \u2014 55500 source rows \u2192 49986 in raw_healthcare_data + 5514 in quarantine_records; reconcile match=True; bad rows visible in BigQuery, not silently dropped."
+}

@@ -6,6 +6,7 @@
     "quarantine and reconcile",
     "dbt build and test",
     "validate AI-facing enrichment",
+    "clinical plausibility hard block",
     "publish to downstream consumers"
   ],
   "gates": [
@@ -35,6 +36,18 @@
       "exceptions_observed": []
     }
   ],
+  "clinical_plausibility": {
+    "gate": "clinical_plausibility_hard_block",
+    "rules": "data/quality/clinical_plausibility.yaml",
+    "boundaries": [
+      "enriched_ai_slice",
+      "bigquery.raw_healthcare_data"
+    ],
+    "hard_violations_enriched": 0,
+    "hard_violations_clean_bq": null,
+    "sample_offenders": [],
+    "success": true
+  },
   "total_expectations": 48,
   "passed_expectations": 48,
   "success": true,

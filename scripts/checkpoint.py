@@ -11,7 +11,7 @@ NOT in scope (do NOT claim these):
     - HIPAA compliance certification
     - SOC 2 controls
     - probabilistic entity resolution (rapidfuzz / SPLINK)
-    - clinical accuracy validation
+    - full clinical NLP / FDA-grade validation (see clinical_plausibility.yaml for rule-based plausibility only)
     - real PII redaction (this is detection only; redaction lives elsewhere)
     - Great Expectations / Soda / Monte Carlo replacement
     - ingestion contract enforcement at the source-system boundary
@@ -42,6 +42,11 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_CSV = REPO_ROOT / "data" / "raw" / "healthcare_dataset_enriched.csv"
 DEFAULT_REPORT = REPO_ROOT / "data" / "quality" / "l1_checkpoint_report.json"
+
+import sys
+if str(REPO_ROOT / "scripts") not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT / "scripts"))
+from clinical_plausibility import check_rows  # noqa: E402
 
 
 # ── Expected schema (drift target) ──────────────────────────────────────────
@@ -262,6 +267,11 @@ def check_audit_lineage_optional(headers: list[str]) -> dict:
     return {"audit_lineage_status": "complete", "verdict_critical": False}
 
 
+def check_clinical_plausibility(rows: list[dict]) -> dict:
+    """Semantic plausibility — schema-valid nonsense (e.g. age 2 + Viagra)."""
+    return check_rows(rows)
+
+
 # ── Runner ──────────────────────────────────────────────────────────────────
 def run(csv_path: Path, *, strict: bool = False) -> dict:
     if not csv_path.exists():
@@ -285,6 +295,7 @@ def run(csv_path: Path, *, strict: bool = False) -> dict:
             "pii_in_narrative":        check_pii_in_narrative(rows),
             "patient_identity":        check_patient_identity_resolvable(rows),
             "audit_lineage":           check_audit_lineage_optional(headers),
+            "clinical_plausibility":   check_clinical_plausibility(rows),
         },
     }
 
@@ -297,6 +308,10 @@ def run(csv_path: Path, *, strict: bool = False) -> dict:
         # In strict mode, also fail on unresolved patient identities and partial lineage
         if report["checks"]["patient_identity"].get("unresolved_count"):
             report["critical_failures"].append("patient_identity (strict)")
+            report["exit_code"] = 1
+        soft = report["checks"]["clinical_plausibility"].get("n_soft_warnings", 0)
+        if soft:
+            report["critical_failures"].append(f"clinical_plausibility_soft ({soft})")
             report["exit_code"] = 1
         if "partial" in report["checks"]["audit_lineage"].get("audit_lineage_status", ""):
             report["critical_failures"].append("audit_lineage (strict)")

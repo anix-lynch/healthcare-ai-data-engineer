@@ -1,17 +1,71 @@
 {
   "artifact": "B2_trust_dashboard",
   "display_mode": "trust-investigation-room",
-  "generated_at": "2026-05-29T15:28:03-07:00",
+  "generated_at": "2026-06-16T12:33:13-07:00",
   "source_truth": {
     "checkpoint_report": "data/quality/l1_checkpoint_report.json",
-    "identity_map": "data/derived/patient_identity_map.json"
+    "identity_map": "data/derived/patient_identity_map.json",
+    "bulk_load_proof": "data/quality/proof_bulk_load.json",
+    "stream_ingest_proof": "ingestion/proof_ingestion.json",
+    "reconciliation_proof": "quality/proof_reconciliation.json"
+  },
+  "ingestion_gates": {
+    "worry_before_load": {
+      "batch": {
+        "proof": "data/quality/proof_bulk_load.json",
+        "topology": "CSV \u2192 validate.py \u2192 clean \u2192 bchan-genai-lab.healthcare_analytics.raw_healthcare_data | quarantine \u2192 bchan-genai-lab.healthcare_analytics.quarantine_records",
+        "source_rows": 55500,
+        "clean_rows": 49986,
+        "quarantined_rows": 5514,
+        "reconcile_match": true,
+        "clinical_quarantine": true,
+        "verdict": "GREEN \u2014 55500 source rows \u2192 49986 in raw_healthcare_data + 5514 in quarantine_records; reconcile match=True; bad rows visible in BigQuery, not silently dropped."
+      },
+      "stream": {
+        "proof": "ingestion/proof_ingestion.json",
+        "source_rows_streamed": 21,
+        "decisions": {
+          "accepted_new": 13,
+          "accepted_revised": 1,
+          "quarantined": 7
+        },
+        "quarantine_reasons": {
+          "duplicate": 1,
+          "malformed_age": 1,
+          "bad_gender": 1,
+          "bad_admission_type": 1,
+          "missing_required": 2,
+          "late_arriving": 1,
+          "clinical_plausibility_hard": 1
+        },
+        "reconcile_match": true,
+        "clinical_hard_block_exercised": true,
+        "verdict": "GREEN \u2014 21 streamed rows reconcile to 13 new + 1 revised + 7 quarantined; messy modes + clinical hard blocks isolated with reasons; idempotent MERGE keeps the clean table at 14 rows on re-run."
+      }
+    },
+    "reconciliation": {
+      "proof": "quality/proof_reconciliation.json",
+      "grain_chain": {
+        "source_csv_rows": 55500,
+        "clean_raw_rows": 49986,
+        "bulk_quarantine_rows": 5514,
+        "total_quarantine_rows": 5521,
+        "exact_dupes_removed": 0,
+        "encounters_staging": 49986,
+        "canonical_patients_dim": 40235,
+        "resolver_artifact_patients": 40235
+      },
+      "all_pass": true,
+      "verdict": "GREEN \u2014 full grain chain reconciles end to end; warehouse dim_patient matches the resolver exactly."
+    },
+    "both_paths_green": true
   },
   "header": {
     "title": "\u2764\ufe0f TRUST INVESTIGATION ROOM",
     "subtitle": "Can we trust the patient and visit numbers?",
     "status": "PROD \ud83d\udfe2",
-    "updated_at": "12:51",
-    "truth_updated_at": "2026-05-29T12:51:59"
+    "updated_at": "12:31",
+    "truth_updated_at": "2026-06-16T12:31:10"
   },
   "current_status": {
     "headline": "Mostly healthy \u2014 1 issue needs attention (not patient-facing yet)",
@@ -113,6 +167,53 @@
         "Open recon query",
         "Open KPI definitions",
         "Open decision log"
+      ]
+    },
+    {
+      "rank": 7,
+      "label": "Clinical nonsense in AI slice?",
+      "value": 0,
+      "display_value": "0 hard \ud83d\udfe2",
+      "benchmark": "required =0 hard (e.g. toddler + Viagra)",
+      "evidence": [
+        "data/quality/clinical_plausibility.yaml",
+        "data/quality/l1_checkpoint_report.json",
+        "dbt-project/tests/assert_clinical_plausibility.sql"
+      ],
+      "nudges": [
+        "Show validation",
+        "Open dbt test",
+        "Open job log"
+      ]
+    },
+    {
+      "rank": 8,
+      "label": "Batch worry-before-load?",
+      "value": 100.0,
+      "display_value": "100% \ud83d\udfe2",
+      "benchmark": "source == clean + quarantine in BigQuery",
+      "evidence": [
+        "data/quality/proof_bulk_load.json",
+        "quality/proof_reconciliation.json"
+      ],
+      "nudges": [
+        "Open recon query",
+        "Open job log"
+      ]
+    },
+    {
+      "rank": 9,
+      "label": "Stream worry-before-load?",
+      "value": 100.0,
+      "display_value": "100% \ud83d\udfe2",
+      "benchmark": "streamed == accepted + quarantined before MERGE",
+      "evidence": [
+        "ingestion/proof_ingestion.json",
+        "ingestion/validate.py"
+      ],
+      "nudges": [
+        "Open job log",
+        "Show validation"
       ]
     }
   ],
@@ -266,9 +367,9 @@
     "Blast radar lines are nudges to where to fix first."
   ],
   "click_audit": {
-    "resolved_count": 34,
-    "unresolved_count": 0,
-    "coverage_pct": 100.0,
+    "resolved_count": 30,
+    "unresolved_count": 4,
+    "coverage_pct": 88.24,
     "resolved": [
       {
         "label": "Open KPI definitions",
@@ -296,16 +397,6 @@
         "exists": true
       },
       {
-        "label": "Open decision log",
-        "target": "ROADMAP.md",
-        "exists": true
-      },
-      {
-        "label": "Open diff",
-        "target": "ROADMAP.md",
-        "exists": true
-      },
-      {
         "label": "Open duplicate keys query",
         "target": "scripts/checkpoint.py",
         "exists": true
@@ -313,11 +404,6 @@
       {
         "label": "Open failing rows",
         "target": "data/derived/patient_identity_map.json",
-        "exists": true
-      },
-      {
-        "label": "Open incident thread",
-        "target": "ROADMAP.md",
         "exists": true
       },
       {
@@ -406,11 +492,6 @@
         "exists": true
       },
       {
-        "label": "Open ticket",
-        "target": "ROADMAP.md",
-        "exists": true
-      },
-      {
         "label": "Open upstream job",
         "target": ".github/workflows/quality.yml",
         "exists": true
@@ -441,6 +522,27 @@
         "exists": true
       }
     ],
-    "unresolved": []
+    "unresolved": [
+      {
+        "label": "Open decision log",
+        "target": "ROADMAP.md",
+        "reason": "target missing"
+      },
+      {
+        "label": "Open diff",
+        "target": "ROADMAP.md",
+        "reason": "target missing"
+      },
+      {
+        "label": "Open incident thread",
+        "target": "ROADMAP.md",
+        "reason": "target missing"
+      },
+      {
+        "label": "Open ticket",
+        "target": "ROADMAP.md",
+        "reason": "target missing"
+      }
+    ]
   }
 }

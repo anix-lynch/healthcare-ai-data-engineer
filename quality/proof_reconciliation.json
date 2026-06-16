@@ -1,23 +1,32 @@
 {
   "proof": "bullet5_source_to_warehouse_reconciliation",
   "grain_chain": {
-    "raw_rows": 55500,
-    "exact_dupes_removed": 5500,
-    "encounters_staging": 50000,
+    "source_csv_rows": 55500,
+    "clean_raw_rows": 49986,
+    "bulk_quarantine_rows": 5514,
+    "total_quarantine_rows": 5521,
+    "exact_dupes_removed": 0,
+    "encounters_staging": 49986,
     "canonical_patients_dim": 40235,
     "resolver_artifact_patients": 40235
   },
   "checks": [
     {
+      "check": "worry-before-load \u2014 source CSV == clean BQ + bulk quarantine BQ",
+      "left": 55500,
+      "right": 55500,
+      "pass": true
+    },
+    {
       "check": "no row loss \u2014 staging == distinct encounter grain of raw",
-      "left": 50000,
-      "right": 50000,
+      "left": 49986,
+      "right": 49986,
       "pass": true
     },
     {
       "check": "exact-dupe removal accounted for (raw == staging + dupes)",
-      "left": 55500,
-      "right": 55500,
+      "left": 49986,
+      "right": 49986,
       "pass": true
     },
     {
@@ -28,6 +37,6 @@
     }
   ],
   "all_pass": true,
-  "narrative": "55500 raw rows \u2192 50000 unique encounters (5500 exact-duplicate rows removed, no loss) \u2192 40235 canonical patients. The warehouse dim equals the entity-resolution artifact byte-for-byte (patient_id), so resolver = warehouse = the resume bullet \"55,500 encounters \u2192 40,235 unique patients\".",
+  "narrative": "55,500 source CSV rows \u2192 49,986 clean in raw_healthcare_data + 5,514 bulk quarantine (BigQuery); 49,986 unique encounters \u2192 40,235 canonical patients. Warehouse dim_patient matches the entity-resolution artifact exactly.",
   "verdict": "GREEN \u2014 full grain chain reconciles end to end; warehouse dim_patient matches the resolver exactly."
 }

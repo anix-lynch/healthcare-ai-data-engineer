@@ -56,4 +56,6 @@ jobs:
           path: |
             data/quality/ge_release_gate_report.json
             data/quality/l1_checkpoint_report.json
+            data/quality/proof_bulk_load.json
+            quality/proof_reconciliation.json
           retention-days: 30

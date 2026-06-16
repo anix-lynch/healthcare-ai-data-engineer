@@ -1,0 +1,22 @@
+# Clinical plausibility rules — Gate 3 semantic layer (not full clinical NLP).
+# Shared by checkpoint.py, ingestion/validate.py, load_bigquery.py, dbt test.
+version: 1
+
+adult_only_medications:
+  # Hard block: under-18 on adult-only meds (statins/ED drugs) — quarantine on batch + stream.
+  hard_min_age: 18
+  soft_min_age: 18
+  names:
+    - lipitor
+    - atorvastatin
+    - viagra
+    - sildenafil
+    - cialis
+    - tadalafil
+
+pediatric_allowed:
+  - penicillin
+  - ibuprofen
+  - paracetamol
+  - aspirin
+  - insulin

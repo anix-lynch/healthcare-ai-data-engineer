@@ -1,10 +1,10 @@
 {
   "proof": "bullet1_event_driven_ingestion_with_quarantine",
-  "source_rows_streamed": 20,
+  "source_rows_streamed": 21,
   "decisions": {
     "accepted_new": 13,
     "accepted_revised": 1,
-    "quarantined": 6
+    "quarantined": 7
   },
   "quarantine_reasons": {
     "duplicate": 1,
@@ -12,19 +12,21 @@
     "bad_gender": 1,
     "bad_admission_type": 1,
     "missing_required": 2,
-    "late_arriving": 1
+    "late_arriving": 1,
+    "clinical_plausibility_hard": 1
   },
   "messy_modes_exercised": [
     "bad_admission_type",
     "bad_gender",
+    "clinical_plausibility_hard",
     "duplicate",
     "late_arriving",
     "malformed_age",
     "missing_required"
   ],
   "reconciliation": {
-    "streamed": 20,
-    "accepted_plus_quarantined": 20,
+    "streamed": 21,
+    "accepted_plus_quarantined": 21,
     "match": true
   },
   "idempotent_merge": "clean rows upsert on natural_key (name|date_of_admission); re-running the same stream leaves the clean table row count unchanged",
@@ -141,6 +143,22 @@
       "name": "pia quinn",
       "status": "accepted_new",
       "reasons": []
+    },
+    {
+      "name": "tiny tyke",
+      "status": "quarantined",
+      "reasons": [
+        "clinical_plausibility_hard:age_3_with_adult_medication:viagra"
+      ]
     }
-  ]
+  ],
+  "bigquery": {
+    "project": "bchan-genai-lab",
+    "dataset": "healthcare_analytics",
+    "clean_table": "raw_ingest_clean",
+    "quarantine_table": "quarantine_records",
+    "clean_table_rows": 14,
+    "quarantine_table_rows": 5521
+  },
+  "verdict": "GREEN \u2014 21 streamed rows reconcile to 13 new + 1 revised + 7 quarantined; messy modes + clinical hard blocks isolated with reasons; idempotent MERGE keeps the clean table at 14 rows on re-run."
 }

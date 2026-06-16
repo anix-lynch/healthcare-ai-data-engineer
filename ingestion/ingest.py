@@ -83,6 +83,8 @@ def _write_bigquery(decisions: list) -> dict:
             "reasons": ";".join(d.reasons),
             "source_event_ts": str(d.record.get("event_ts", "")),
             "quarantined_at": datetime.now(timezone.utc).isoformat(),
+            "source": "stream_replay",
+            "natural_key": f"{str(d.record.get('name', '')).strip().lower()}|{d.record.get('date_of_admission', '')}",
         }
         for d in decisions
         if d.status == "quarantined"
@@ -112,11 +114,44 @@ def _write_bigquery(decisions: list) -> dict:
     """
     client.query(merge_sql).result()
 
-    # 2. Quarantine — deterministic from the fixed stream, so truncate-replace.
-    client.load_table_from_json(
-        quarantine_rows or [], QUARANTINE_TABLE,
-        job_config=bigquery.LoadJobConfig(schema=_q_schema(), write_disposition="WRITE_TRUNCATE"),
-    ).result()
+    # 2. Quarantine — replace only this run's source slice (keep bulk_load rows intact).
+    q_schema = _q_schema()
+    client.create_table(bigquery.Table(QUARANTINE_TABLE, schema=q_schema), exists_ok=True)
+    deleted = False
+    try:
+        client.query(
+            f"DELETE FROM `{QUARANTINE_TABLE}` WHERE source = 'stream_replay'"
+        ).result()
+        deleted = True
+    except Exception:
+        # Streaming-buffer rows block DELETE ~90m; rebuild table from bulk + stream slices.
+        bulk_rows = list(client.query(
+            f"SELECT * FROM `{QUARANTINE_TABLE}` WHERE source = 'bulk_load'"
+        ).result())
+        combined = []
+        for r in bulk_rows:
+            row = dict(r.items())
+            if hasattr(row.get("quarantined_at"), "isoformat"):
+                row["quarantined_at"] = row["quarantined_at"].isoformat()
+            combined.append(row)
+        combined.extend(quarantine_rows)
+        client.load_table_from_json(
+            combined,
+            QUARANTINE_TABLE,
+            job_config=bigquery.LoadJobConfig(
+                schema=q_schema,
+                write_disposition="WRITE_TRUNCATE",
+            ),
+        ).result()
+    if deleted and quarantine_rows:
+        client.load_table_from_json(
+            quarantine_rows,
+            QUARANTINE_TABLE,
+            job_config=bigquery.LoadJobConfig(
+                schema=q_schema,
+                write_disposition="WRITE_APPEND",
+            ),
+        ).result()
 
     clean_count = list(client.query(f"SELECT COUNT(*) c FROM `{CLEAN_TABLE}`").result())[0].c
     q_count = list(client.query(f"SELECT COUNT(*) c FROM `{QUARANTINE_TABLE}`").result())[0].c
@@ -161,10 +196,10 @@ def build_proof(decisions: list, bq_counts: dict | None) -> dict:
             **bq_counts,
         }
         proof["verdict"] = (
-            "GREEN — 20 streamed rows reconcile to "
+            f"GREEN — {n} streamed rows reconcile to "
             f"{proof['decisions']['accepted_new']} new + "
             f"{proof['decisions']['accepted_revised']} revised + {quarantined} quarantined; "
-            "5 messy modes isolated with reasons; idempotent MERGE keeps the clean table at "
+            "messy modes + clinical hard blocks isolated with reasons; idempotent MERGE keeps the clean table at "
             f"{bq_counts['clean_table_rows']} rows on re-run."
         )
     return proof

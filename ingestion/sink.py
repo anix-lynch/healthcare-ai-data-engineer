@@ -45,6 +45,8 @@ def quarantine_schema():
         bigquery.SchemaField("reasons", "STRING"),
         bigquery.SchemaField("source_event_ts", "STRING"),
         bigquery.SchemaField("quarantined_at", "TIMESTAMP"),
+        bigquery.SchemaField("source", "STRING"),          # pubsub | bulk_load | stream_replay
+        bigquery.SchemaField("natural_key", "STRING"),
     ]
 
 
@@ -87,11 +89,14 @@ def persist_decision(client, decision) -> str:
 
     if decision.status == "quarantined":
         client.create_table(bigquery.Table(QUARANTINE_TABLE, schema=quarantine_schema()), exists_ok=True)
+        nk = f"{str(decision.record.get('name', '')).strip().lower()}|{decision.record.get('date_of_admission', '')}"
         client.insert_rows_json(QUARANTINE_TABLE, [{
             "raw_json": json.dumps(decision.record),
             "reasons": ";".join(decision.reasons),
             "source_event_ts": str(decision.record.get("event_ts", "")),
             "quarantined_at": datetime.now(timezone.utc).isoformat(),
+            "source": os.environ.get("INGEST_SOURCE", "pubsub"),
+            "natural_key": nk,
         }])
         return "quarantined"
 
@@ -118,3 +123,43 @@ def persist_decision(client, decision) -> str:
     """
     client.query(merge_sql, job_config=bigquery.QueryJobConfig(query_parameters=params)).result()
     return decision.status
+
+
+def write_quarantine_batch(client, rows: list[dict], *, source: str = "bulk_load") -> int:
+    """Replace quarantine slice for one bulk load — visible in BigQuery console."""
+    from google.cloud import bigquery
+
+    client.create_table(bigquery.Table(QUARANTINE_TABLE, schema=quarantine_schema()), exists_ok=True)
+    client.query(
+        f"DELETE FROM `{QUARANTINE_TABLE}` WHERE source = @src",
+        job_config=bigquery.QueryJobConfig(
+            query_parameters=[bigquery.ScalarQueryParameter("src", "STRING", source)]
+        ),
+    ).result()
+    if not rows:
+        return 0
+
+    payload = []
+    now = datetime.now(timezone.utc).isoformat()
+    for item in rows:
+        rec = item.get("record") or item
+        payload.append({
+            "raw_json": json.dumps(rec if isinstance(rec, dict) else item),
+            "reasons": ";".join(item.get("reasons") or []),
+            "source_event_ts": str(rec.get("event_ts", "") if isinstance(rec, dict) else ""),
+            "quarantined_at": now,
+            "source": source,
+            "natural_key": item.get("natural_key") or "",
+        })
+
+    client.create_table(bigquery.Table(QUARANTINE_TABLE, schema=quarantine_schema()), exists_ok=True)
+    job = client.load_table_from_json(
+        payload,
+        QUARANTINE_TABLE,
+        job_config=bigquery.LoadJobConfig(
+            schema=quarantine_schema(),
+            write_disposition="WRITE_APPEND",
+        ),
+    )
+    job.result()
+    return len(payload)

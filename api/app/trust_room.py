@@ -11,6 +11,8 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 CHECKPOINT_PATH = REPO_ROOT / "data" / "quality" / "l1_checkpoint_report.json"
 IDENTITY_PATH = REPO_ROOT / "data" / "derived" / "patient_identity_map.json"
 
+from api.app.ingestion_evidence import build_ingestion_summary  # noqa: E402
+
 
 def _load_json(path: Path) -> dict[str, Any]:
     with path.open() as fh:
@@ -123,6 +125,10 @@ def build_trust_room_payload() -> dict[str, Any]:
     """Return the B2 payload that powers the trust investigation room."""
     checkpoint = _load_json(CHECKPOINT_PATH)
     identity = _load_json(IDENTITY_PATH)
+    ingestion = build_ingestion_summary()
+    batch = ingestion.get("worry_before_load", {}).get("batch", {})
+    stream = ingestion.get("worry_before_load", {}).get("stream", {})
+    clinical = checkpoint.get("checks", {}).get("clinical_plausibility", {})
     checks = checkpoint.get("checks", {})
     scanned_at = checkpoint.get("scanned_at", "")
     generated_at = datetime.now().astimezone().isoformat(timespec="seconds")
@@ -155,7 +161,11 @@ def build_trust_room_payload() -> dict[str, Any]:
         "source_truth": {
             "checkpoint_report": str(CHECKPOINT_PATH.relative_to(REPO_ROOT)),
             "identity_map": str(IDENTITY_PATH.relative_to(REPO_ROOT)),
+            "bulk_load_proof": batch.get("proof"),
+            "stream_ingest_proof": stream.get("proof"),
+            "reconciliation_proof": ingestion.get("reconciliation", {}).get("proof"),
         },
+        "ingestion_gates": ingestion,
         "header": {
             "title": "❤️ TRUST INVESTIGATION ROOM",
             "subtitle": "Can we trust the patient and visit numbers?",
@@ -222,6 +232,52 @@ def build_trust_room_payload() -> dict[str, Any]:
                 "benchmark": "good >=99 | strong >=99.9",
                 "evidence": ["data/quality/l1_checkpoint_report.json", "tests/test_checkpoint.py"],
                 "nudges": ["Open recon query", "Open KPI definitions", "Open decision log"],
+            },
+            {
+                "rank": 7,
+                "label": "Clinical nonsense in AI slice?",
+                "value": int(clinical.get("n_hard_violations", 0)),
+                "display_value": (
+                    f"{clinical.get('n_hard_violations', 0)} hard "
+                    f"{_light_from_max(clinical.get('n_hard_violations', 0), strong_max=0, good_max=0)}"
+                ),
+                "benchmark": "required =0 hard (e.g. toddler + Viagra)",
+                "evidence": [
+                    "data/quality/clinical_plausibility.yaml",
+                    "data/quality/l1_checkpoint_report.json",
+                    "dbt-project/tests/assert_clinical_plausibility.sql",
+                ],
+                "nudges": ["Show validation", "Open dbt test", "Open job log"],
+            },
+            {
+                "rank": 8,
+                "label": "Batch worry-before-load?",
+                "value": 100.0 if batch.get("reconcile_match") else 0.0,
+                "display_value": (
+                    f"{'100%' if batch.get('reconcile_match') else 'FAIL'} "
+                    f"{_light_from_pct(100.0 if batch.get('reconcile_match') else 0.0, strong=100.0, good=100.0)}"
+                ),
+                "benchmark": "source == clean + quarantine in BigQuery",
+                "evidence": [
+                    batch.get("proof", "data/quality/proof_bulk_load.json"),
+                    "quality/proof_reconciliation.json",
+                ],
+                "nudges": ["Open recon query", "Open job log"],
+            },
+            {
+                "rank": 9,
+                "label": "Stream worry-before-load?",
+                "value": 100.0 if stream.get("reconcile_match") else 0.0,
+                "display_value": (
+                    f"{'100%' if stream.get('reconcile_match') else 'FAIL'} "
+                    f"{_light_from_pct(100.0 if stream.get('reconcile_match') else 0.0, strong=100.0, good=100.0)}"
+                ),
+                "benchmark": "streamed == accepted + quarantined before MERGE",
+                "evidence": [
+                    stream.get("proof", "ingestion/proof_ingestion.json"),
+                    "ingestion/validate.py",
+                ],
+                "nudges": ["Open job log", "Show validation"],
             },
         ],
         "evidence_proof": [

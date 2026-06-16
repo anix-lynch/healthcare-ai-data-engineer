@@ -117,6 +117,63 @@ def _run_gate(context, datasource, *, asset_name: str, csv: str, suite: str, bui
     }
 
 
+def _clinical_hard_block_gate() -> dict:
+    """Semantic plausibility on PROMOTED boundaries only — not raw source CSV.
+
+    Raw source may contain rows that batch/stream quarantine before load.
+    We prove: enriched AI slice + live clean BigQuery table have zero hard blocks.
+    """
+    sys.path.insert(0, str(REPO / "scripts"))
+    from clinical_plausibility import check_row, is_hard_violation
+    import csv
+
+    offenders: list[dict] = []
+    for csv_path, label in [
+        (REPO / "data/raw/healthcare_dataset_enriched.csv", "enriched_ai_slice"),
+    ]:
+        with csv_path.open(newline="") as f:
+            rows = list(csv.DictReader(f))
+        for i, row in enumerate(rows):
+            hard = [r for r in check_row(row) if is_hard_violation(r)]
+            if hard:
+                offenders.append({
+                    "boundary": label,
+                    "row_index": i,
+                    "name": row.get("Name"),
+                    "age": row.get("Age"),
+                    "medication": row.get("Medication"),
+                    "reasons": hard,
+                })
+
+    bq_offenders = 0
+    try:
+        from google.cloud import bigquery
+
+        client = bigquery.Client(project=os.environ.get("GCP_PROJECT_ID", "bchan-genai-lab"))
+        bq_offenders = list(client.query(
+            """
+            SELECT COUNT(*) c
+            FROM `bchan-genai-lab.healthcare_analytics.raw_healthcare_data`
+            WHERE age < 18
+              AND LOWER(medication) IN (
+                'lipitor','atorvastatin','viagra','sildenafil','cialis','tadalafil'
+              )
+            """
+        ).result())[0].c
+    except Exception:
+        bq_offenders = None
+
+    return {
+        "gate": "clinical_plausibility_hard_block",
+        "rules": "data/quality/clinical_plausibility.yaml",
+        "boundaries": ["enriched_ai_slice", "bigquery.raw_healthcare_data"],
+        "hard_violations_enriched": len(offenders),
+        "hard_violations_clean_bq": bq_offenders,
+        "sample_offenders": offenders[:10],
+        "success": len(offenders) == 0 and (bq_offenders in (0, None)),
+    }
+
+
 def main() -> int:
     os.chdir(REPO)
     context = gx.get_context(project_root_dir=str(REPO))
@@ -142,6 +199,8 @@ def main() -> int:
     ]
     context.build_data_docs()
 
+    clinical = _clinical_hard_block_gate()
+
     proof = {
         "proof": "great_expectations_release_gate",
         "activity_bracket": [
@@ -150,12 +209,14 @@ def main() -> int:
             "quarantine and reconcile",
             "dbt build and test",
             "validate AI-facing enrichment",
+            "clinical plausibility hard block",
             "publish to downstream consumers",
         ],
         "gates": gates,
+        "clinical_plausibility": clinical,
         "total_expectations": sum(gate["expectations"] for gate in gates),
         "passed_expectations": sum(gate["passed"] for gate in gates),
-        "success": all(gate["success"] for gate in gates),
+        "success": all(gate["success"] for gate in gates) and clinical["success"],
         "boundary": (
             "GE validates contracts at source and AI-facing release boundaries. "
             "Duplicate disposition and no-row-loss accounting are proven separately by reconciliation."

@@ -47,8 +47,7 @@ SELECT
     -- Canonical patient identity — collapses case/spacing variants of the SAME
     -- name into one patient, byte-for-byte identical to scripts/patient_identity.py
     -- (`P-` + first 10 hex of SHA256 of the lower-cased, space-normalized name).
-    -- This is the entity resolver expressed in SQL: 55,500 encounters → 40,235
-    -- canonical patients, so the warehouse dim == the resolver artifact == the bullet.
+    -- Entity resolver in SQL: encounters → canonical patients (matches patient_identity.py).
     CONCAT('P-', SUBSTR(TO_HEX(SHA256(REPLACE(REPLACE(LOWER(patient_name), ' ', '_'), '_', ' '))), 1, 10)) AS patient_id,
 
     -- Clean column values
@@ -84,8 +83,8 @@ SELECT
     acuity_red_flags,
     holdout
 FROM source_data
--- Encounter grain = one row per (patient, admission date). The raw synthetic
--- feed repeats ~5,500 exact-duplicate rows; keep the most-complete one.
+-- Encounter grain = one row per (patient, admission date). Bulk load quarantines
+-- exact duplicates before landing; QUALIFY keeps the richest row if any slip through.
 QUALIFY ROW_NUMBER() OVER (
     PARTITION BY patient_name, date_of_admission
     ORDER BY discharge_date DESC, chief_complaint
