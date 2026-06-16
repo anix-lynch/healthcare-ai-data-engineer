@@ -1,0 +1,27 @@
+{
+  "_meta": {
+    "source": "durable case store \u2014 Baymax owns each case across time until CLOSED or ESCALATED. Status/decisions come from observing the outcome organ, not a script."
+  },
+  "case-mom": {
+    "case_id": "case-mom",
+    "patient_id": "mom-001",
+    "action_id": "ref-1",
+    "status": "OPEN",
+    "checks": 0,
+    "max_checks": 3,
+    "history": [],
+    "next_check_at": null,
+    "observed_verified": false
+  },
+  "case-dad": {
+    "case_id": "case-dad",
+    "patient_id": "dad-002",
+    "action_id": "dad-ref-1",
+    "status": "OPEN",
+    "checks": 0,
+    "max_checks": 3,
+    "history": [],
+    "next_check_at": null,
+    "observed_verified": true
+  }
+}

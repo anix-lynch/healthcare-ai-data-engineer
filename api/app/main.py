@@ -89,6 +89,14 @@ except Exception:  # pragma: no cover
         build_drug_risk = None  # type: ignore
 
 try:
+    from . import case_manager
+except Exception:  # pragma: no cover
+    try:
+        import case_manager  # type: ignore
+    except Exception:
+        case_manager = None  # type: ignore
+
+try:
     from .baymax_organs import (
         build_bed_ops,
         build_lab_status,
@@ -806,6 +814,22 @@ def read_case_status(correlation_id: str):
     if get_case_status is None:
         raise HTTPException(status_code=503, detail="case status adapter unavailable")
     return get_case_status(correlation_id)
+
+
+@app.get("/api/case/{case_id}")
+def read_case(case_id: str):
+    """Baymax CASE OWNERSHIP: the durable case Baymax owns across time."""
+    if case_manager is None:
+        raise HTTPException(status_code=503, detail="case manager unavailable")
+    return case_manager.get_case(case_id)
+
+
+@app.post("/api/case/{case_id}/advance")
+def advance_case(case_id: str):
+    """One tick: Baymax observes the real outcome and decides the next transition itself."""
+    if case_manager is None or get_outcome is None:
+        raise HTTPException(status_code=503, detail="case manager unavailable")
+    return case_manager.advance_case(case_id, get_outcome)
 
 
 if __name__ == "__main__":
