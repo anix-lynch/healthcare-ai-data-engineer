@@ -1,0 +1,5 @@
+{
+  "_meta": {"source": "DISCLOSED seed goals — the sqlite memory store starts empty on a fresh instance; a real upsert (POST /api/goal) overrides these. Generalizes: add a patient here."},
+  "mom-001": {"stated_request": "discharge fast", "inferred_goal": "safe discharge with low rebound risk", "preferences": ["plain-language nightly update"]},
+  "dad-002": {"stated_request": "avoid a hospital stay", "inferred_goal": "stable breathing, manage COPD at home", "preferences": ["call my daughter with updates"]}
+}

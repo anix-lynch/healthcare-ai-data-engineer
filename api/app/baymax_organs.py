@@ -19,29 +19,18 @@ NOW = "2026-06-15T19:00:00Z"
 DEFAULT_PATIENT = "mom-001"
 
 
-BED_OPS: Dict[str, Dict[str, Any]] = {
-    DEFAULT_PATIENT: {
-        "requested": True,
-        "registered": False,
-        "nurse_said_sent": True,
-        "ack": False,
-        "receiver": "bed_ops",
-        "requested_at": "2026-06-15T18:42:00Z",
-        "last_checked_at": NOW,
-        "note": "nurse marked sent; bed not yet registered in ops system",
-    }
-}
+def _load_workflow_store() -> Dict[str, Any]:
+    """Workflow state lives in a DISCLOSED data store, not in code. ack/ready are
+    computed from it; add a patient and Baymax runs for them."""
+    try:
+        return json.loads((Path(__file__).resolve().parent / "workflow_store.json").read_text(encoding="utf-8"))
+    except Exception:
+        return {"bed": {}, "labs": {}}
 
 
-LAB_STATUS: Dict[str, Dict[str, Any]] = {
-    DEFAULT_PATIENT: {
-        "ready": False,
-        "eta_days": 2,
-        "pending": ["creatinine", "eGFR"],
-        "last_result_at": "2026-06-13T09:15:00Z",
-        "blocking_reason": "renal panel is stale for a kidney-risk decision",
-    }
-}
+_WF = _load_workflow_store()
+BED_OPS: Dict[str, Dict[str, Any]] = _WF.get("bed", {})
+LAB_STATUS: Dict[str, Dict[str, Any]] = _WF.get("labs", {})
 
 
 OUTCOMES: Dict[str, Dict[str, Any]] = {
@@ -122,6 +111,7 @@ def build_bed_ops(patient_id: str = DEFAULT_PATIENT) -> Dict[str, Any]:
     payload["ack"] = bool(payload.get("registered") is True)
     payload["outcome_stage"] = "registered" if payload["ack"] else "waiting_for_ack"
     payload["reason_code"] = "BED_ACK_MISSING" if not payload["ack"] else "BED_ACK_CONFIRMED"
+    payload["lineage"] = {"source": "workflow_store.json", "computed": "ack = (registered is True)"}
     return payload
 
 
@@ -139,42 +129,74 @@ def build_lab_status(patient_id: str = DEFAULT_PATIENT) -> Dict[str, Any]:
     payload = dict(row)
     payload["available"] = True
     payload["patient_id"] = patient_id
+    payload["ready"] = len(payload.get("pending") or []) == 0
     payload["reason_code"] = "LABS_PENDING" if not payload["ready"] else "LABS_READY"
+    payload["lineage"] = {"source": "workflow_store.json", "computed": "ready = (no pending tests)"}
     return payload
 
 
 def build_tradeoff(body: Dict[str, Any] | None = None) -> Dict[str, Any]:
+    """Green: DERIVE the trade-off from this patient's real organs (state-diff +
+    drug-risk). No frozen A/B — the recommendation flips with the inputs."""
     body = body or {}
     patient_id = body.get("patient_id") or DEFAULT_PATIENT
-    options: List[Dict[str, Any]] = [
-        {
-            "id": "A",
-            "label": "repeat prior diuretic intensity",
-            "benefit": "may reduce swelling faster",
-            "risk": "higher kidney-risk now that CKD moved from stage 2 to stage 3",
-            "reversible": "medium",
-            "fits_today": False,
-            "counterfactual": "would have looked safer in the 2024 state",
-        },
-        {
-            "id": "B",
-            "label": "lower intensity plus renal review",
-            "benefit": "protects kidney function while workup completes",
-            "risk": "symptom relief may be slower",
-            "reversible": "high",
-            "fits_today": True,
-            "counterfactual": "if renal labs return reassuring, escalation can be reconsidered",
-        },
+    try:
+        from .state_diff import build_state_diff
+        from .drug_risk import build_drug_risk
+    except Exception:  # pragma: no cover
+        from state_diff import build_state_diff  # type: ignore
+        from drug_risk import build_drug_risk  # type: ignore
+
+    state = build_state_diff(patient_id)
+    drug = build_drug_risk(patient_id)
+
+    worse = [c for c in (state.get("changed") or []) if c.get("direction") == "worse"] \
+        if state.get("available") else []
+    state_worse = bool(worse)
+    renal_drugs = [d["drug"] for d in (drug.get("per_drug") or []) if d.get("renal_reaction_reports")] \
+        if drug.get("available") else []
+    renal_flag = bool(drug.get("cross_domain_flag")) if drug.get("available") else False
+    caution = state_worse or renal_flag
+
+    why_bits = []
+    if worse:
+        why_bits.append(", ".join(f"{c['field']} {c['from']}→{c['to']}" for c in worse))
+    if renal_drugs:
+        why_bits.append(f"{', '.join(renal_drugs)} has renal adverse-event reports in openFDA")
+    why = ("; ".join(why_bits) + " — kidney safety now outweighs speed."
+           if caution else "no worsening state and no renal drug signal — the prior approach may still apply.")
+
+    options = [
+        {"id": "A", "label": "repeat prior intensity (faster relief)",
+         "benefit": "may reduce symptoms faster", "risk": "higher organ risk given today's state",
+         "reversible": "medium", "fits_today": not caution},
+        {"id": "B", "label": "lower intensity + specialist review",
+         "benefit": "protects organ function while workup completes", "risk": "symptom relief may be slower",
+         "reversible": "high", "fits_today": caution},
     ]
+    reason_codes = []
+    if state_worse:
+        reason_codes.append("STATE_CHANGED")
+    if renal_flag:
+        reason_codes.append("RENAL_RISK_HIGHER")
+    reason_codes.append("HUMAN_REVIEW_REQUIRED" if caution else "NO_NEW_RISK")
+
     return {
+        "available": bool(state.get("available") or drug.get("available")),
         "patient_id": patient_id,
         "options": options,
-        "dimensions": ["speed of relief", "kidney safety", "fit to today's state"],
-        "recommend": "B",
-        "why": "CKD stage 3 makes kidney risk more expensive than speed for this decision.",
+        "dimensions": ["speed of relief", "organ safety", "fit to today's state"],
+        "recommend": "B" if caution else "A",
+        "why": why,
         "decision_type": "recommendation_preparation",
-        "requires_human_review": True,
-        "reason_codes": ["STATE_CHANGED", "RENAL_RISK_HIGHER", "HUMAN_REVIEW_REQUIRED"],
+        "requires_human_review": caution,
+        "reason_codes": reason_codes,
+        "lineage": {
+            "derived_from": ["state-diff", "drug-risk"],
+            "state_changed": state_worse,
+            "renal_drug_signal": renal_drugs,
+            "computed": "options + recommendation derived from this patient's state delta and drug-safety join",
+        },
     }
 
 
@@ -204,13 +226,24 @@ def _connect_goal_db() -> sqlite3.Connection:
     return conn
 
 
-def _default_goal(patient_id: str) -> Dict[str, Any]:
+def _seed_goal(patient_id: str) -> Dict[str, Any] | None:
+    """Disclosed seed (memory store is empty on a fresh instance). Read from a data
+    file, not hardcoded per patient — generalizes and is honestly labelled."""
+    try:
+        seeds = json.loads((Path(__file__).resolve().parent / "goals_seed.json").read_text(encoding="utf-8"))
+    except Exception:
+        return None
+    s = seeds.get(patient_id)
+    if not s:
+        return None
     return {
+        "available": True,
         "patient_id": patient_id,
-        "stated_request": "discharge fast",
-        "inferred_goal": "safe discharge with low rebound risk",
-        "preferences": ["plain-language nightly update"],
-        "source": "seed_memory",
+        "stated_request": s["stated_request"],
+        "inferred_goal": s["inferred_goal"],
+        "preferences": s.get("preferences", []),
+        "source": "seed_disclosed",
+        "lineage": {"source": "goals_seed.json", "note": "disclosed seed; a real POST /api/goal overrides it"},
         "updated_at": NOW,
     }
 
@@ -222,9 +255,10 @@ def get_goal(patient_id: str = DEFAULT_PATIENT) -> Dict[str, Any]:
             "FROM goals WHERE patient_id = ?",
             (patient_id,),
         ).fetchone()
-    if not row and patient_id == DEFAULT_PATIENT:
-        return _default_goal(patient_id)
     if not row:
+        seeded = _seed_goal(patient_id)
+        if seeded:
+            return seeded
         return {
             "available": False,
             "patient_id": patient_id,
@@ -269,8 +303,15 @@ def upsert_goal(body: Dict[str, Any]) -> Dict[str, Any]:
     return get_goal(patient_id)
 
 
+def _outcomes_store() -> Dict[str, Any]:
+    try:
+        return json.loads((Path(__file__).resolve().parent / "outcomes_store.json").read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+
+
 def get_outcome(action_id: str) -> Dict[str, Any]:
-    row = OUTCOMES.get(action_id)
+    row = _outcomes_store().get(action_id)
     if not row:
         return {
             "available": False,
@@ -287,23 +328,40 @@ def get_outcome(action_id: str) -> Dict[str, Any]:
     payload["reason_code"] = (
         "OUTCOME_NOT_VERIFIED" if not payload.get("real_world_verified") else "OUTCOME_VERIFIED"
     )
+    payload["lineage"] = {"source": "outcomes_store.json", "computed": "tool_success vs real_world_verified are distinct fields"}
     return payload
 
 
 def get_trajectory(patient_id: str = DEFAULT_PATIENT) -> Dict[str, Any]:
-    row = TRAJECTORIES.get(patient_id)
-    if not row:
-        return {
-            "available": False,
-            "patient_id": patient_id,
-            "points": [],
-            "slope": "unknown",
-            "branches": [],
-        }
-    payload = dict(row)
-    payload["available"] = True
-    payload["patient_id"] = patient_id
-    return payload
+    """Black: multi-timepoint trajectory COMPUTED from the patient's real admits in
+    the encounter corpus (same source as state-diff), not a frozen per-patient dict."""
+    corpus = Path(__file__).resolve().parents[2] / "data" / "raw" / "enriched_use_397.jsonl"
+    rows: List[Dict[str, Any]] = []
+    try:
+        for ln in corpus.read_text(encoding="utf-8").splitlines():
+            if not ln.strip():
+                continue
+            r = json.loads(ln)
+            if r.get("patient_id") == patient_id:
+                rows.append(r)
+    except Exception:
+        rows = []
+    if not rows:
+        return {"available": False, "patient_id": patient_id, "points": [], "slope": "unknown", "branches": []}
+    rows.sort(key=lambda r: str(r.get("Date of Admission", "")))
+    points = [{"date": r.get("Date of Admission"), "ckd_stage": r.get("ckd_stage"),
+               "condition": r.get("Medical Condition"), "admission": r.get("Admission Type")} for r in rows]
+    stages = [p["ckd_stage"] for p in points if isinstance(p["ckd_stage"], (int, float))]
+    slope = "worsening" if len(stages) >= 2 and stages[-1] > stages[0] else \
+            "improving" if len(stages) >= 2 and stages[-1] < stages[0] else "stable"
+    return {
+        "available": True,
+        "patient_id": patient_id,
+        "points": points,
+        "slope": slope,
+        "branches": [],
+        "lineage": {"source": "enriched_use_397.jsonl", "computed": "all admits for this patient_id, ordered by date"},
+    }
 
 
 def get_case_status(correlation_id: str) -> Dict[str, Any]:

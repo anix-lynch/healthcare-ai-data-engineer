@@ -108,7 +108,7 @@ function addDual(clinical, family) {
 }
 
 async function loadEvidence() {
-  const [root, retrieval, meds, signals, state, bed, lab, tradeoff, goal, classify, outcome, trajectory, caseStatus] =
+  const [root, retrieval, meds, signals, state, bed, lab, tradeoff, goal, classify, outcome, trajectory, caseStatus, drugRisk] =
     await Promise.all([
       getJson("/"),
       getJson(`/api/retrieve?q=${encodeURIComponent(COMPLAINT)}&k=5`),
@@ -123,8 +123,9 @@ async function loadEvidence() {
       getJson(`/api/outcome?action_id=${ACTION_ID}`),
       getJson(`/api/trajectory?patient_id=${PATIENT_ID}`),
       getJson(`/v1/cases/${CORRELATION_ID}/status`),
+      getJson(`/api/drug-risk?patient_id=${PATIENT_ID}`).catch(() => null),
     ]);
-  return { root, retrieval, meds, signals, state, bed, lab, tradeoff, goal, classify, outcome, trajectory, caseStatus };
+  return { root, retrieval, meds, signals, state, bed, lab, tradeoff, goal, classify, outcome, trajectory, caseStatus, drugRisk };
 }
 
 function buildSteps(data) {
@@ -155,6 +156,13 @@ function buildSteps(data) {
     {
       organ: "nose",
       html: `👃 Cheap signals run before expensive reasoning.${chipRow(signalChips)}<span style="color:var(--color-text-secondary);font-size:12px;">${data.signals.nose_read}</span>`,
+    },
+    {
+      organ: "nose",
+      kind: data.drugRisk?.cross_domain_flag ? "danger" : "",
+      html: data.drugRisk?.available
+        ? `👂 The openFDA whisper — Baymax joins <b>her own meds</b> against real FAERS adverse-event reports:${chipRow((data.drugRisk.per_drug || []).map((d) => chip(`${d.drug}: ${d.serious_reports} serious · ${d.renal_reaction_reports} renal`, d.renal_reaction_reports ? "var(--color-background-danger)" : "var(--color-background-warning)", d.renal_reaction_reports ? "var(--color-text-danger)" : "var(--color-text-warning)")))}<span style="font-size:12px;">She is at <b>${data.drugRisk.patient_renal_state}</b>. ${data.drugRisk.cross_domain_flag ? "A drug she takes has renal adverse-event reports — review before continuing it." : "No renal-specific conflict found."} <span style="color:var(--color-text-tertiary);">(population signal, not proof of causation)</span></span>`
+        : `👂 No medication record to cross-check against openFDA for this patient.`,
     },
     {
       organ: "nerves",
