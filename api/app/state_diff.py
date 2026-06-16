@@ -42,7 +42,7 @@ def _load_rows(patient_id: str) -> List[Dict[str, Any]]:
     return rows
 
 
-def build_state_diff(patient_id: str = "mom-001") -> Dict[str, Any]:
+def build_state_diff(patient_id: str = "__unknown__") -> Dict[str, Any]:
     rows = _load_rows(patient_id)
     if len(rows) < 2:
         return {

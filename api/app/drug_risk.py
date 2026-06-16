@@ -56,7 +56,7 @@ def _patient_record(patient_id: str) -> Dict[str, Any] | None:
     return rows[-1]
 
 
-def build_drug_risk(patient_id: str = "mom-001") -> Dict[str, Any]:
+def build_drug_risk(patient_id: str = "__unknown__") -> Dict[str, Any]:
     rec = _patient_record(patient_id)
     if not rec:
         return {"available": False, "patient_id": patient_id,

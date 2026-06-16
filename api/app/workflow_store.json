@@ -5,18 +5,38 @@
     "demonstrates": "mom-001 = nurse said sent but NOT registered (ack false); dad-002 = registered (ack true) to prove the logic generalizes, not a frozen mom-only answer"
   },
   "bed": {
-    "mom-001": {"requested": true, "nurse_said_sent": true, "registered": false,
-                "receiver": "bed_ops", "requested_at": "2026-06-15T18:42:00Z",
-                "note": "nurse marked sent; bed not yet registered in ops system"},
-    "dad-002": {"requested": true, "nurse_said_sent": true, "registered": true,
-                "receiver": "bed_ops", "requested_at": "2026-06-14T10:00:00Z",
-                "note": "bed registered in ops system"}
+    "mom-001": {
+      "requested": true,
+      "nurse_said_sent": true,
+      "registered": false,
+      "receiver": "bed_ops",
+      "requested_at": "2026-06-15T18:42:00Z",
+      "note": "nurse marked sent; bed not yet registered in ops system"
+    },
+    "dad-002": {
+      "requested": true,
+      "nurse_said_sent": true,
+      "registered": true,
+      "receiver": "bed_ops",
+      "requested_at": "2026-06-09T08:00:00Z",
+      "note": "bed registered in ops system"
+    }
   },
   "labs": {
-    "mom-001": {"pending": ["creatinine", "eGFR"], "eta_days": 2,
-                "last_result_at": "2026-06-13T09:15:00Z",
-                "blocking_reason": "renal panel is stale for a kidney-risk decision"},
-    "dad-002": {"pending": [], "eta_days": 0,
-                "last_result_at": "2026-06-14T08:00:00Z", "blocking_reason": ""}
+    "mom-001": {
+      "pending": [
+        "creatinine",
+        "eGFR"
+      ],
+      "eta_days": 2,
+      "last_result_at": "2026-06-13T09:15:00Z",
+      "blocking_reason": "renal panel is stale for a kidney-risk decision"
+    },
+    "dad-002": {
+      "pending": [],
+      "eta_days": 0,
+      "last_result_at": "2026-06-09T09:00:00Z",
+      "blocking_reason": ""
+    }
   }
 }

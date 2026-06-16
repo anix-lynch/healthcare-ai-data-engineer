@@ -16,7 +16,7 @@ from typing import Any, Dict, List
 
 
 NOW = "2026-06-15T19:00:00Z"
-DEFAULT_PATIENT = "mom-001"
+DEFAULT_PATIENT = "__unknown__"
 
 
 def _load_workflow_store() -> Dict[str, Any]:
@@ -350,10 +350,15 @@ def get_trajectory(patient_id: str = DEFAULT_PATIENT) -> Dict[str, Any]:
         return {"available": False, "patient_id": patient_id, "points": [], "slope": "unknown", "branches": []}
     rows.sort(key=lambda r: str(r.get("Date of Admission", "")))
     points = [{"date": r.get("Date of Admission"), "ckd_stage": r.get("ckd_stage"),
+               "fev1_pct": r.get("fev1_pct"), "egfr": r.get("egfr"),
                "condition": r.get("Medical Condition"), "admission": r.get("Admission Type")} for r in rows]
-    stages = [p["ckd_stage"] for p in points if isinstance(p["ckd_stage"], (int, float))]
-    slope = "worsening" if len(stages) >= 2 and stages[-1] > stages[0] else \
-            "improving" if len(stages) >= 2 and stages[-1] < stages[0] else "stable"
+    # slope is generic: higher-is-worse fields (ckd_stage) and lower-is-worse fields (fev1, egfr)
+    slope = "stable"
+    for field, higher_worse in (("ckd_stage", True), ("fev1_pct", False), ("egfr", False)):
+        vals = [r.get(field) for r in rows if isinstance(r.get(field), (int, float))]
+        if len(vals) >= 2 and vals[-1] != vals[0]:
+            slope = "worsening" if (vals[-1] > vals[0]) == higher_worse else "improving"
+            break
     return {
         "available": True,
         "patient_id": patient_id,

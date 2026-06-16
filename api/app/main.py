@@ -715,7 +715,7 @@ def get_signals():
 
 
 @app.get("/api/state-diff")
-def get_state_diff(patient_id: str = Query("mom-001", description="patient id")):
+def get_state_diff(patient_id: str = Query(..., description="patient id")):
     """
     Baymax NERVES ⚡ — longitudinal state-diff (completes Yellow).
     Returns past vs now + changed fields (e.g. CKD Stage 2 → 3). STUB: demo
@@ -727,7 +727,7 @@ def get_state_diff(patient_id: str = Query("mom-001", description="patient id"))
 
 
 @app.get("/api/drug-risk")
-def get_drug_risk(patient_id: str = Query("mom-001", description="patient id")):
+def get_drug_risk(patient_id: str = Query(..., description="patient id")):
     """
     Baymax CROSS-DOMAIN JOIN 👂×👃 — joins THIS patient's medications against real
     openFDA FAERS adverse-event reports (serious + renal reactions) and flags a
@@ -739,7 +739,7 @@ def get_drug_risk(patient_id: str = Query("mom-001", description="patient id")):
 
 
 @app.get("/api/ops/bed")
-def get_bed_ops(patient_id: str = Query("mom-001", description="patient id")):
+def get_bed_ops(patient_id: str = Query(..., description="patient id")):
     """
     Baymax ORANGE: workflow ACK truth.
 
@@ -753,7 +753,7 @@ def get_bed_ops(patient_id: str = Query("mom-001", description="patient id")):
 
 
 @app.get("/api/lab-status")
-def get_lab_status(patient_id: str = Query("mom-001", description="patient id")):
+def get_lab_status(patient_id: str = Query(..., description="patient id")):
     """Baymax ORANGE: lab readiness gate for kidney-risk decisions."""
     if build_lab_status is None:
         raise HTTPException(status_code=503, detail="lab status adapter unavailable")
@@ -769,7 +769,7 @@ def post_tradeoff(payload: Optional[dict] = Body(None)):
 
 
 @app.get("/api/goal")
-def read_goal(patient_id: str = Query("mom-001", description="patient id")):
+def read_goal(patient_id: str = Query(..., description="patient id")):
     """Baymax BLUE: recall the patient's/family's goal from memory."""
     if get_goal is None:
         raise HTTPException(status_code=503, detail="goal memory unavailable")
@@ -793,7 +793,7 @@ def read_outcome(action_id: str = Query(..., description="action id")):
 
 
 @app.get("/api/trajectory")
-def read_trajectory(patient_id: str = Query("mom-001", description="patient id")):
+def read_trajectory(patient_id: str = Query(..., description="patient id")):
     """Baymax BLACK: multi-timepoint patient trajectory with branch risks."""
     if get_trajectory is None:
         raise HTTPException(status_code=503, detail="trajectory adapter unavailable")

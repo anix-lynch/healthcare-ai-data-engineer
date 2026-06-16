@@ -1,9 +1,54 @@
 {
-  "_meta": {"source": "DISCLOSED workflow outcome store — distinguishes tool_success (the call returned ok) from real_world_verified (the side effect actually happened). Generalizes by action_id."},
-  "ref-1": {"stage": "submitted", "stages": ["drafted", "submitted", "accepted", "scheduled", "verified"],
-            "open": true, "patient_id": "mom-001", "action_type": "renal_review_referral",
-            "tool_success": true, "real_world_verified": false, "note": "referral sent but appointment not yet booked"},
-  "bed-1": {"stage": "requested", "stages": ["drafted", "requested", "accepted", "registered", "verified"],
-            "open": true, "patient_id": "mom-001", "action_type": "bed_request",
-            "tool_success": true, "real_world_verified": false, "note": "bed request submitted; bed ops has not registered the assignment"}
+  "_meta": {
+    "source": "DISCLOSED workflow outcome store — distinguishes tool_success (the call returned ok) from real_world_verified (the side effect actually happened). Generalizes by action_id."
+  },
+  "ref-1": {
+    "stage": "submitted",
+    "stages": [
+      "drafted",
+      "submitted",
+      "accepted",
+      "scheduled",
+      "verified"
+    ],
+    "open": true,
+    "patient_id": "mom-001",
+    "action_type": "renal_review_referral",
+    "tool_success": true,
+    "real_world_verified": false,
+    "note": "referral sent but appointment not yet booked"
+  },
+  "bed-1": {
+    "stage": "requested",
+    "stages": [
+      "drafted",
+      "requested",
+      "accepted",
+      "registered",
+      "verified"
+    ],
+    "open": true,
+    "patient_id": "mom-001",
+    "action_type": "bed_request",
+    "tool_success": true,
+    "real_world_verified": false,
+    "note": "bed request submitted; bed ops has not registered the assignment"
+  },
+  "dad-ref-1": {
+    "action_id": "dad-ref-1",
+    "stage": "verified",
+    "stages": [
+      "drafted",
+      "submitted",
+      "accepted",
+      "scheduled",
+      "verified"
+    ],
+    "open": false,
+    "patient_id": "dad-002",
+    "action_type": "pulmonology_referral",
+    "tool_success": true,
+    "real_world_verified": true,
+    "note": "pulmonology appointment booked and confirmed"
+  }
 }
