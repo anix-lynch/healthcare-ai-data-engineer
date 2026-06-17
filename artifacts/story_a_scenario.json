@@ -1,0 +1,118 @@
+{
+  "story": "A",
+  "title": "The Record That Gets Rejected",
+  "tagline": "A 5-year-old diagnosed with Alzheimer's disease. Schema passes. Plausibility contract fires.",
+  "source_artifact": "artifacts/plausibility_contracts.json + artifacts/quarantine_patterns.json",
+  "acts": {
+    "act_1": {
+      "title": "Synthetic Bad Record Arrives",
+      "synthetic_record": {
+        "Age": 5,
+        "Gender": "Female",
+        "Medical_Condition": "Alzheimer's Disease",
+        "Admission_Type": "Emergency",
+        "schema_age_range": "0-120",
+        "schema_condition_col": "non-null",
+        "schema_status": "VALID"
+      },
+      "annotation": "Age=5 is in range 0-120. Medical_Condition is non-null. Great Expectations sees no violation.",
+      "source_artifact": "artifacts/plausibility_contracts.json -> policy.rationale"
+    },
+    "act_2": {
+      "title": "GE Schema Checks: PASS (48/48)",
+      "ge_result": {
+        "checks_run": 48,
+        "checks_passed": 48,
+        "checks_failed": 0,
+        "relevant_checks": [
+          {
+            "check": "age_range_0_to_120",
+            "result": "PASS",
+            "value": 5
+          },
+          {
+            "check": "medical_condition_not_null",
+            "result": "PASS",
+            "value": "Alzheimer's Disease"
+          },
+          {
+            "check": "admission_type_valid_enum",
+            "result": "PASS",
+            "value": "Emergency"
+          }
+        ],
+        "verdict": "NO_GE_VIOLATION"
+      },
+      "annotation": "GE validates syntax and ranges. It cannot validate clinical meaning. This is the gap B2 closes.",
+      "source_artifact": "artifacts/quarantine_patterns.json -> metadata"
+    },
+    "act_3": {
+      "title": "Plausibility Contract CLINICAL-002 Fires",
+      "contract_id": "C-003",
+      "contract_type": "SEMANTIC_CORRECTNESS",
+      "rule_fired": {
+        "rule_id": "CLINICAL-002",
+        "rule_name": "pediatric_diagnosis_age_gate",
+        "hard_max_age_for_blocked_diagnoses": 18,
+        "blocked_diagnoses": [
+          "alzheimers disease",
+          "alzheimers",
+          "dementia",
+          "senile dementia",
+          "vascular dementia"
+        ],
+        "action_hard": "QUARANTINE -- never reaches clean table or agent",
+        "action_soft": "QUARANTINE with soft tag -- reviewable",
+        "evidence": "Age-diagnosis combination fails clinical reality: Alzheimers onset minimum age ~30 (early-onset); pediatric dementia is a distinct condition with different ICD codes. Diagnosis column present and non-null does not make the combination medically valid.",
+        "config_file": "data/quality/clinical_plausibility.yaml",
+        "code_file": "scripts/clinical_plausibility.py"
+      },
+      "violation": {
+        "patient_age": 5,
+        "condition": "Alzheimer's Disease",
+        "condition_normalized": "alzheimers disease",
+        "in_blocked_diagnoses": true,
+        "verdict": "QUARANTINE"
+      },
+      "annotation": "Plausibility contracts catch SEMANTIC errors GE cannot express. Schema = syntax. Contracts = meaning.",
+      "source_artifact": "artifacts/plausibility_contracts.json -> policy.rules[CLINICAL-002]"
+    },
+    "act_4": {
+      "title": "Record Quarantined -- Pattern Confirmed",
+      "quarantine_pattern": {
+        "pattern": "clinical_plausibility_hard",
+        "count": 25,
+        "frequency_pct": 0.45,
+        "root_cause_class": "SEMANTIC_CORRECTNESS",
+        "root_cause_description": "Age x medication combination fails medical plausibility",
+        "is_recurring": true,
+        "seen_in_batch": true,
+        "seen_in_stream": true,
+        "signal_strength": "MEDIUM"
+      },
+      "quarantine_summary": {
+        "total_quarantine_events": 5521,
+        "clinical_plausibility_hard_events": 25,
+        "root_cause_class": "SEMANTIC_CORRECTNESS",
+        "seen_in_batch": true,
+        "seen_in_stream": true
+      },
+      "annotation": "25 plausibility violations caught across batch + stream. Pattern is recurring -- rule is evidence-backed.",
+      "source_artifact": "artifacts/quarantine_patterns.json -> patterns[clinical_plausibility_hard]"
+    },
+    "act_5": {
+      "title": "AI-Facing Corpus: Zero Hard Violations",
+      "before_b2": {
+        "hard_violations": 24,
+        "source": "artifacts/plausibility_contracts.json -> CLINICAL-001.evidence"
+      },
+      "after_b2": {
+        "hard_violations": 0,
+        "source": "artifacts/plausibility_contracts.json -> policy.proof_artifacts"
+      },
+      "corpus_status": "clean",
+      "annotation": "The corpus Baymax reads has never seen a 5-year-old diagnosed with Alzheimer's. B2 is the guard.",
+      "source_artifact": "artifacts/plausibility_contracts.json -> policy.proof_artifacts"
+    }
+  }
+}

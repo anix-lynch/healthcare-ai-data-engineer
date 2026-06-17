@@ -1,12 +1,12 @@
 {
   "contract_id": "C-003",
   "contract_type": "SEMANTIC_CORRECTNESS",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "generated_at": "2026-06-16",
   "policy": {
     "name": "clinical_plausibility",
     "description": "Medical plausibility rules that GE cannot express -- semantic layer above schema",
-    "rationale": "A 3-year-old prescribed Viagra passes all GE schema checks (age 0-120, medication column present) but is clinically impossible. Schema contracts catch syntax; plausibility contracts catch semantics.",
+    "rationale": "A 5-year-old diagnosed with Alzheimers disease passes all GE schema checks (age 0-120, diagnosis column present) but is clinically impossible. Schema contracts catch syntax; plausibility contracts catch semantics.",
     "rules": [
       {
         "rule_id": "CLINICAL-001",
@@ -16,14 +16,31 @@
         "blocked_medications": [
           "lipitor",
           "atorvastatin",
-          "viagra",
           "sildenafil",
-          "cialis",
-          "tadalafil"
+          "tadalafil",
+          "metformin_adult_only",
+          "warfarin_pediatric_restricted"
         ],
         "action_hard": "QUARANTINE -- never reaches clean table or agent",
         "action_soft": "QUARANTINE with soft tag -- reviewable",
         "evidence": "24 violations caught in bulk load; 1 in stream replay; 0 in enriched AI corpus post-adoption",
+        "config_file": "data/quality/clinical_plausibility.yaml",
+        "code_file": "scripts/clinical_plausibility.py"
+      },
+      {
+        "rule_id": "CLINICAL-002",
+        "rule_name": "pediatric_diagnosis_age_gate",
+        "hard_max_age_for_blocked_diagnoses": 18,
+        "blocked_diagnoses": [
+          "alzheimers disease",
+          "alzheimers",
+          "dementia",
+          "senile dementia",
+          "vascular dementia"
+        ],
+        "action_hard": "QUARANTINE -- never reaches clean table or agent",
+        "action_soft": "QUARANTINE with soft tag -- reviewable",
+        "evidence": "Age-diagnosis combination fails clinical reality: Alzheimers onset minimum age ~30 (early-onset); pediatric dementia is a distinct condition with different ICD codes. Diagnosis column present and non-null does not make the combination medically valid.",
         "config_file": "data/quality/clinical_plausibility.yaml",
         "code_file": "scripts/clinical_plausibility.py"
       }

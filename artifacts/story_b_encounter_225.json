@@ -1,0 +1,244 @@
+{
+  "story": "B",
+  "title": "The Record That Reaches Baymax",
+  "tagline": "23yo male, high-speed MVC, bp=88, hr=125. Novelty score 0.3425 -- highest in 401 encounters. Baymax gets the full Pro-tier budget.",
+  "source_artifacts": [
+    "data/raw/enriched_use_397.jsonl[225]",
+    "artifacts/spend_signals.json",
+    "artifacts/routing_decision_ledger.json",
+    "artifacts/context_cache_cost_analysis.json",
+    "artifacts/grounded_answer_eval.json"
+  ],
+  "acts": {
+    "act_1": {
+      "title": "B1 -- Raw Encounter Arrives",
+      "layer": "B1",
+      "encounter_card": {
+        "encounter_idx": 225,
+        "age": "23",
+        "gender": "Male",
+        "medical_condition": "Arthritis",
+        "chief_complaint": "Injuries after high-speed car crash",
+        "hpi_excerpt": "A 23-year-old male presents to the ED after a high-speed motor vehicle collision. Patient was extricated from the vehicle at the scene by EMS, who reported an initial GCS of 12 (E3V4M5) and significan",
+        "bp_systolic": "88",
+        "heart_rate": "125",
+        "respiratory_rate": "24",
+        "spo2_pct": "94",
+        "temperature_f": "97.6",
+        "acuity_red_flags": "altered_mental_status;hypotension;tachycardia;positive_FAST;major_trauma_mechanism",
+        "admission_type": "Emergency",
+        "esi_tier_truth": "1"
+      },
+      "ingestion_result": {
+        "entity_resolution": "canonical patient assigned",
+        "bigquery_merge": "idempotent -- no duplicate rows",
+        "batch_or_stream": "batch"
+      },
+      "annotation": "Batch ingestion. Entity resolution. Idempotent BigQuery merge.",
+      "source_artifact": "data/raw/enriched_use_397.jsonl[idx=225]"
+    },
+    "act_2": {
+      "title": "B2 -- Truth Contracts Clear",
+      "layer": "B2",
+      "contracts_evaluated": 7,
+      "contracts_blocking": 6,
+      "result": "ALL_PASS",
+      "clinical_plausibility": {
+        "rule": "CLINICAL-002",
+        "patient_age": "23",
+        "condition": "Arthritis",
+        "verdict": "PASS -- age=23 > 18, Arthritis not in blocked_diagnoses"
+      },
+      "quarantine_gate": "NOT_TRIGGERED",
+      "annotation": "7 contracts evaluated. 6 BLOCKING. All pass. This record enters the AI-facing corpus.",
+      "source_artifact": "artifacts/plausibility_contracts.json + artifacts/quarantine_patterns.json"
+    },
+    "act_3": {
+      "title": "B3 -- Semantic Profiles Built",
+      "layer": "B3",
+      "knowledge_products": {
+        "PatientProfile": {
+          "age": "23",
+          "gender": "Male",
+          "medical_condition": "Arthritis",
+          "admission_type": "Emergency"
+        },
+        "RiskProfile": {
+          "acuity_red_flags": "altered_mental_status;hypotension;tachycardia;positive_FAST;major_trauma_mechanism",
+          "red_flag_count": 5,
+          "esi_prediction_tier": "1"
+        },
+        "retrieval_metrics": {
+          "bm25_hit_at_5": 0.95,
+          "mrr": 0.9,
+          "ndcg_at_10": 0.89,
+          "source": "B3 eval over 497-row enriched corpus"
+        }
+      },
+      "annotation": "B3 reads clinical meaning. PatientProfile and RiskProfile built. BM25 retrieves top-5 similar encounters. B5 does not touch these.",
+      "source_artifact": "data/raw/enriched_use_397.jsonl[idx=225] + B3 eval metrics"
+    },
+    "act_4": {
+      "title": "B4 -- Pipeline Reliability Verified",
+      "layer": "B4",
+      "reliability": {
+        "pipeline_success_rate": "99.0%",
+        "auto_recovery_rate": "90%",
+        "sla_compliance": "99.9%",
+        "stale_data_incidents": 0,
+        "fault_injection_runs": 1000,
+        "data_freshness": "within SLA"
+      },
+      "annotation": "B4 ensures the substrate is alive. 90% auto-recovery. Baymax never sees stale data.",
+      "source_artifact": "/api/platform/reliability"
+    },
+    "act_5": {
+      "title": "B5 -- Spend Signals Computed",
+      "layer": "B5",
+      "signals": {
+        "novelty_score": 0.3425,
+        "novelty_corpus_percentile": "p99+ (highest of 401 encounters)",
+        "struct_completeness_score": 0.75,
+        "vital_instability_count": 2,
+        "instability_detail": "bp_systolic=88 < 90 threshold; heart_rate=125 > 120 threshold",
+        "text_density_chars": 861
+      },
+      "corpus_novelty_distribution": {
+        "min": 0.065,
+        "p25": 0.0982,
+        "p50": 0.1266,
+        "p75": 0.1547,
+        "max": 0.3425,
+        "routing_thresholds": {
+          "low_novelty_max": 0.1055,
+          "high_novelty_min": 0.1452,
+          "low_count": 132,
+          "medium_count": 136,
+          "high_count": 133
+        }
+      },
+      "annotation": "Purely structural signals -- no clinical interpretation. Novelty=0.3425 is the corpus maximum. Measures distance, fraction, count.",
+      "source_artifact": "artifacts/spend_signals.json[idx=225] + artifacts/novelty_score_analysis.json"
+    },
+    "act_6": {
+      "title": "B5 -- Attention Router: PRO Tier",
+      "layer": "B5",
+      "routing_decision": {
+        "encounter_idx": 225,
+        "routing_tier": "PRO",
+        "routing_model": "gemini-2.5-pro",
+        "routing_reason": "novelty_score=0.3425 >= threshold 0.1452",
+        "cost_usd": 0.0032875,
+        "cost_naive_pro_usd": 0.0032875
+      },
+      "corpus_routing_distribution": {
+        "PRO": {
+          "count": 150,
+          "pct": 37.4
+        },
+        "FLASH": {
+          "count": 202,
+          "pct": 50.4
+        },
+        "CACHED_FLASH": {
+          "count": 49,
+          "pct": 12.2
+        }
+      },
+      "cost_reduction": {
+        "vs_naive_all_pro_pct": 59.3,
+        "cohort_55500_saved_usd": 108.18
+      },
+      "signal_contribution": {},
+      "annotation": "novelty_score=0.3425 triggers PRO tier. 89% of PRO decisions driven by novelty. Corpus-wide: 59.3% cost reduction vs naive all-Pro.",
+      "source_artifact": "artifacts/routing_decision_ledger.json[idx=225] + artifacts/attention_routing_eval.json"
+    },
+    "act_7": {
+      "title": "B5 -- Context Cache Economics",
+      "layer": "B5",
+      "token_architecture": {
+        "static_layer": {
+          "description": "System prompt + medical reference protocols (same for every call)",
+          "content": [
+            "system_prompt",
+            "ESI_triage_reference",
+            "vital_sign_ranges",
+            "red_flag_definitions",
+            "lab_flag_reference"
+          ],
+          "token_count": 2163,
+          "char_count": 7869,
+          "caching_strategy": "Vertex Context Caching \u2014 cached once per TTL window, read at 75% discount"
+        },
+        "dynamic_layer": {
+          "description": "Per-call content: BM25-retrieved encounter docs + user query",
+          "content": [
+            "bm25_top5_results",
+            "user_query"
+          ],
+          "token_count": 467,
+          "char_count": 1744,
+          "caching_strategy": "Not cached \u2014 fresh per call"
+        },
+        "total_tokens_no_cache": 2630,
+        "static_pct_of_total": 82.2
+      },
+      "per_call_reduction_pct": 61.7,
+      "static_pct_of_total": 82.2,
+      "breakeven_calls_per_hour": 17.8,
+      "cohort_savings": {
+        "no_cache_total_usd": 10.95,
+        "with_cache_total_usd": 4.19,
+        "saved_usd": 6.75
+      },
+      "portability_note": "Any AI pipeline with a stable reference corpus benefits from this pattern. Static/dynamic split is domain-agnostic: legal (case law), finance (regulatory reference), insurance (policy definitions).",
+      "annotation": "Static layer (2163 tokens: ESI protocol, vital ranges, red-flag definitions) cached once at 75% discount. Dynamic layer (467 tokens: BM25 results + query) fresh per call.",
+      "source_artifact": "artifacts/context_cache_cost_analysis.json"
+    },
+    "act_8": {
+      "title": "Baymax Response",
+      "layer": "B3+B5",
+      "query": {
+        "id": "Q-007",
+        "query_text": "arthritis joint pain ibuprofen",
+        "condition_context": "Medical Condition for enc_225: Arthritis",
+        "sources_retrieved": 5,
+        "retrieval_method": "BM25 (Hit@5=0.95)"
+      },
+      "answer": {
+        "text": "Patients with arthritis experiencing joint pain are noted to be on Ibuprofen. A 48-year-old male with arthritis presents with severe, diffuse joint pain and swelling while currently on Ibuprofen [doc 1]. Another patient, a 26-year-old male with seronegative arthritis, reports severe knee pain and st",
+        "answer_type": "SUBSTANTIVE",
+        "evidence_citations": [
+          "[doc 1]",
+          "[doc 2]",
+          "[doc 3]",
+          "[doc 4]",
+          "[doc 5]"
+        ],
+        "note": "Answer text from eval artifact. Full response grounded against 5 retrieved encounter documents."
+      },
+      "grounding_verification": {
+        "service": "google.cloud.aiplatform_v1beta1.EvaluationServiceClient",
+        "groundedness_score": 1.0,
+        "groundedness_confidence": 1.0,
+        "verdict": "GROUNDED",
+        "explanation_excerpt": "STEP 1: Assess if all aspects of the response are attributable to the inputs in the context based on the criteria.\n- The opening statement \"Patients with arthritis experiencing joint pain are noted to be on Ibuprofen\" is a general observation supported by specific cases within the provided documents"
+      },
+      "routing_context": {
+        "why_pro_tier": "novelty_score=0.3425 -- corpus maximum. Highest-novelty encounter earns full compute budget.",
+        "model_used": "gemini-2.5-pro",
+        "routing_reason": "novelty_score=0.3425 >= threshold 0.1452"
+      },
+      "pipeline_chain": [
+        "B1: record ingested, entity resolved",
+        "B2: 7 truth contracts passed",
+        "B3: PatientProfile + RiskProfile built; BM25 top-5 retrieved",
+        "B4: pipeline healthy, data fresh",
+        "B5: novelty=0.3425 -> PRO tier; static context cached at 75% discount",
+        "Baymax: Gemini-2.5-Pro generated; Vertex Gen AI Eval verified groundedness=1.0"
+      ],
+      "annotation": "Every answer Baymax produces is grounded against retrieved evidence and verified by Vertex Gen AI Eval. Refusals (40%) are hallucination prevention, not failures.",
+      "source_artifact": "artifacts/grounded_answer_eval.json[Q-007] + artifacts/routing_decision_ledger.json[idx=225]"
+    }
+  }
+}

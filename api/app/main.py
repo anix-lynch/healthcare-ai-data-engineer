@@ -11,6 +11,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from typing import Optional, List
+import json
 import pandas as pd
 from datetime import datetime
 import os
@@ -601,6 +602,33 @@ def get_warehouse_room():
 def get_portfolio_a5():
     """Alias for the B5 warehouse-explorer payload."""
     return build_warehouse_room_payload()
+
+
+@app.get("/api/storyboard/a")
+def get_storyboard_a():
+    """Story A: The Record That Gets Rejected.
+    Pre-assembled payload: synthetic bad record, GE pass, CLINICAL-002 violation, quarantine proof.
+    Every field carries source_artifact tracing to the originating artifact file.
+    """
+    artifact_path = BASE_DIR / "artifacts" / "story_a_scenario.json"
+    if not artifact_path.exists():
+        raise HTTPException(status_code=404, detail="story_a_scenario.json not found — run quality/build_story_artifacts.py")
+    with open(artifact_path) as f:
+        return json.load(f)
+
+
+@app.get("/api/storyboard/b")
+def get_storyboard_b():
+    """Story B: The Record That Reaches Baymax (enc_225, novelty=0.3425, PRO tier).
+    Pre-assembled B1->B5 payload: encounter card, trust contracts, semantic profiles,
+    reliability health, spend signals, routing decision, cache economics, grounded answer.
+    Every field carries source_artifact tracing to the originating artifact file.
+    """
+    artifact_path = BASE_DIR / "artifacts" / "story_b_encounter_225.json"
+    if not artifact_path.exists():
+        raise HTTPException(status_code=404, detail="story_b_encounter_225.json not found — run quality/build_story_artifacts.py")
+    with open(artifact_path) as f:
+        return json.load(f)
 
 
 @app.get("/api/search")
