@@ -4,22 +4,48 @@
   "method": "bm25_okapi",
   "corpus": "data/raw/enriched_use_397.jsonl",
   "corpus_size_rows": 497,
-  "enriched_fields": ["chief_complaint", "hpi", "physician_note", "Medical Condition", "Medication", "esi_tier_truth"],
+  "enriched_fields": [
+    "chief_complaint",
+    "hpi",
+    "physician_note",
+    "Medical Condition",
+    "Medication",
+    "esi_tier_truth"
+  ],
   "golden_query_set": "data/quality/golden_retrieval_set.json",
   "n_queries": 20,
   "metrics": {
     "hit_at_5": 0.95,
-    "mrr": 0.90,
+    "mrr": 0.9,
     "ndcg_at_10": 0.8921,
     "p95_latency_ms": 1
   },
   "grounding_endpoint": "/api/ask",
-  "grounding_mechanism": "BM25 top-K retrieval → numbered [doc N] context block → Gemini answer constrained to retrieved evidence with mandatory [doc N] citations; returns grounded=false gracefully when Vertex unavailable",
+  "grounding_mechanism": "BM25 top-K retrieval \u2192 numbered [doc N] context block \u2192 Gemini answer constrained to retrieved evidence with mandatory [doc N] citations; returns grounded=false gracefully when Vertex unavailable",
   "vertex_dependency": "gemini-2.5-flash via vertexai SDK; grounded=false fallback when unavailable",
   "bragable_bar_check": {
-    "industry_baseline_hit_at_5_sparse": 0.70,
+    "industry_baseline_hit_at_5_sparse": 0.7,
     "achieved": 0.95,
     "verdict": "ABOVE_BAR"
   },
-  "note": "BM25 chosen over Vertex AI Search because corpus is 497 rows — managed index adds no retrieval quality benefit at this scale while adding operational overhead."
+  "note": "BM25 chosen over Vertex AI Search because corpus is 497 rows \u2014 managed index adds no retrieval quality benefit at this scale while adding operational overhead.",
+  "vertex_genai_eval": {
+    "service": "google.cloud.aiplatform_v1beta1.EvaluationServiceClient",
+    "endpoint": "us-central1-aiplatform.googleapis.com",
+    "gcp_api": "aiplatform.googleapis.com (already enabled)",
+    "eval_date": "2026-06-16",
+    "n_queries": 20,
+    "grounded_response_rate_substantive": 0.9167,
+    "refusal_rate": 0.4,
+    "n_grounded_substantive": 11,
+    "n_substantive_answers": 12,
+    "n_refusals": 8,
+    "groundedness_score_avg": 0.55,
+    "cost_per_call_usd": 2.2e-05,
+    "cost_20_queries_usd": 0.00043,
+    "artifact": "artifacts/grounded_answer_eval.json",
+    "interpretation": "grounded_response_rate_substantive=91.7%: of 12 queries where Gemini produced a substantive answer, 11 were verified fully attributable to retrieved context. 8/20 queries triggered a correct refusal (hallucination prevention) on out-of-corpus queries (septic shock, acute MI, neutropenic fever, pediatric). 1/20 partial hallucination detected (Q-002)."
+  },
+  "grounded_endpoint": "/api/ask",
+  "grounded_mechanism": "BM25 top-K retrieval \u2192 numbered [doc N] context block \u2192 Gemini generation with citation-forcing system prompt \u2192 Vertex Gen AI Eval groundedness verification (aiplatform.googleapis.com). VERIFY_GROUNDEDNESS=true env var enables per-answer verification."
 }
