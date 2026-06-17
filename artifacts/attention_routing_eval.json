@@ -1,0 +1,57 @@
+{
+  "metadata": {
+    "generated": "2026-06-16",
+    "n_encounters": 401,
+    "thresholds": {
+      "novelty_high": 0.1452,
+      "novelty_low": 0.1055,
+      "completeness_low": 0.75,
+      "instability_high": 2,
+      "source": "corpus tertiles (p33/p67) \u2014 calibrated from real novelty distribution, not hand-tuned"
+    },
+    "token_architecture": {
+      "static_tokens": 2163,
+      "dynamic_tokens": 467,
+      "static_pct": 82.2
+    },
+    "b5_note": "Routing is governed by spend_signals, not clinical risk. Same architecture applies to finance, legal, insurance, customer support.",
+    "portability": {
+      "pattern": "4 structural signals, domain-agnostic",
+      "healthcare": "novelty=embedding distance, completeness=field fill rate, instability=vital boundary violations",
+      "finance": "novelty=distance from known-pattern corpus, completeness=transaction field fill rate, instability=metric boundary violations",
+      "insurance": "novelty=distance from settled-claim corpus, completeness=documentation fill rate, instability=claim exception count",
+      "legal": "novelty=distance from precedent corpus, completeness=contract field fill rate, instability=clause flag count",
+      "support": "novelty=distance from known-issue corpus, completeness=ticket field fill rate, instability=SLA breach count"
+    }
+  },
+  "routing_distribution": {
+    "PRO": {
+      "count": 150,
+      "pct": 37.4
+    },
+    "FLASH": {
+      "count": 202,
+      "pct": 50.4
+    },
+    "CACHED_FLASH": {
+      "count": 49,
+      "pct": 12.2
+    }
+  },
+  "cost_analysis": {
+    "naive_all_pro_per_call_usd": 0.0032875,
+    "governed_avg_per_call_usd": 0.0013383,
+    "per_call_reduction_pct": 59.3,
+    "context_caching_reduction_pct": 61.7,
+    "combined_reduction_pct": 59.3,
+    "cohort_55500_naive_usd": 182.46,
+    "cohort_55500_governed_usd": 74.28,
+    "cohort_55500_saved_usd": 108.18
+  },
+  "signal_contribution_analysis": {
+    "pro_triggered_by_novelty": 133,
+    "pro_triggered_by_completeness": 2,
+    "pro_triggered_by_instability": 15,
+    "cached_flash_count": 49
+  }
+}

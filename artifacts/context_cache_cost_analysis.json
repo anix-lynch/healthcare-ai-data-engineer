@@ -1,0 +1,63 @@
+{
+  "metadata": {
+    "measured_at": "2026-06-16",
+    "model": "gemini-2.5-flash",
+    "method": "Vertex AI count_tokens API \u2014 actual token counts, not estimates",
+    "b5_note": "60% reduction is the ARCHITECTURAL TARGET. Actual savings require authoring the static reference layer and deploying Context Caching. These numbers prove the economics.",
+    "portability": "Any AI pipeline with a stable reference corpus benefits from this pattern. Static/dynamic split is domain-agnostic: legal (case law), finance (regulatory reference), insurance (policy definitions)."
+  },
+  "token_architecture": {
+    "static_layer": {
+      "description": "System prompt + medical reference protocols (same for every call)",
+      "content": [
+        "system_prompt",
+        "ESI_triage_reference",
+        "vital_sign_ranges",
+        "red_flag_definitions",
+        "lab_flag_reference"
+      ],
+      "token_count": 2163,
+      "char_count": 7869,
+      "caching_strategy": "Vertex Context Caching \u2014 cached once per TTL window, read at 75% discount"
+    },
+    "dynamic_layer": {
+      "description": "Per-call content: BM25-retrieved encounter docs + user query",
+      "content": [
+        "bm25_top5_results",
+        "user_query"
+      ],
+      "token_count": 467,
+      "char_count": 1744,
+      "caching_strategy": "Not cached \u2014 fresh per call"
+    },
+    "total_tokens_no_cache": 2630,
+    "static_pct_of_total": 82.2
+  },
+  "cost_analysis": {
+    "pricing": {
+      "flash_standard_per_m_tokens": 0.075,
+      "flash_cached_per_m_tokens": 0.01875,
+      "pro_standard_per_m_tokens": 1.25,
+      "cache_storage_per_m_tokens_per_hour": 1.0
+    },
+    "per_call": {
+      "no_cache_flash_usd": 0.0001972,
+      "with_cache_flash_usd": 7.56e-05,
+      "savings_per_call_usd": 0.0001217,
+      "reduction_pct": 61.7,
+      "no_cache_pro_usd": 0.003288
+    },
+    "cache_economics": {
+      "storage_cost_per_hour_usd": 0.002163,
+      "storage_cost_per_day_usd": 0.0519,
+      "breakeven_calls_per_hour": 17.8,
+      "net_savings_at_10_calls_per_hr": -0.00095,
+      "net_savings_at_100_calls_per_hr": 0.01
+    },
+    "cohort_55500_encounters": {
+      "no_cache_total_usd": 10.95,
+      "with_cache_total_usd": 4.19,
+      "saved_usd": 6.75
+    }
+  }
+}

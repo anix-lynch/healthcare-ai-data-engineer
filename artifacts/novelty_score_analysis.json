@@ -1,0 +1,2437 @@
+{
+  "metadata": {
+    "model": "text-embedding-004",
+    "embedding_dim": 768,
+    "knn_k": 5,
+    "method": "1 - mean_cosine_similarity_to_top5_neighbors",
+    "n_encounters": 401,
+    "b5_note": "Novelty = structural dissimilarity from known corpus. High novelty = needs more inference. No clinical interpretation.",
+    "portability": "Same pattern applies to: finance (novel transactions), legal (novel contract clauses), insurance (novel claim patterns), support (novel issue types)"
+  },
+  "distribution": {
+    "min": 0.065,
+    "p10": 0.0816,
+    "p25": 0.0982,
+    "p50": 0.1266,
+    "p75": 0.1547,
+    "p90": 0.1854,
+    "p95": 0.2144,
+    "max": 0.3425,
+    "mean": 0.1316,
+    "routing_thresholds": {
+      "low_novelty_max": 0.1055,
+      "high_novelty_min": 0.1452,
+      "low_count": 132,
+      "medium_count": 136,
+      "high_count": 133
+    }
+  },
+  "per_encounter": [
+    {
+      "idx": 0,
+      "encounter_id": "ANDreW walLAcE",
+      "novelty_score": 0.1434,
+      "embedding_text_chars": 299
+    },
+    {
+      "idx": 1,
+      "encounter_id": "MR. kYlE beRger",
+      "novelty_score": 0.1094,
+      "embedding_text_chars": 340
+    },
+    {
+      "idx": 2,
+      "encounter_id": "ryaN toRreS",
+      "novelty_score": 0.1413,
+      "embedding_text_chars": 376
+    },
+    {
+      "idx": 3,
+      "encounter_id": "erICa pATteRsOn",
+      "novelty_score": 0.1525,
+      "embedding_text_chars": 389
+    },
+    {
+      "idx": 4,
+      "encounter_id": "CASEy DEAn",
+      "novelty_score": 0.0968,
+      "embedding_text_chars": 389
+    },
+    {
+      "idx": 5,
+      "encounter_id": "wENDY SMITH",
+      "novelty_score": 0.1592,
+      "embedding_text_chars": 287
+    },
+    {
+      "idx": 6,
+      "encounter_id": "KYLe huMpHReY",
+      "novelty_score": 0.1635,
+      "embedding_text_chars": 374
+    },
+    {
+      "idx": 7,
+      "encounter_id": "WilliaM petersOn",
+      "novelty_score": 0.1291,
+      "embedding_text_chars": 342
+    },
+    {
+      "idx": 8,
+      "encounter_id": "marIA MartiN",
+      "novelty_score": 0.0949,
+      "embedding_text_chars": 387
+    },
+    {
+      "idx": 9,
+      "encounter_id": "CHRistINa BARker",
+      "novelty_score": 0.1464,
+      "embedding_text_chars": 338
+    },
+    {
+      "idx": 10,
+      "encounter_id": "enc_10",
+      "novelty_score": 0.214,
+      "embedding_text_chars": 393
+    },
+    {
+      "idx": 11,
+      "encounter_id": "Lisa arcHEr",
+      "novelty_score": 0.1565,
+      "embedding_text_chars": 370
+    },
+    {
+      "idx": 12,
+      "encounter_id": "jereMIAh YouNG",
+      "novelty_score": 0.0982,
+      "embedding_text_chars": 502
+    },
+    {
+      "idx": 13,
+      "encounter_id": "miCHAEL wILlIAMs",
+      "novelty_score": 0.1058,
+      "embedding_text_chars": 345
+    },
+    {
+      "idx": 14,
+      "encounter_id": "KevIN milLer",
+      "novelty_score": 0.0767,
+      "embedding_text_chars": 416
+    },
+    {
+      "idx": 15,
+      "encounter_id": "KelLIE FrAnKlin",
+      "novelty_score": 0.0689,
+      "embedding_text_chars": 341
+    },
+    {
+      "idx": 16,
+      "encounter_id": "maRy FLemING",
+      "novelty_score": 0.0835,
+      "embedding_text_chars": 340
+    },
+    {
+      "idx": 17,
+      "encounter_id": "NaNcY GonZaLes",
+      "novelty_score": 0.1731,
+      "embedding_text_chars": 554
+    },
+    {
+      "idx": 18,
+      "encounter_id": "daVID kLEIn",
+      "novelty_score": 0.1025,
+      "embedding_text_chars": 352
+    },
+    {
+      "idx": 19,
+      "encounter_id": "jaSON roMerO",
+      "novelty_score": 0.2656,
+      "embedding_text_chars": 288
+    },
+    {
+      "idx": 20,
+      "encounter_id": "MIChAel mILLEr",
+      "novelty_score": 0.1097,
+      "embedding_text_chars": 390
+    },
+    {
+      "idx": 21,
+      "encounter_id": "mElIsSA FlEtchER",
+      "novelty_score": 0.1292,
+      "embedding_text_chars": 343
+    },
+    {
+      "idx": 22,
+      "encounter_id": "enc_22",
+      "novelty_score": 0.2121,
+      "embedding_text_chars": 393
+    },
+    {
+      "idx": 23,
+      "encounter_id": "enc_23",
+      "novelty_score": 0.2209,
+      "embedding_text_chars": 323
+    },
+    {
+      "idx": 24,
+      "encounter_id": "BrOOKe RhoDeS",
+      "novelty_score": 0.0735,
+      "embedding_text_chars": 402
+    },
+    {
+      "idx": 25,
+      "encounter_id": "eRIn gARCIa",
+      "novelty_score": 0.0817,
+      "embedding_text_chars": 352
+    },
+    {
+      "idx": 26,
+      "encounter_id": "jamES BasS phD",
+      "novelty_score": 0.1547,
+      "embedding_text_chars": 346
+    },
+    {
+      "idx": 27,
+      "encounter_id": "roBERT tHoMpsoN",
+      "novelty_score": 0.1542,
+      "embedding_text_chars": 355
+    },
+    {
+      "idx": 28,
+      "encounter_id": "joy CHAveZ",
+      "novelty_score": 0.1592,
+      "embedding_text_chars": 406
+    },
+    {
+      "idx": 29,
+      "encounter_id": "RIChArD LaWSon",
+      "novelty_score": 0.0931,
+      "embedding_text_chars": 491
+    },
+    {
+      "idx": 30,
+      "encounter_id": "deReK VALDEz",
+      "novelty_score": 0.1004,
+      "embedding_text_chars": 313
+    },
+    {
+      "idx": 31,
+      "encounter_id": "cLareNCE evaNs",
+      "novelty_score": 0.0743,
+      "embedding_text_chars": 333
+    },
+    {
+      "idx": 32,
+      "encounter_id": "enc_32",
+      "novelty_score": 0.284,
+      "embedding_text_chars": 424
+    },
+    {
+      "idx": 33,
+      "encounter_id": "enc_33",
+      "novelty_score": 0.1469,
+      "embedding_text_chars": 364
+    },
+    {
+      "idx": 34,
+      "encounter_id": "EmILY sImmoNS",
+      "novelty_score": 0.1374,
+      "embedding_text_chars": 377
+    },
+    {
+      "idx": 35,
+      "encounter_id": "DianE jImeNEz",
+      "novelty_score": 0.1031,
+      "embedding_text_chars": 336
+    },
+    {
+      "idx": 36,
+      "encounter_id": "AarOn walteR",
+      "novelty_score": 0.1784,
+      "embedding_text_chars": 378
+    },
+    {
+      "idx": 37,
+      "encounter_id": "Neil Black",
+      "novelty_score": 0.1698,
+      "embedding_text_chars": 319
+    },
+    {
+      "idx": 38,
+      "encounter_id": "CHrisTOPhEr mArTIneZ",
+      "novelty_score": 0.0791,
+      "embedding_text_chars": 410
+    },
+    {
+      "idx": 39,
+      "encounter_id": "whitNEy DAViS",
+      "novelty_score": 0.1277,
+      "embedding_text_chars": 445
+    },
+    {
+      "idx": 40,
+      "encounter_id": "Manuel roGErS",
+      "novelty_score": 0.0984,
+      "embedding_text_chars": 313
+    },
+    {
+      "idx": 41,
+      "encounter_id": "enc_41",
+      "novelty_score": 0.1333,
+      "embedding_text_chars": 459
+    },
+    {
+      "idx": 42,
+      "encounter_id": "KeRRi mEJiA",
+      "novelty_score": 0.1503,
+      "embedding_text_chars": 377
+    },
+    {
+      "idx": 43,
+      "encounter_id": "KIMBerly wILLIams",
+      "novelty_score": 0.1271,
+      "embedding_text_chars": 349
+    },
+    {
+      "idx": 44,
+      "encounter_id": "tODD FisHER",
+      "novelty_score": 0.162,
+      "embedding_text_chars": 447
+    },
+    {
+      "idx": 45,
+      "encounter_id": "KAthRyN fReNCH",
+      "novelty_score": 0.101,
+      "embedding_text_chars": 335
+    },
+    {
+      "idx": 46,
+      "encounter_id": "bENJAMin rIch",
+      "novelty_score": 0.1017,
+      "embedding_text_chars": 423
+    },
+    {
+      "idx": 47,
+      "encounter_id": "mark jACKSON",
+      "novelty_score": 0.1233,
+      "embedding_text_chars": 403
+    },
+    {
+      "idx": 48,
+      "encounter_id": "cHaRLes mASON",
+      "novelty_score": 0.077,
+      "embedding_text_chars": 411
+    },
+    {
+      "idx": 49,
+      "encounter_id": "enc_49",
+      "novelty_score": 0.2138,
+      "embedding_text_chars": 352
+    },
+    {
+      "idx": 50,
+      "encounter_id": "Jesse hAnCOcK",
+      "novelty_score": 0.1064,
+      "embedding_text_chars": 414
+    },
+    {
+      "idx": 51,
+      "encounter_id": "amANda BEcK",
+      "novelty_score": 0.1135,
+      "embedding_text_chars": 341
+    },
+    {
+      "idx": 52,
+      "encounter_id": "jAsoN leOnARd",
+      "novelty_score": 0.0857,
+      "embedding_text_chars": 368
+    },
+    {
+      "idx": 53,
+      "encounter_id": "HuNTEr vEgA",
+      "novelty_score": 0.1561,
+      "embedding_text_chars": 469
+    },
+    {
+      "idx": 54,
+      "encounter_id": "natashA SMITh",
+      "novelty_score": 0.1146,
+      "embedding_text_chars": 351
+    },
+    {
+      "idx": 55,
+      "encounter_id": "RaChel AdKinS",
+      "novelty_score": 0.077,
+      "embedding_text_chars": 390
+    },
+    {
+      "idx": 56,
+      "encounter_id": "scoTt adams",
+      "novelty_score": 0.1732,
+      "embedding_text_chars": 377
+    },
+    {
+      "idx": 57,
+      "encounter_id": "wILLIAM hIlL",
+      "novelty_score": 0.1081,
+      "embedding_text_chars": 488
+    },
+    {
+      "idx": 58,
+      "encounter_id": "MIchaEl garcIa",
+      "novelty_score": 0.1471,
+      "embedding_text_chars": 468
+    },
+    {
+      "idx": 59,
+      "encounter_id": "naTasha smIth",
+      "novelty_score": 0.1804,
+      "embedding_text_chars": 370
+    },
+    {
+      "idx": 60,
+      "encounter_id": "aNDReW wALLeR",
+      "novelty_score": 0.1396,
+      "embedding_text_chars": 349
+    },
+    {
+      "idx": 61,
+      "encounter_id": "SCotT MArTiNez",
+      "novelty_score": 0.1254,
+      "embedding_text_chars": 322
+    },
+    {
+      "idx": 62,
+      "encounter_id": "KRiSTeN peteRSOn",
+      "novelty_score": 0.0872,
+      "embedding_text_chars": 394
+    },
+    {
+      "idx": 63,
+      "encounter_id": "ChaRleS cRaiG",
+      "novelty_score": 0.1668,
+      "embedding_text_chars": 340
+    },
+    {
+      "idx": 64,
+      "encounter_id": "chelsEa FInLeY",
+      "novelty_score": 0.2296,
+      "embedding_text_chars": 348
+    },
+    {
+      "idx": 65,
+      "encounter_id": "MEgAN mUnOZ",
+      "novelty_score": 0.1698,
+      "embedding_text_chars": 413
+    },
+    {
+      "idx": 66,
+      "encounter_id": "StePHanIE mCdOnAlD",
+      "novelty_score": 0.0954,
+      "embedding_text_chars": 409
+    },
+    {
+      "idx": 67,
+      "encounter_id": "jasminE frenCh",
+      "novelty_score": 0.1101,
+      "embedding_text_chars": 358
+    },
+    {
+      "idx": 68,
+      "encounter_id": "enc_68",
+      "novelty_score": 0.1375,
+      "embedding_text_chars": 306
+    },
+    {
+      "idx": 69,
+      "encounter_id": "jErEmY tUrnEr",
+      "novelty_score": 0.0827,
+      "embedding_text_chars": 342
+    },
+    {
+      "idx": 70,
+      "encounter_id": "jaCquELINe PAtTERSON",
+      "novelty_score": 0.129,
+      "embedding_text_chars": 416
+    },
+    {
+      "idx": 71,
+      "encounter_id": "enc_71",
+      "novelty_score": 0.2227,
+      "embedding_text_chars": 387
+    },
+    {
+      "idx": 72,
+      "encounter_id": "PATrick RobBInS",
+      "novelty_score": 0.1307,
+      "embedding_text_chars": 394
+    },
+    {
+      "idx": 73,
+      "encounter_id": "dANIeLLe MOReno",
+      "novelty_score": 0.1491,
+      "embedding_text_chars": 387
+    },
+    {
+      "idx": 74,
+      "encounter_id": "JONathAn manNING",
+      "novelty_score": 0.0935,
+      "embedding_text_chars": 339
+    },
+    {
+      "idx": 75,
+      "encounter_id": "jEROmE DAY",
+      "novelty_score": 0.0865,
+      "embedding_text_chars": 348
+    },
+    {
+      "idx": 76,
+      "encounter_id": "Samuel mooRE",
+      "novelty_score": 0.0978,
+      "embedding_text_chars": 460
+    },
+    {
+      "idx": 77,
+      "encounter_id": "MEGAn gUZMAN",
+      "novelty_score": 0.099,
+      "embedding_text_chars": 354
+    },
+    {
+      "idx": 78,
+      "encounter_id": "enc_78",
+      "novelty_score": 0.1111,
+      "embedding_text_chars": 380
+    },
+    {
+      "idx": 79,
+      "encounter_id": "jusTiN BridGEs",
+      "novelty_score": 0.1164,
+      "embedding_text_chars": 345
+    },
+    {
+      "idx": 80,
+      "encounter_id": "LInda hoLT",
+      "novelty_score": 0.1236,
+      "embedding_text_chars": 346
+    },
+    {
+      "idx": 81,
+      "encounter_id": "andreW WRIghT",
+      "novelty_score": 0.143,
+      "embedding_text_chars": 345
+    },
+    {
+      "idx": 82,
+      "encounter_id": "CaRLa JenSeN",
+      "novelty_score": 0.0772,
+      "embedding_text_chars": 415
+    },
+    {
+      "idx": 83,
+      "encounter_id": "juLIe ROmero",
+      "novelty_score": 0.1676,
+      "embedding_text_chars": 339
+    },
+    {
+      "idx": 84,
+      "encounter_id": "dAWN jOHNsOn",
+      "novelty_score": 0.1486,
+      "embedding_text_chars": 423
+    },
+    {
+      "idx": 85,
+      "encounter_id": "mR. josEPh HolmeS DdS",
+      "novelty_score": 0.1008,
+      "embedding_text_chars": 416
+    },
+    {
+      "idx": 86,
+      "encounter_id": "kEiTh lIn",
+      "novelty_score": 0.1203,
+      "embedding_text_chars": 434
+    },
+    {
+      "idx": 87,
+      "encounter_id": "NAThan Walker",
+      "novelty_score": 0.0714,
+      "embedding_text_chars": 353
+    },
+    {
+      "idx": 88,
+      "encounter_id": "MaRIE wilLIAms",
+      "novelty_score": 0.1199,
+      "embedding_text_chars": 400
+    },
+    {
+      "idx": 89,
+      "encounter_id": "TYleR sWEEnEy",
+      "novelty_score": 0.1156,
+      "embedding_text_chars": 383
+    },
+    {
+      "idx": 90,
+      "encounter_id": "JeffREY SMITH",
+      "novelty_score": 0.1004,
+      "embedding_text_chars": 381
+    },
+    {
+      "idx": 91,
+      "encounter_id": "WEndy sMiTH",
+      "novelty_score": 0.2125,
+      "embedding_text_chars": 377
+    },
+    {
+      "idx": 92,
+      "encounter_id": "rOnalD daVis",
+      "novelty_score": 0.2034,
+      "embedding_text_chars": 303
+    },
+    {
+      "idx": 93,
+      "encounter_id": "enc_93",
+      "novelty_score": 0.1769,
+      "embedding_text_chars": 370
+    },
+    {
+      "idx": 94,
+      "encounter_id": "jAMES GARCiA",
+      "novelty_score": 0.1513,
+      "embedding_text_chars": 328
+    },
+    {
+      "idx": 95,
+      "encounter_id": "enc_95",
+      "novelty_score": 0.1664,
+      "embedding_text_chars": 433
+    },
+    {
+      "idx": 96,
+      "encounter_id": "DOuGlaS TaYloR",
+      "novelty_score": 0.0688,
+      "embedding_text_chars": 374
+    },
+    {
+      "idx": 97,
+      "encounter_id": "BRIaN mCCLuRE",
+      "novelty_score": 0.0994,
+      "embedding_text_chars": 360
+    },
+    {
+      "idx": 98,
+      "encounter_id": "dEBBIe odOnnElL",
+      "novelty_score": 0.0913,
+      "embedding_text_chars": 379
+    },
+    {
+      "idx": 99,
+      "encounter_id": "enc_99",
+      "novelty_score": 0.2398,
+      "embedding_text_chars": 354
+    },
+    {
+      "idx": 100,
+      "encounter_id": "dAWn chAveZ",
+      "novelty_score": 0.1417,
+      "embedding_text_chars": 368
+    },
+    {
+      "idx": 101,
+      "encounter_id": "HeNRy fErgUsOn",
+      "novelty_score": 0.1936,
+      "embedding_text_chars": 374
+    },
+    {
+      "idx": 102,
+      "encounter_id": "jACQuEline deAn",
+      "novelty_score": 0.1017,
+      "embedding_text_chars": 339
+    },
+    {
+      "idx": 103,
+      "encounter_id": "dAnIEL OcONnOR",
+      "novelty_score": 0.1264,
+      "embedding_text_chars": 460
+    },
+    {
+      "idx": 104,
+      "encounter_id": "DebORAH CoLliER",
+      "novelty_score": 0.2144,
+      "embedding_text_chars": 290
+    },
+    {
+      "idx": 105,
+      "encounter_id": "noAh RObErTS",
+      "novelty_score": 0.1387,
+      "embedding_text_chars": 440
+    },
+    {
+      "idx": 106,
+      "encounter_id": "TEResa roSE",
+      "novelty_score": 0.1301,
+      "embedding_text_chars": 474
+    },
+    {
+      "idx": 107,
+      "encounter_id": "jANeT SmitH",
+      "novelty_score": 0.0887,
+      "embedding_text_chars": 354
+    },
+    {
+      "idx": 108,
+      "encounter_id": "VicToR CaRLSOn",
+      "novelty_score": 0.1554,
+      "embedding_text_chars": 403
+    },
+    {
+      "idx": 109,
+      "encounter_id": "HEATHEr BuCkLEy",
+      "novelty_score": 0.1413,
+      "embedding_text_chars": 390
+    },
+    {
+      "idx": 110,
+      "encounter_id": "LiSa JoRDAn",
+      "novelty_score": 0.1395,
+      "embedding_text_chars": 414
+    },
+    {
+      "idx": 111,
+      "encounter_id": "CRYstal pAyNe",
+      "novelty_score": 0.1349,
+      "embedding_text_chars": 355
+    },
+    {
+      "idx": 112,
+      "encounter_id": "enc_112",
+      "novelty_score": 0.1405,
+      "embedding_text_chars": 391
+    },
+    {
+      "idx": 113,
+      "encounter_id": "SusaN dIxon",
+      "novelty_score": 0.1641,
+      "embedding_text_chars": 379
+    },
+    {
+      "idx": 114,
+      "encounter_id": "sHAnnON BAiLey",
+      "novelty_score": 0.127,
+      "embedding_text_chars": 360
+    },
+    {
+      "idx": 115,
+      "encounter_id": "jAMEs kenNeDY",
+      "novelty_score": 0.0976,
+      "embedding_text_chars": 336
+    },
+    {
+      "idx": 116,
+      "encounter_id": "wAnDA suLlIVAN",
+      "novelty_score": 0.0973,
+      "embedding_text_chars": 376
+    },
+    {
+      "idx": 117,
+      "encounter_id": "CrYSTAL chambeRS",
+      "novelty_score": 0.1408,
+      "embedding_text_chars": 455
+    },
+    {
+      "idx": 118,
+      "encounter_id": "KIMBERlY tHORnTon",
+      "novelty_score": 0.1461,
+      "embedding_text_chars": 342
+    },
+    {
+      "idx": 119,
+      "encounter_id": "jACQUelINe HaNsON",
+      "novelty_score": 0.1132,
+      "embedding_text_chars": 343
+    },
+    {
+      "idx": 120,
+      "encounter_id": "ANthONy HaRvEY",
+      "novelty_score": 0.1452,
+      "embedding_text_chars": 328
+    },
+    {
+      "idx": 121,
+      "encounter_id": "kENNeTh welcH",
+      "novelty_score": 0.1377,
+      "embedding_text_chars": 349
+    },
+    {
+      "idx": 122,
+      "encounter_id": "kELlY DONALDSON",
+      "novelty_score": 0.166,
+      "embedding_text_chars": 324
+    },
+    {
+      "idx": 123,
+      "encounter_id": "aMY hUyNH",
+      "novelty_score": 0.0996,
+      "embedding_text_chars": 384
+    },
+    {
+      "idx": 124,
+      "encounter_id": "DaviD Shaw",
+      "novelty_score": 0.1523,
+      "embedding_text_chars": 392
+    },
+    {
+      "idx": 125,
+      "encounter_id": "mElisSa yanG",
+      "novelty_score": 0.1266,
+      "embedding_text_chars": 358
+    },
+    {
+      "idx": 126,
+      "encounter_id": "natHAN white",
+      "novelty_score": 0.1652,
+      "embedding_text_chars": 373
+    },
+    {
+      "idx": 127,
+      "encounter_id": "enc_127",
+      "novelty_score": 0.2041,
+      "embedding_text_chars": 349
+    },
+    {
+      "idx": 128,
+      "encounter_id": "kAThLEEN HurLEy",
+      "novelty_score": 0.0744,
+      "embedding_text_chars": 357
+    },
+    {
+      "idx": 129,
+      "encounter_id": "enc_129",
+      "novelty_score": 0.1021,
+      "embedding_text_chars": 342
+    },
+    {
+      "idx": 130,
+      "encounter_id": "AsHlEe GENtrY",
+      "novelty_score": 0.1166,
+      "embedding_text_chars": 344
+    },
+    {
+      "idx": 131,
+      "encounter_id": "SAra cRoSs",
+      "novelty_score": 0.1051,
+      "embedding_text_chars": 495
+    },
+    {
+      "idx": 132,
+      "encounter_id": "cAThEriNe diLloN",
+      "novelty_score": 0.0905,
+      "embedding_text_chars": 373
+    },
+    {
+      "idx": 133,
+      "encounter_id": "mArK dAVIs",
+      "novelty_score": 0.0727,
+      "embedding_text_chars": 373
+    },
+    {
+      "idx": 134,
+      "encounter_id": "CYntHIA MCClain",
+      "novelty_score": 0.1751,
+      "embedding_text_chars": 296
+    },
+    {
+      "idx": 135,
+      "encounter_id": "MitcHeLl riDDle",
+      "novelty_score": 0.1445,
+      "embedding_text_chars": 348
+    },
+    {
+      "idx": 136,
+      "encounter_id": "KeVin HalL",
+      "novelty_score": 0.1418,
+      "embedding_text_chars": 371
+    },
+    {
+      "idx": 137,
+      "encounter_id": "DAVid johnSOn",
+      "novelty_score": 0.1089,
+      "embedding_text_chars": 371
+    },
+    {
+      "idx": 138,
+      "encounter_id": "heAThEr cOOK",
+      "novelty_score": 0.0778,
+      "embedding_text_chars": 371
+    },
+    {
+      "idx": 139,
+      "encounter_id": "brandOn FIsher",
+      "novelty_score": 0.1245,
+      "embedding_text_chars": 359
+    },
+    {
+      "idx": 140,
+      "encounter_id": "PamELa joHNSon",
+      "novelty_score": 0.1534,
+      "embedding_text_chars": 375
+    },
+    {
+      "idx": 141,
+      "encounter_id": "JEFFRey rEEveS",
+      "novelty_score": 0.0779,
+      "embedding_text_chars": 326
+    },
+    {
+      "idx": 142,
+      "encounter_id": "DeboRAh RUssEll",
+      "novelty_score": 0.1266,
+      "embedding_text_chars": 434
+    },
+    {
+      "idx": 143,
+      "encounter_id": "DEaNnA pALMeR",
+      "novelty_score": 0.1466,
+      "embedding_text_chars": 324
+    },
+    {
+      "idx": 144,
+      "encounter_id": "enc_144",
+      "novelty_score": 0.1854,
+      "embedding_text_chars": 330
+    },
+    {
+      "idx": 145,
+      "encounter_id": "eRika youNg",
+      "novelty_score": 0.0802,
+      "embedding_text_chars": 366
+    },
+    {
+      "idx": 146,
+      "encounter_id": "KARInA reYEs",
+      "novelty_score": 0.0762,
+      "embedding_text_chars": 344
+    },
+    {
+      "idx": 147,
+      "encounter_id": "JoNaTHAn JacksoN",
+      "novelty_score": 0.1771,
+      "embedding_text_chars": 414
+    },
+    {
+      "idx": 148,
+      "encounter_id": "NIchOlas RiCHArDSOn",
+      "novelty_score": 0.1247,
+      "embedding_text_chars": 320
+    },
+    {
+      "idx": 149,
+      "encounter_id": "JAmes ryAn",
+      "novelty_score": 0.124,
+      "embedding_text_chars": 289
+    },
+    {
+      "idx": 150,
+      "encounter_id": "enc_150",
+      "novelty_score": 0.1988,
+      "embedding_text_chars": 351
+    },
+    {
+      "idx": 151,
+      "encounter_id": "erin hIlL",
+      "novelty_score": 0.0924,
+      "embedding_text_chars": 340
+    },
+    {
+      "idx": 152,
+      "encounter_id": "JaMes BroWn",
+      "novelty_score": 0.145,
+      "embedding_text_chars": 309
+    },
+    {
+      "idx": 153,
+      "encounter_id": "ChriStopHer COHeN",
+      "novelty_score": 0.0778,
+      "embedding_text_chars": 327
+    },
+    {
+      "idx": 154,
+      "encounter_id": "mIchaeL PARKer",
+      "novelty_score": 0.1586,
+      "embedding_text_chars": 381
+    },
+    {
+      "idx": 155,
+      "encounter_id": "ronaLd cArtER",
+      "novelty_score": 0.1034,
+      "embedding_text_chars": 371
+    },
+    {
+      "idx": 156,
+      "encounter_id": "tAYLOr WARD",
+      "novelty_score": 0.1394,
+      "embedding_text_chars": 356
+    },
+    {
+      "idx": 157,
+      "encounter_id": "saNdRa mILLer",
+      "novelty_score": 0.2149,
+      "embedding_text_chars": 348
+    },
+    {
+      "idx": 158,
+      "encounter_id": "PAtriCk sMith",
+      "novelty_score": 0.1547,
+      "embedding_text_chars": 377
+    },
+    {
+      "idx": 159,
+      "encounter_id": "enc_159",
+      "novelty_score": 0.2514,
+      "embedding_text_chars": 264
+    },
+    {
+      "idx": 160,
+      "encounter_id": "gRAce miLleR",
+      "novelty_score": 0.113,
+      "embedding_text_chars": 414
+    },
+    {
+      "idx": 161,
+      "encounter_id": "CHrIsTOpHeR AtKINSON",
+      "novelty_score": 0.1177,
+      "embedding_text_chars": 349
+    },
+    {
+      "idx": 162,
+      "encounter_id": "SArA sAncHez",
+      "novelty_score": 0.1584,
+      "embedding_text_chars": 306
+    },
+    {
+      "idx": 163,
+      "encounter_id": "jiMMy cArsoN",
+      "novelty_score": 0.0882,
+      "embedding_text_chars": 336
+    },
+    {
+      "idx": 164,
+      "encounter_id": "eDWin BANkS",
+      "novelty_score": 0.0717,
+      "embedding_text_chars": 401
+    },
+    {
+      "idx": 165,
+      "encounter_id": "JONathAn yaTeS",
+      "novelty_score": 0.155,
+      "embedding_text_chars": 349
+    },
+    {
+      "idx": 166,
+      "encounter_id": "enc_166",
+      "novelty_score": 0.1681,
+      "embedding_text_chars": 309
+    },
+    {
+      "idx": 167,
+      "encounter_id": "jEAn gRavES",
+      "novelty_score": 0.1774,
+      "embedding_text_chars": 436
+    },
+    {
+      "idx": 168,
+      "encounter_id": "enc_168",
+      "novelty_score": 0.2199,
+      "embedding_text_chars": 417
+    },
+    {
+      "idx": 169,
+      "encounter_id": "nATHaN marTIn",
+      "novelty_score": 0.1055,
+      "embedding_text_chars": 355
+    },
+    {
+      "idx": 170,
+      "encounter_id": "cArlY acosta",
+      "novelty_score": 0.1439,
+      "embedding_text_chars": 458
+    },
+    {
+      "idx": 171,
+      "encounter_id": "JeSsiCa aDaMS",
+      "novelty_score": 0.1254,
+      "embedding_text_chars": 403
+    },
+    {
+      "idx": 172,
+      "encounter_id": "EtHaN RobINSON",
+      "novelty_score": 0.1307,
+      "embedding_text_chars": 393
+    },
+    {
+      "idx": 173,
+      "encounter_id": "RIChaRd VeLasquEZ",
+      "novelty_score": 0.1452,
+      "embedding_text_chars": 388
+    },
+    {
+      "idx": 174,
+      "encounter_id": "chRisTOPHEr LIttlE",
+      "novelty_score": 0.1798,
+      "embedding_text_chars": 298
+    },
+    {
+      "idx": 175,
+      "encounter_id": "sTephanie SChULTZ",
+      "novelty_score": 0.1211,
+      "embedding_text_chars": 405
+    },
+    {
+      "idx": 176,
+      "encounter_id": "jAMES huRst DvM",
+      "novelty_score": 0.1351,
+      "embedding_text_chars": 400
+    },
+    {
+      "idx": 177,
+      "encounter_id": "MARY ColEmaN",
+      "novelty_score": 0.1443,
+      "embedding_text_chars": 324
+    },
+    {
+      "idx": 178,
+      "encounter_id": "laCeY sANdOVAL",
+      "novelty_score": 0.0968,
+      "embedding_text_chars": 386
+    },
+    {
+      "idx": 179,
+      "encounter_id": "sharON snYDeR",
+      "novelty_score": 0.1493,
+      "embedding_text_chars": 344
+    },
+    {
+      "idx": 180,
+      "encounter_id": "beth arNOLd",
+      "novelty_score": 0.101,
+      "embedding_text_chars": 399
+    },
+    {
+      "idx": 181,
+      "encounter_id": "LiSa ThOrnTon",
+      "novelty_score": 0.1132,
+      "embedding_text_chars": 420
+    },
+    {
+      "idx": 182,
+      "encounter_id": "PhYLLis kLeiN",
+      "novelty_score": 0.1431,
+      "embedding_text_chars": 384
+    },
+    {
+      "idx": 183,
+      "encounter_id": "dENiSE GOoDWIN",
+      "novelty_score": 0.1723,
+      "embedding_text_chars": 370
+    },
+    {
+      "idx": 184,
+      "encounter_id": "enc_184",
+      "novelty_score": 0.1719,
+      "embedding_text_chars": 359
+    },
+    {
+      "idx": 185,
+      "encounter_id": "LISa DiXOn",
+      "novelty_score": 0.0888,
+      "embedding_text_chars": 297
+    },
+    {
+      "idx": 186,
+      "encounter_id": "aNgeL JOHNsON",
+      "novelty_score": 0.1517,
+      "embedding_text_chars": 397
+    },
+    {
+      "idx": 187,
+      "encounter_id": "eRIN gREEr",
+      "novelty_score": 0.0886,
+      "embedding_text_chars": 376
+    },
+    {
+      "idx": 188,
+      "encounter_id": "JaSon MilLeR",
+      "novelty_score": 0.0874,
+      "embedding_text_chars": 363
+    },
+    {
+      "idx": 189,
+      "encounter_id": "enc_189",
+      "novelty_score": 0.1635,
+      "embedding_text_chars": 408
+    },
+    {
+      "idx": 190,
+      "encounter_id": "JessICA CHuNG",
+      "novelty_score": 0.2073,
+      "embedding_text_chars": 330
+    },
+    {
+      "idx": 191,
+      "encounter_id": "mrs. maRIa nEwTon",
+      "novelty_score": 0.119,
+      "embedding_text_chars": 326
+    },
+    {
+      "idx": 192,
+      "encounter_id": "SArah MENdOZa",
+      "novelty_score": 0.0808,
+      "embedding_text_chars": 431
+    },
+    {
+      "idx": 193,
+      "encounter_id": "DONNa aLlen",
+      "novelty_score": 0.1755,
+      "embedding_text_chars": 309
+    },
+    {
+      "idx": 194,
+      "encounter_id": "RIcHaRd rObiNSoN",
+      "novelty_score": 0.1679,
+      "embedding_text_chars": 343
+    },
+    {
+      "idx": 195,
+      "encounter_id": "VINCenT EAtOn",
+      "novelty_score": 0.1646,
+      "embedding_text_chars": 311
+    },
+    {
+      "idx": 196,
+      "encounter_id": "StACY MOSES",
+      "novelty_score": 0.0928,
+      "embedding_text_chars": 307
+    },
+    {
+      "idx": 197,
+      "encounter_id": "enc_197",
+      "novelty_score": 0.184,
+      "embedding_text_chars": 304
+    },
+    {
+      "idx": 198,
+      "encounter_id": "MaUrIce CARtER",
+      "novelty_score": 0.1729,
+      "embedding_text_chars": 352
+    },
+    {
+      "idx": 199,
+      "encounter_id": "eRIc CaRTEr",
+      "novelty_score": 0.0901,
+      "embedding_text_chars": 434
+    },
+    {
+      "idx": 200,
+      "encounter_id": "AndREw garCia",
+      "novelty_score": 0.0787,
+      "embedding_text_chars": 387
+    },
+    {
+      "idx": 201,
+      "encounter_id": "jENNifER CUnNingham",
+      "novelty_score": 0.1241,
+      "embedding_text_chars": 382
+    },
+    {
+      "idx": 202,
+      "encounter_id": "aLan ShARp",
+      "novelty_score": 0.1421,
+      "embedding_text_chars": 345
+    },
+    {
+      "idx": 203,
+      "encounter_id": "kAthleEn shIElDs",
+      "novelty_score": 0.1534,
+      "embedding_text_chars": 392
+    },
+    {
+      "idx": 204,
+      "encounter_id": "KaReN sanTANA",
+      "novelty_score": 0.112,
+      "embedding_text_chars": 391
+    },
+    {
+      "idx": 205,
+      "encounter_id": "kENNEth MUrRAY",
+      "novelty_score": 0.1145,
+      "embedding_text_chars": 440
+    },
+    {
+      "idx": 206,
+      "encounter_id": "cyNThIA bRadLEy",
+      "novelty_score": 0.1626,
+      "embedding_text_chars": 317
+    },
+    {
+      "idx": 207,
+      "encounter_id": "caMEroN martInez",
+      "novelty_score": 0.1017,
+      "embedding_text_chars": 339
+    },
+    {
+      "idx": 208,
+      "encounter_id": "cAroLINE scoTt",
+      "novelty_score": 0.1242,
+      "embedding_text_chars": 358
+    },
+    {
+      "idx": 209,
+      "encounter_id": "PATRIcIa braDY",
+      "novelty_score": 0.1316,
+      "embedding_text_chars": 373
+    },
+    {
+      "idx": 210,
+      "encounter_id": "TayLoR PeRKINs",
+      "novelty_score": 0.0822,
+      "embedding_text_chars": 390
+    },
+    {
+      "idx": 211,
+      "encounter_id": "JAmEs parkER",
+      "novelty_score": 0.1776,
+      "embedding_text_chars": 399
+    },
+    {
+      "idx": 212,
+      "encounter_id": "viCtOr yoUng",
+      "novelty_score": 0.1598,
+      "embedding_text_chars": 359
+    },
+    {
+      "idx": 213,
+      "encounter_id": "MAry NoBlE",
+      "novelty_score": 0.1426,
+      "embedding_text_chars": 352
+    },
+    {
+      "idx": 214,
+      "encounter_id": "curtIS WHitE",
+      "novelty_score": 0.102,
+      "embedding_text_chars": 371
+    },
+    {
+      "idx": 215,
+      "encounter_id": "JESSE PEna",
+      "novelty_score": 0.0829,
+      "embedding_text_chars": 318
+    },
+    {
+      "idx": 216,
+      "encounter_id": "KimBERLy RaNdall",
+      "novelty_score": 0.1036,
+      "embedding_text_chars": 342
+    },
+    {
+      "idx": 217,
+      "encounter_id": "moniCA sAUndErs",
+      "novelty_score": 0.1081,
+      "embedding_text_chars": 368
+    },
+    {
+      "idx": 218,
+      "encounter_id": "Amy JeNSEN",
+      "novelty_score": 0.1018,
+      "embedding_text_chars": 304
+    },
+    {
+      "idx": 219,
+      "encounter_id": "enc_219",
+      "novelty_score": 0.2738,
+      "embedding_text_chars": 433
+    },
+    {
+      "idx": 220,
+      "encounter_id": "JUlIan joHNsOn",
+      "novelty_score": 0.1322,
+      "embedding_text_chars": 469
+    },
+    {
+      "idx": 221,
+      "encounter_id": "mR. jOSePH WILlIaMS MD",
+      "novelty_score": 0.0988,
+      "embedding_text_chars": 391
+    },
+    {
+      "idx": 222,
+      "encounter_id": "jeSsica ANderSON",
+      "novelty_score": 0.1496,
+      "embedding_text_chars": 333
+    },
+    {
+      "idx": 223,
+      "encounter_id": "JOHN McknIGhT",
+      "novelty_score": 0.1142,
+      "embedding_text_chars": 278
+    },
+    {
+      "idx": 224,
+      "encounter_id": "JasON mckInney",
+      "novelty_score": 0.1335,
+      "embedding_text_chars": 446
+    },
+    {
+      "idx": 225,
+      "encounter_id": "enc_225",
+      "novelty_score": 0.3425,
+      "embedding_text_chars": 416
+    },
+    {
+      "idx": 226,
+      "encounter_id": "wanda SmitH",
+      "novelty_score": 0.1248,
+      "embedding_text_chars": 328
+    },
+    {
+      "idx": 227,
+      "encounter_id": "enc_227",
+      "novelty_score": 0.2066,
+      "embedding_text_chars": 306
+    },
+    {
+      "idx": 228,
+      "encounter_id": "kennEth LOPeZ",
+      "novelty_score": 0.0897,
+      "embedding_text_chars": 422
+    },
+    {
+      "idx": 229,
+      "encounter_id": "josHuA MORRiS",
+      "novelty_score": 0.0873,
+      "embedding_text_chars": 321
+    },
+    {
+      "idx": 230,
+      "encounter_id": "chrIStINA broWn",
+      "novelty_score": 0.1563,
+      "embedding_text_chars": 337
+    },
+    {
+      "idx": 231,
+      "encounter_id": "JEsSIca KElLer",
+      "novelty_score": 0.1045,
+      "embedding_text_chars": 403
+    },
+    {
+      "idx": 232,
+      "encounter_id": "wENdY taylOR",
+      "novelty_score": 0.0766,
+      "embedding_text_chars": 356
+    },
+    {
+      "idx": 233,
+      "encounter_id": "PaTriCiA gArcIA",
+      "novelty_score": 0.0816,
+      "embedding_text_chars": 327
+    },
+    {
+      "idx": 234,
+      "encounter_id": "jOn mATHEws",
+      "novelty_score": 0.155,
+      "embedding_text_chars": 352
+    },
+    {
+      "idx": 235,
+      "encounter_id": "eVelyN DAy",
+      "novelty_score": 0.1092,
+      "embedding_text_chars": 319
+    },
+    {
+      "idx": 236,
+      "encounter_id": "TANya wriGht",
+      "novelty_score": 0.1287,
+      "embedding_text_chars": 418
+    },
+    {
+      "idx": 237,
+      "encounter_id": "Greg whItE",
+      "novelty_score": 0.1349,
+      "embedding_text_chars": 405
+    },
+    {
+      "idx": 238,
+      "encounter_id": "AusTiN hERnanDeZ",
+      "novelty_score": 0.1487,
+      "embedding_text_chars": 341
+    },
+    {
+      "idx": 239,
+      "encounter_id": "julIE beARD",
+      "novelty_score": 0.0914,
+      "embedding_text_chars": 402
+    },
+    {
+      "idx": 240,
+      "encounter_id": "rOBeRt harriS",
+      "novelty_score": 0.0876,
+      "embedding_text_chars": 436
+    },
+    {
+      "idx": 241,
+      "encounter_id": "mIChaEl FarLey",
+      "novelty_score": 0.1443,
+      "embedding_text_chars": 350
+    },
+    {
+      "idx": 242,
+      "encounter_id": "StEPHaNIe CLARK",
+      "novelty_score": 0.1001,
+      "embedding_text_chars": 386
+    },
+    {
+      "idx": 243,
+      "encounter_id": "DenisE rOdRIGuEZ",
+      "novelty_score": 0.2551,
+      "embedding_text_chars": 305
+    },
+    {
+      "idx": 244,
+      "encounter_id": "jOSEPh MeNDOZa",
+      "novelty_score": 0.1153,
+      "embedding_text_chars": 405
+    },
+    {
+      "idx": 245,
+      "encounter_id": "mELIssa tUCKeR",
+      "novelty_score": 0.1337,
+      "embedding_text_chars": 336
+    },
+    {
+      "idx": 246,
+      "encounter_id": "JOsePH belL",
+      "novelty_score": 0.1681,
+      "embedding_text_chars": 304
+    },
+    {
+      "idx": 247,
+      "encounter_id": "aPriL wOODArd",
+      "novelty_score": 0.1063,
+      "embedding_text_chars": 383
+    },
+    {
+      "idx": 248,
+      "encounter_id": "yOlAndA wiLlIaMs",
+      "novelty_score": 0.1269,
+      "embedding_text_chars": 331
+    },
+    {
+      "idx": 249,
+      "encounter_id": "riCHArd LoPeZ",
+      "novelty_score": 0.1055,
+      "embedding_text_chars": 360
+    },
+    {
+      "idx": 250,
+      "encounter_id": "tAMmy hilL",
+      "novelty_score": 0.1441,
+      "embedding_text_chars": 318
+    },
+    {
+      "idx": 251,
+      "encounter_id": "KAtHEriNE CoOper",
+      "novelty_score": 0.0963,
+      "embedding_text_chars": 322
+    },
+    {
+      "idx": 252,
+      "encounter_id": "ThEREsa sImMoNS",
+      "novelty_score": 0.1878,
+      "embedding_text_chars": 398
+    },
+    {
+      "idx": 253,
+      "encounter_id": "mIcHaEl LeAcH",
+      "novelty_score": 0.0916,
+      "embedding_text_chars": 321
+    },
+    {
+      "idx": 254,
+      "encounter_id": "jamEs BranDT",
+      "novelty_score": 0.1884,
+      "embedding_text_chars": 334
+    },
+    {
+      "idx": 255,
+      "encounter_id": "leSlIE smith",
+      "novelty_score": 0.1171,
+      "embedding_text_chars": 387
+    },
+    {
+      "idx": 256,
+      "encounter_id": "jeffeRy sCHnEiDEr",
+      "novelty_score": 0.116,
+      "embedding_text_chars": 354
+    },
+    {
+      "idx": 257,
+      "encounter_id": "CHrISTophER ShaH",
+      "novelty_score": 0.1306,
+      "embedding_text_chars": 343
+    },
+    {
+      "idx": 258,
+      "encounter_id": "JUan klEiN",
+      "novelty_score": 0.1468,
+      "embedding_text_chars": 452
+    },
+    {
+      "idx": 259,
+      "encounter_id": "JENNa aNdrEWs",
+      "novelty_score": 0.1467,
+      "embedding_text_chars": 403
+    },
+    {
+      "idx": 260,
+      "encounter_id": "JeNnIFer JoHNsoN",
+      "novelty_score": 0.1233,
+      "embedding_text_chars": 333
+    },
+    {
+      "idx": 261,
+      "encounter_id": "juStin VArGAS",
+      "novelty_score": 0.0696,
+      "embedding_text_chars": 425
+    },
+    {
+      "idx": 262,
+      "encounter_id": "amanDa SAndErs",
+      "novelty_score": 0.1488,
+      "embedding_text_chars": 384
+    },
+    {
+      "idx": 263,
+      "encounter_id": "jULie ANDerSON",
+      "novelty_score": 0.1077,
+      "embedding_text_chars": 386
+    },
+    {
+      "idx": 264,
+      "encounter_id": "jEnNA CAIN",
+      "novelty_score": 0.1132,
+      "embedding_text_chars": 353
+    },
+    {
+      "idx": 265,
+      "encounter_id": "MICHeLLe WAng",
+      "novelty_score": 0.0728,
+      "embedding_text_chars": 350
+    },
+    {
+      "idx": 266,
+      "encounter_id": "carla alLEn",
+      "novelty_score": 0.1094,
+      "embedding_text_chars": 350
+    },
+    {
+      "idx": 267,
+      "encounter_id": "enc_267",
+      "novelty_score": 0.129,
+      "embedding_text_chars": 335
+    },
+    {
+      "idx": 268,
+      "encounter_id": "STEVeN cole",
+      "novelty_score": 0.0756,
+      "embedding_text_chars": 297
+    },
+    {
+      "idx": 269,
+      "encounter_id": "pHiLLIP denNis",
+      "novelty_score": 0.1043,
+      "embedding_text_chars": 364
+    },
+    {
+      "idx": 270,
+      "encounter_id": "grEgorY jOHnSon dDs",
+      "novelty_score": 0.0777,
+      "embedding_text_chars": 414
+    },
+    {
+      "idx": 271,
+      "encounter_id": "enc_271",
+      "novelty_score": 0.1499,
+      "embedding_text_chars": 391
+    },
+    {
+      "idx": 272,
+      "encounter_id": "jUlIe mILleR",
+      "novelty_score": 0.1006,
+      "embedding_text_chars": 421
+    },
+    {
+      "idx": 273,
+      "encounter_id": "juStin keLley",
+      "novelty_score": 0.1537,
+      "embedding_text_chars": 445
+    },
+    {
+      "idx": 274,
+      "encounter_id": "rACHaEL LebLAnc",
+      "novelty_score": 0.1356,
+      "embedding_text_chars": 375
+    },
+    {
+      "idx": 275,
+      "encounter_id": "enc_275",
+      "novelty_score": 0.2871,
+      "embedding_text_chars": 319
+    },
+    {
+      "idx": 276,
+      "encounter_id": "hEnRY sIMon",
+      "novelty_score": 0.0844,
+      "embedding_text_chars": 352
+    },
+    {
+      "idx": 277,
+      "encounter_id": "MEgAn tAYlOr",
+      "novelty_score": 0.0834,
+      "embedding_text_chars": 387
+    },
+    {
+      "idx": 278,
+      "encounter_id": "aPril AdaMS",
+      "novelty_score": 0.1006,
+      "embedding_text_chars": 300
+    },
+    {
+      "idx": 279,
+      "encounter_id": "STEPhEn Tapia",
+      "novelty_score": 0.1385,
+      "embedding_text_chars": 346
+    },
+    {
+      "idx": 280,
+      "encounter_id": "saNdRa torRes",
+      "novelty_score": 0.1066,
+      "embedding_text_chars": 419
+    },
+    {
+      "idx": 281,
+      "encounter_id": "JEssIcA WHiTe",
+      "novelty_score": 0.1287,
+      "embedding_text_chars": 299
+    },
+    {
+      "idx": 282,
+      "encounter_id": "JonaThan AdaMs",
+      "novelty_score": 0.0875,
+      "embedding_text_chars": 341
+    },
+    {
+      "idx": 283,
+      "encounter_id": "CiNdY PerEZ",
+      "novelty_score": 0.0931,
+      "embedding_text_chars": 370
+    },
+    {
+      "idx": 284,
+      "encounter_id": "enc_284",
+      "novelty_score": 0.0854,
+      "embedding_text_chars": 310
+    },
+    {
+      "idx": 285,
+      "encounter_id": "CHeryL CHAMBeRS",
+      "novelty_score": 0.0972,
+      "embedding_text_chars": 315
+    },
+    {
+      "idx": 286,
+      "encounter_id": "briDGEt khAN",
+      "novelty_score": 0.1156,
+      "embedding_text_chars": 306
+    },
+    {
+      "idx": 287,
+      "encounter_id": "fRedErICk ESpINoZa",
+      "novelty_score": 0.0846,
+      "embedding_text_chars": 371
+    },
+    {
+      "idx": 288,
+      "encounter_id": "NicOLE MENdeZ",
+      "novelty_score": 0.1216,
+      "embedding_text_chars": 406
+    },
+    {
+      "idx": 289,
+      "encounter_id": "shELly obrIEn",
+      "novelty_score": 0.1517,
+      "embedding_text_chars": 363
+    },
+    {
+      "idx": 290,
+      "encounter_id": "KRiStIN GoldEn",
+      "novelty_score": 0.1324,
+      "embedding_text_chars": 374
+    },
+    {
+      "idx": 291,
+      "encounter_id": "ROBeRT mulLiNs",
+      "novelty_score": 0.0835,
+      "embedding_text_chars": 360
+    },
+    {
+      "idx": 292,
+      "encounter_id": "JUsTin MoyER",
+      "novelty_score": 0.1355,
+      "embedding_text_chars": 334
+    },
+    {
+      "idx": 293,
+      "encounter_id": "LaUra gArCiA",
+      "novelty_score": 0.1416,
+      "embedding_text_chars": 408
+    },
+    {
+      "idx": 294,
+      "encounter_id": "DaNIel DAVis",
+      "novelty_score": 0.0922,
+      "embedding_text_chars": 329
+    },
+    {
+      "idx": 295,
+      "encounter_id": "ambeR yoUnG",
+      "novelty_score": 0.0805,
+      "embedding_text_chars": 363
+    },
+    {
+      "idx": 296,
+      "encounter_id": "johN MonTGOmery",
+      "novelty_score": 0.147,
+      "embedding_text_chars": 333
+    },
+    {
+      "idx": 297,
+      "encounter_id": "LiNDA LOVE",
+      "novelty_score": 0.1415,
+      "embedding_text_chars": 408
+    },
+    {
+      "idx": 298,
+      "encounter_id": "david banKS",
+      "novelty_score": 0.075,
+      "embedding_text_chars": 278
+    },
+    {
+      "idx": 299,
+      "encounter_id": "KaRen brOwn",
+      "novelty_score": 0.1651,
+      "embedding_text_chars": 358
+    },
+    {
+      "idx": 300,
+      "encounter_id": "lUiS young",
+      "novelty_score": 0.0729,
+      "embedding_text_chars": 274
+    },
+    {
+      "idx": 301,
+      "encounter_id": "KathErINE MARtIn",
+      "novelty_score": 0.1021,
+      "embedding_text_chars": 364
+    },
+    {
+      "idx": 302,
+      "encounter_id": "brIaN fReNCh",
+      "novelty_score": 0.1457,
+      "embedding_text_chars": 461
+    },
+    {
+      "idx": 303,
+      "encounter_id": "JaMeS WIlLiamS",
+      "novelty_score": 0.1246,
+      "embedding_text_chars": 323
+    },
+    {
+      "idx": 304,
+      "encounter_id": "juStIn mILler",
+      "novelty_score": 0.0773,
+      "embedding_text_chars": 411
+    },
+    {
+      "idx": 305,
+      "encounter_id": "enc_305",
+      "novelty_score": 0.1875,
+      "embedding_text_chars": 418
+    },
+    {
+      "idx": 306,
+      "encounter_id": "connOr hERmAN",
+      "novelty_score": 0.075,
+      "embedding_text_chars": 357
+    },
+    {
+      "idx": 307,
+      "encounter_id": "gReGORY bAILeY",
+      "novelty_score": 0.1404,
+      "embedding_text_chars": 363
+    },
+    {
+      "idx": 308,
+      "encounter_id": "pAul pereZ",
+      "novelty_score": 0.2297,
+      "embedding_text_chars": 508
+    },
+    {
+      "idx": 309,
+      "encounter_id": "aSHley ArmstRong",
+      "novelty_score": 0.0936,
+      "embedding_text_chars": 365
+    },
+    {
+      "idx": 310,
+      "encounter_id": "jUAN anDersoN",
+      "novelty_score": 0.1387,
+      "embedding_text_chars": 288
+    },
+    {
+      "idx": 311,
+      "encounter_id": "SusAn NeWmaN mD",
+      "novelty_score": 0.1164,
+      "embedding_text_chars": 326
+    },
+    {
+      "idx": 312,
+      "encounter_id": "suE ShEphErD",
+      "novelty_score": 0.0853,
+      "embedding_text_chars": 308
+    },
+    {
+      "idx": 313,
+      "encounter_id": "laURA PayNE",
+      "novelty_score": 0.0725,
+      "embedding_text_chars": 365
+    },
+    {
+      "idx": 314,
+      "encounter_id": "Tara kIdD",
+      "novelty_score": 0.1568,
+      "embedding_text_chars": 415
+    },
+    {
+      "idx": 315,
+      "encounter_id": "PEGgY RoBinSON",
+      "novelty_score": 0.1812,
+      "embedding_text_chars": 260
+    },
+    {
+      "idx": 316,
+      "encounter_id": "SUSAN goOdmaN",
+      "novelty_score": 0.0669,
+      "embedding_text_chars": 312
+    },
+    {
+      "idx": 317,
+      "encounter_id": "SUsAN BAUEr",
+      "novelty_score": 0.1143,
+      "embedding_text_chars": 420
+    },
+    {
+      "idx": 318,
+      "encounter_id": "cyntHiA SMIth",
+      "novelty_score": 0.1197,
+      "embedding_text_chars": 344
+    },
+    {
+      "idx": 319,
+      "encounter_id": "amy dixoN",
+      "novelty_score": 0.1339,
+      "embedding_text_chars": 358
+    },
+    {
+      "idx": 320,
+      "encounter_id": "karen milLer",
+      "novelty_score": 0.1848,
+      "embedding_text_chars": 448
+    },
+    {
+      "idx": 321,
+      "encounter_id": "JimMY esPArZa",
+      "novelty_score": 0.0723,
+      "embedding_text_chars": 409
+    },
+    {
+      "idx": 322,
+      "encounter_id": "BETtY wEst",
+      "novelty_score": 0.0762,
+      "embedding_text_chars": 306
+    },
+    {
+      "idx": 323,
+      "encounter_id": "enc_323",
+      "novelty_score": 0.2155,
+      "embedding_text_chars": 381
+    },
+    {
+      "idx": 324,
+      "encounter_id": "kEnNETH poweLl",
+      "novelty_score": 0.0976,
+      "embedding_text_chars": 274
+    },
+    {
+      "idx": 325,
+      "encounter_id": "enc_325",
+      "novelty_score": 0.1173,
+      "embedding_text_chars": 369
+    },
+    {
+      "idx": 326,
+      "encounter_id": "HEaTHEr rEeD",
+      "novelty_score": 0.1378,
+      "embedding_text_chars": 401
+    },
+    {
+      "idx": 327,
+      "encounter_id": "TylEr chUrcH",
+      "novelty_score": 0.1303,
+      "embedding_text_chars": 370
+    },
+    {
+      "idx": 328,
+      "encounter_id": "sHelBY GonZalez",
+      "novelty_score": 0.1664,
+      "embedding_text_chars": 368
+    },
+    {
+      "idx": 329,
+      "encounter_id": "eMILy WilsON",
+      "novelty_score": 0.1467,
+      "embedding_text_chars": 476
+    },
+    {
+      "idx": 330,
+      "encounter_id": "Maurice steelE",
+      "novelty_score": 0.1063,
+      "embedding_text_chars": 350
+    },
+    {
+      "idx": 331,
+      "encounter_id": "kathY FrITz",
+      "novelty_score": 0.1406,
+      "embedding_text_chars": 364
+    },
+    {
+      "idx": 332,
+      "encounter_id": "alExAndeR SHannON",
+      "novelty_score": 0.1111,
+      "embedding_text_chars": 333
+    },
+    {
+      "idx": 333,
+      "encounter_id": "niCOlE mCcoy",
+      "novelty_score": 0.1165,
+      "embedding_text_chars": 380
+    },
+    {
+      "idx": 334,
+      "encounter_id": "Terry alVARez",
+      "novelty_score": 0.1193,
+      "embedding_text_chars": 357
+    },
+    {
+      "idx": 335,
+      "encounter_id": "dAVId GOnzaleZ",
+      "novelty_score": 0.077,
+      "embedding_text_chars": 371
+    },
+    {
+      "idx": 336,
+      "encounter_id": "sarAH WaRe",
+      "novelty_score": 0.1124,
+      "embedding_text_chars": 364
+    },
+    {
+      "idx": 337,
+      "encounter_id": "MArIA Colon",
+      "novelty_score": 0.1784,
+      "embedding_text_chars": 423
+    },
+    {
+      "idx": 338,
+      "encounter_id": "heatHeR BeckEr",
+      "novelty_score": 0.168,
+      "embedding_text_chars": 359
+    },
+    {
+      "idx": 339,
+      "encounter_id": "ANNe LEONArd",
+      "novelty_score": 0.1464,
+      "embedding_text_chars": 414
+    },
+    {
+      "idx": 340,
+      "encounter_id": "tHomAs WILLiAmS",
+      "novelty_score": 0.0956,
+      "embedding_text_chars": 414
+    },
+    {
+      "idx": 341,
+      "encounter_id": "AManda StokEs",
+      "novelty_score": 0.065,
+      "embedding_text_chars": 397
+    },
+    {
+      "idx": 342,
+      "encounter_id": "BrIan JoRDaN",
+      "novelty_score": 0.1215,
+      "embedding_text_chars": 368
+    },
+    {
+      "idx": 343,
+      "encounter_id": "cAlViN gRavEs",
+      "novelty_score": 0.0941,
+      "embedding_text_chars": 431
+    },
+    {
+      "idx": 344,
+      "encounter_id": "kEViN HAlL",
+      "novelty_score": 0.0978,
+      "embedding_text_chars": 387
+    },
+    {
+      "idx": 345,
+      "encounter_id": "enc_345",
+      "novelty_score": 0.1218,
+      "embedding_text_chars": 337
+    },
+    {
+      "idx": 346,
+      "encounter_id": "wiLlIAm rIch",
+      "novelty_score": 0.1595,
+      "embedding_text_chars": 521
+    },
+    {
+      "idx": 347,
+      "encounter_id": "sAmUel enGlISh",
+      "novelty_score": 0.1742,
+      "embedding_text_chars": 424
+    },
+    {
+      "idx": 348,
+      "encounter_id": "shAWN ScHMIdT",
+      "novelty_score": 0.0966,
+      "embedding_text_chars": 334
+    },
+    {
+      "idx": 349,
+      "encounter_id": "BrENda kNight",
+      "novelty_score": 0.0855,
+      "embedding_text_chars": 305
+    },
+    {
+      "idx": 350,
+      "encounter_id": "alYSSA SCOtt",
+      "novelty_score": 0.1274,
+      "embedding_text_chars": 379
+    },
+    {
+      "idx": 351,
+      "encounter_id": "george MCCaRTy",
+      "novelty_score": 0.0843,
+      "embedding_text_chars": 363
+    },
+    {
+      "idx": 352,
+      "encounter_id": "cHriSTiNE leon",
+      "novelty_score": 0.0922,
+      "embedding_text_chars": 361
+    },
+    {
+      "idx": 353,
+      "encounter_id": "nICholAS sCott",
+      "novelty_score": 0.1905,
+      "embedding_text_chars": 384
+    },
+    {
+      "idx": 354,
+      "encounter_id": "aNTHoNY oneal",
+      "novelty_score": 0.1585,
+      "embedding_text_chars": 325
+    },
+    {
+      "idx": 355,
+      "encounter_id": "pATRICIA BeCKER",
+      "novelty_score": 0.1827,
+      "embedding_text_chars": 366
+    },
+    {
+      "idx": 356,
+      "encounter_id": "amanda Mckee",
+      "novelty_score": 0.1927,
+      "embedding_text_chars": 291
+    },
+    {
+      "idx": 357,
+      "encounter_id": "BrittanY jamEs",
+      "novelty_score": 0.1044,
+      "embedding_text_chars": 400
+    },
+    {
+      "idx": 358,
+      "encounter_id": "vAnEsSA frANkLin",
+      "novelty_score": 0.0968,
+      "embedding_text_chars": 283
+    },
+    {
+      "idx": 359,
+      "encounter_id": "TiFFaNy CASTRO",
+      "novelty_score": 0.1294,
+      "embedding_text_chars": 403
+    },
+    {
+      "idx": 360,
+      "encounter_id": "JEFfrey GIlbErT",
+      "novelty_score": 0.0939,
+      "embedding_text_chars": 328
+    },
+    {
+      "idx": 361,
+      "encounter_id": "enc_361",
+      "novelty_score": 0.2376,
+      "embedding_text_chars": 275
+    },
+    {
+      "idx": 362,
+      "encounter_id": "aShLeY MCIntOSh",
+      "novelty_score": 0.174,
+      "embedding_text_chars": 341
+    },
+    {
+      "idx": 363,
+      "encounter_id": "jessICa pINEDA",
+      "novelty_score": 0.2156,
+      "embedding_text_chars": 400
+    },
+    {
+      "idx": 364,
+      "encounter_id": "RODNey tRavIS",
+      "novelty_score": 0.0957,
+      "embedding_text_chars": 457
+    },
+    {
+      "idx": 365,
+      "encounter_id": "LIsA bENNett",
+      "novelty_score": 0.1066,
+      "embedding_text_chars": 389
+    },
+    {
+      "idx": 366,
+      "encounter_id": "ALeXaNdRa ESPINOzA",
+      "novelty_score": 0.1314,
+      "embedding_text_chars": 453
+    },
+    {
+      "idx": 367,
+      "encounter_id": "MIChAEl goMEZ",
+      "novelty_score": 0.1352,
+      "embedding_text_chars": 430
+    },
+    {
+      "idx": 368,
+      "encounter_id": "riTA archER",
+      "novelty_score": 0.2017,
+      "embedding_text_chars": 364
+    },
+    {
+      "idx": 369,
+      "encounter_id": "frAncISCo rILey",
+      "novelty_score": 0.1376,
+      "embedding_text_chars": 343
+    },
+    {
+      "idx": 370,
+      "encounter_id": "ErIN rOsE",
+      "novelty_score": 0.0916,
+      "embedding_text_chars": 311
+    },
+    {
+      "idx": 371,
+      "encounter_id": "vALeRIE peNa",
+      "novelty_score": 0.1425,
+      "embedding_text_chars": 340
+    },
+    {
+      "idx": 372,
+      "encounter_id": "StefAnIe aNdrade",
+      "novelty_score": 0.1318,
+      "embedding_text_chars": 392
+    },
+    {
+      "idx": 373,
+      "encounter_id": "ROBeRT ENGlIsh",
+      "novelty_score": 0.0851,
+      "embedding_text_chars": 358
+    },
+    {
+      "idx": 374,
+      "encounter_id": "KRiSten pAYNe",
+      "novelty_score": 0.1452,
+      "embedding_text_chars": 365
+    },
+    {
+      "idx": 375,
+      "encounter_id": "RUsSelL FiGuErOa",
+      "novelty_score": 0.1355,
+      "embedding_text_chars": 365
+    },
+    {
+      "idx": 376,
+      "encounter_id": "mary roDRIGUez",
+      "novelty_score": 0.0774,
+      "embedding_text_chars": 361
+    },
+    {
+      "idx": 377,
+      "encounter_id": "enc_377",
+      "novelty_score": 0.1571,
+      "embedding_text_chars": 407
+    },
+    {
+      "idx": 378,
+      "encounter_id": "hARRy CLArk",
+      "novelty_score": 0.1184,
+      "embedding_text_chars": 410
+    },
+    {
+      "idx": 379,
+      "encounter_id": "chERYL CANnon",
+      "novelty_score": 0.102,
+      "embedding_text_chars": 395
+    },
+    {
+      "idx": 380,
+      "encounter_id": "aMaNdA crOsS",
+      "novelty_score": 0.0847,
+      "embedding_text_chars": 386
+    },
+    {
+      "idx": 381,
+      "encounter_id": "enc_381",
+      "novelty_score": 0.1983,
+      "embedding_text_chars": 423
+    },
+    {
+      "idx": 382,
+      "encounter_id": "david rosS",
+      "novelty_score": 0.1804,
+      "embedding_text_chars": 350
+    },
+    {
+      "idx": 383,
+      "encounter_id": "NiCOLe NOvaK",
+      "novelty_score": 0.0761,
+      "embedding_text_chars": 379
+    },
+    {
+      "idx": 384,
+      "encounter_id": "loRI TaYLoR",
+      "novelty_score": 0.1043,
+      "embedding_text_chars": 303
+    },
+    {
+      "idx": 385,
+      "encounter_id": "TaMMY oRTeGA",
+      "novelty_score": 0.0966,
+      "embedding_text_chars": 362
+    },
+    {
+      "idx": 386,
+      "encounter_id": "maRy rIVera",
+      "novelty_score": 0.0769,
+      "embedding_text_chars": 362
+    },
+    {
+      "idx": 387,
+      "encounter_id": "rIckeY HerNanDEZ",
+      "novelty_score": 0.1643,
+      "embedding_text_chars": 408
+    },
+    {
+      "idx": 388,
+      "encounter_id": "DOuglaS PeNa",
+      "novelty_score": 0.1361,
+      "embedding_text_chars": 390
+    },
+    {
+      "idx": 389,
+      "encounter_id": "debORaH wArREN DdS",
+      "novelty_score": 0.1239,
+      "embedding_text_chars": 309
+    },
+    {
+      "idx": 390,
+      "encounter_id": "paTricK hEbeRT",
+      "novelty_score": 0.1124,
+      "embedding_text_chars": 422
+    },
+    {
+      "idx": 391,
+      "encounter_id": "mORgAn biRd",
+      "novelty_score": 0.1166,
+      "embedding_text_chars": 418
+    },
+    {
+      "idx": 392,
+      "encounter_id": "enc_392",
+      "novelty_score": 0.2687,
+      "embedding_text_chars": 455
+    },
+    {
+      "idx": 393,
+      "encounter_id": "eliZABetH tanNer",
+      "novelty_score": 0.0762,
+      "embedding_text_chars": 384
+    },
+    {
+      "idx": 394,
+      "encounter_id": "Amanda cHAPMaN",
+      "novelty_score": 0.1639,
+      "embedding_text_chars": 332
+    },
+    {
+      "idx": 395,
+      "encounter_id": "davID WaRD",
+      "novelty_score": 0.1481,
+      "embedding_text_chars": 409
+    },
+    {
+      "idx": 396,
+      "encounter_id": "JILL huErTa",
+      "novelty_score": 0.0987,
+      "embedding_text_chars": 392
+    },
+    {
+      "idx": 397,
+      "encounter_id": "SYNTHETIC-MOTHER-EDEMA (mom-001, synthetic)",
+      "novelty_score": 0.2654,
+      "embedding_text_chars": 144
+    },
+    {
+      "idx": 398,
+      "encounter_id": "SYNTHETIC-MOTHER-EDEMA (mom-001, synthetic)",
+      "novelty_score": 0.2265,
+      "embedding_text_chars": 290
+    },
+    {
+      "idx": 399,
+      "encounter_id": "SYNTHETIC-FATHER-COPD (dad-002)",
+      "novelty_score": 0.1943,
+      "embedding_text_chars": 113
+    },
+    {
+      "idx": 400,
+      "encounter_id": "SYNTHETIC-FATHER-COPD (dad-002)",
+      "novelty_score": 0.188,
+      "embedding_text_chars": 132
+    }
+  ]
+}

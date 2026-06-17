@@ -1,0 +1,594 @@
+{
+  "metadata": {
+    "generated": "2026-06-16",
+    "n_encounters": 401,
+    "b5_note": "spend_signals is a STRUCTURAL feature view \u2014 distinct from B3 semantic_features. These signals measure information density and novelty, not clinical meaning.",
+    "b3_b5_boundary": "B3 semantic_features answer: what IS this encounter. B5 spend_signals answer: how MUCH is here and how NOVEL is it.",
+    "portability": {
+      "pattern": "4 structural signals, domain-agnostic",
+      "healthcare": "novelty=embedding distance, completeness=field fill rate, instability=vital boundary violations",
+      "finance": "novelty=distance from known-pattern corpus, completeness=transaction field fill rate, instability=metric boundary violations",
+      "insurance": "novelty=distance from settled-claim corpus, completeness=documentation fill rate, instability=claim exception count",
+      "legal": "novelty=distance from precedent corpus, completeness=contract field fill rate, instability=clause flag count",
+      "support": "novelty=distance from known-issue corpus, completeness=ticket field fill rate, instability=SLA breach count"
+    },
+    "signals": {
+      "novelty_score": "cosine distance to top-5 nearest neighbors via text-embedding-004. Range 0.065-0.342 in this corpus.",
+      "struct_completeness_score": "fraction of 12 structured fields non-null (0.0-1.0). Lower = more ambiguity = more compute warranted.",
+      "vital_instability_count": "count of vitals outside reference ranges (0-5). Counts boundary violations, not clinical severity.",
+      "text_density_chars": "character count of narrative fields. Low variance in this synthetic corpus; high variance in real EHR data."
+    }
+  },
+  "distribution": {
+    "novelty_score": {
+      "min": 0.065,
+      "p25": 0.0982,
+      "p50": 0.1266,
+      "p75": 0.1547,
+      "max": 0.3425
+    },
+    "struct_completeness_score": {
+      "fully_complete_1_0": 235,
+      "partial_0_75_0_99": 153,
+      "incomplete_lt_0_75": 13
+    },
+    "vital_instability_count": {
+      "zero_flags": 289,
+      "one_flag": 89,
+      "two_plus": 23
+    }
+  },
+  "per_encounter": [
+    {
+      "idx": 0,
+      "signals": {
+        "novelty_score": 0.1434,
+        "struct_completeness_score": 1.0,
+        "vital_instability_count": 0,
+        "text_density_chars": 624
+      },
+      "tier": "FLASH",
+      "model": "gemini-2.5-flash"
+    },
+    {
+      "idx": 1,
+      "signals": {
+        "novelty_score": 0.1094,
+        "struct_completeness_score": 1.0,
+        "vital_instability_count": 0,
+        "text_density_chars": 904
+      },
+      "tier": "FLASH",
+      "model": "gemini-2.5-flash"
+    },
+    {
+      "idx": 2,
+      "signals": {
+        "novelty_score": 0.1413,
+        "struct_completeness_score": 1.0,
+        "vital_instability_count": 0,
+        "text_density_chars": 784
+      },
+      "tier": "FLASH",
+      "model": "gemini-2.5-flash"
+    },
+    {
+      "idx": 3,
+      "signals": {
+        "novelty_score": 0.1525,
+        "struct_completeness_score": 1.0,
+        "vital_instability_count": 1,
+        "text_density_chars": 788
+      },
+      "tier": "PRO",
+      "model": "gemini-2.5-pro"
+    },
+    {
+      "idx": 4,
+      "signals": {
+        "novelty_score": 0.0968,
+        "struct_completeness_score": 1.0,
+        "vital_instability_count": 1,
+        "text_density_chars": 763
+      },
+      "tier": "FLASH",
+      "model": "gemini-2.5-flash"
+    },
+    {
+      "idx": 5,
+      "signals": {
+        "novelty_score": 0.1592,
+        "struct_completeness_score": 1.0,
+        "vital_instability_count": 0,
+        "text_density_chars": 558
+      },
+      "tier": "PRO",
+      "model": "gemini-2.5-pro"
+    },
+    {
+      "idx": 6,
+      "signals": {
+        "novelty_score": 0.1635,
+        "struct_completeness_score": 0.917,
+        "vital_instability_count": 0,
+        "text_density_chars": 749
+      },
+      "tier": "PRO",
+      "model": "gemini-2.5-pro"
+    },
+    {
+      "idx": 7,
+      "signals": {
+        "novelty_score": 0.1291,
+        "struct_completeness_score": 0.917,
+        "vital_instability_count": 0,
+        "text_density_chars": 653
+      },
+      "tier": "FLASH",
+      "model": "gemini-2.5-flash"
+    },
+    {
+      "idx": 8,
+      "signals": {
+        "novelty_score": 0.0949,
+        "struct_completeness_score": 0.917,
+        "vital_instability_count": 0,
+        "text_density_chars": 849
+      },
+      "tier": "FLASH",
+      "model": "gemini-2.5-flash"
+    },
+    {
+      "idx": 9,
+      "signals": {
+        "novelty_score": 0.1464,
+        "struct_completeness_score": 0.833,
+        "vital_instability_count": 0,
+        "text_density_chars": 793
+      },
+      "tier": "PRO",
+      "model": "gemini-2.5-pro"
+    },
+    {
+      "idx": 10,
+      "signals": {
+        "novelty_score": 0.214,
+        "struct_completeness_score": 0.583,
+        "vital_instability_count": 0,
+        "text_density_chars": 744
+      },
+      "tier": "PRO",
+      "model": "gemini-2.5-pro"
+    },
+    {
+      "idx": 11,
+      "signals": {
+        "novelty_score": 0.1565,
+        "struct_completeness_score": 0.833,
+        "vital_instability_count": 0,
+        "text_density_chars": 697
+      },
+      "tier": "PRO",
+      "model": "gemini-2.5-pro"
+    },
+    {
+      "idx": 12,
+      "signals": {
+        "novelty_score": 0.0982,
+        "struct_completeness_score": 1.0,
+        "vital_instability_count": 1,
+        "text_density_chars": 1032
+      },
+      "tier": "FLASH",
+      "model": "gemini-2.5-flash"
+    },
+    {
+      "idx": 13,
+      "signals": {
+        "novelty_score": 0.1058,
+        "struct_completeness_score": 1.0,
+        "vital_instability_count": 1,
+        "text_density_chars": 675
+      },
+      "tier": "FLASH",
+      "model": "gemini-2.5-flash"
+    },
+    {
+      "idx": 14,
+      "signals": {
+        "novelty_score": 0.0767,
+        "struct_completeness_score": 1.0,
+        "vital_instability_count": 0,
+        "text_density_chars": 985
+      },
+      "tier": "CACHED_FLASH",
+      "model": "gemini-2.5-flash"
+    },
+    {
+      "idx": 15,
+      "signals": {
+        "novelty_score": 0.0689,
+        "struct_completeness_score": 0.917,
+        "vital_instability_count": 1,
+        "text_density_chars": 619
+      },
+      "tier": "FLASH",
+      "model": "gemini-2.5-flash"
+    },
+    {
+      "idx": 16,
+      "signals": {
+        "novelty_score": 0.0835,
+        "struct_completeness_score": 1.0,
+        "vital_instability_count": 0,
+        "text_density_chars": 818
+      },
+      "tier": "CACHED_FLASH",
+      "model": "gemini-2.5-flash"
+    },
+    {
+      "idx": 17,
+      "signals": {
+        "novelty_score": 0.1731,
+        "struct_completeness_score": 1.0,
+        "vital_instability_count": 0,
+        "text_density_chars": 1083
+      },
+      "tier": "PRO",
+      "model": "gemini-2.5-pro"
+    },
+    {
+      "idx": 18,
+      "signals": {
+        "novelty_score": 0.1025,
+        "struct_completeness_score": 1.0,
+        "vital_instability_count": 0,
+        "text_density_chars": 637
+      },
+      "tier": "CACHED_FLASH",
+      "model": "gemini-2.5-flash"
+    },
+    {
+      "idx": 19,
+      "signals": {
+        "novelty_score": 0.2656,
+        "struct_completeness_score": 0.833,
+        "vital_instability_count": 0,
+        "text_density_chars": 671
+      },
+      "tier": "PRO",
+      "model": "gemini-2.5-pro"
+    },
+    {
+      "idx": 20,
+      "signals": {
+        "novelty_score": 0.1097,
+        "struct_completeness_score": 1.0,
+        "vital_instability_count": 0,
+        "text_density_chars": 740
+      },
+      "tier": "FLASH",
+      "model": "gemini-2.5-flash"
+    },
+    {
+      "idx": 21,
+      "signals": {
+        "novelty_score": 0.1292,
+        "struct_completeness_score": 0.917,
+        "vital_instability_count": 0,
+        "text_density_chars": 824
+      },
+      "tier": "FLASH",
+      "model": "gemini-2.5-flash"
+    },
+    {
+      "idx": 22,
+      "signals": {
+        "novelty_score": 0.2121,
+        "struct_completeness_score": 0.667,
+        "vital_instability_count": 1,
+        "text_density_chars": 848
+      },
+      "tier": "PRO",
+      "model": "gemini-2.5-pro"
+    },
+    {
+      "idx": 23,
+      "signals": {
+        "novelty_score": 0.2209,
+        "struct_completeness_score": 0.583,
+        "vital_instability_count": 0,
+        "text_density_chars": 752
+      },
+      "tier": "PRO",
+      "model": "gemini-2.5-pro"
+    },
+    {
+      "idx": 24,
+      "signals": {
+        "novelty_score": 0.0735,
+        "struct_completeness_score": 0.917,
+        "vital_instability_count": 1,
+        "text_density_chars": 753
+      },
+      "tier": "FLASH",
+      "model": "gemini-2.5-flash"
+    },
+    {
+      "idx": 25,
+      "signals": {
+        "novelty_score": 0.0817,
+        "struct_completeness_score": 1.0,
+        "vital_instability_count": 0,
+        "text_density_chars": 711
+      },
+      "tier": "CACHED_FLASH",
+      "model": "gemini-2.5-flash"
+    },
+    {
+      "idx": 26,
+      "signals": {
+        "novelty_score": 0.1547,
+        "struct_completeness_score": 1.0,
+        "vital_instability_count": 1,
+        "text_density_chars": 695
+      },
+      "tier": "PRO",
+      "model": "gemini-2.5-pro"
+    },
+    {
+      "idx": 27,
+      "signals": {
+        "novelty_score": 0.1542,
+        "struct_completeness_score": 1.0,
+        "vital_instability_count": 0,
+        "text_density_chars": 615
+      },
+      "tier": "PRO",
+      "model": "gemini-2.5-pro"
+    },
+    {
+      "idx": 28,
+      "signals": {
+        "novelty_score": 0.1592,
+        "struct_completeness_score": 1.0,
+        "vital_instability_count": 0,
+        "text_density_chars": 892
+      },
+      "tier": "PRO",
+      "model": "gemini-2.5-pro"
+    },
+    {
+      "idx": 29,
+      "signals": {
+        "novelty_score": 0.0931,
+        "struct_completeness_score": 1.0,
+        "vital_instability_count": 0,
+        "text_density_chars": 995
+      },
+      "tier": "CACHED_FLASH",
+      "model": "gemini-2.5-flash"
+    },
+    {
+      "idx": 30,
+      "signals": {
+        "novelty_score": 0.1004,
+        "struct_completeness_score": 1.0,
+        "vital_instability_count": 0,
+        "text_density_chars": 650
+      },
+      "tier": "CACHED_FLASH",
+      "model": "gemini-2.5-flash"
+    },
+    {
+      "idx": 31,
+      "signals": {
+        "novelty_score": 0.0743,
+        "struct_completeness_score": 1.0,
+        "vital_instability_count": 2,
+        "text_density_chars": 661
+      },
+      "tier": "PRO",
+      "model": "gemini-2.5-pro"
+    },
+    {
+      "idx": 32,
+      "signals": {
+        "novelty_score": 0.284,
+        "struct_completeness_score": 0.75,
+        "vital_instability_count": 0,
+        "text_density_chars": 961
+      },
+      "tier": "PRO",
+      "model": "gemini-2.5-pro"
+    },
+    {
+      "idx": 33,
+      "signals": {
+        "novelty_score": 0.1469,
+        "struct_completeness_score": 0.75,
+        "vital_instability_count": 0,
+        "text_density_chars": 765
+      },
+      "tier": "PRO",
+      "model": "gemini-2.5-pro"
+    },
+    {
+      "idx": 34,
+      "signals": {
+        "novelty_score": 0.1374,
+        "struct_completeness_score": 1.0,
+        "vital_instability_count": 0,
+        "text_density_chars": 863
+      },
+      "tier": "FLASH",
+      "model": "gemini-2.5-flash"
+    },
+    {
+      "idx": 35,
+      "signals": {
+        "novelty_score": 0.1031,
+        "struct_completeness_score": 1.0,
+        "vital_instability_count": 0,
+        "text_density_chars": 666
+      },
+      "tier": "CACHED_FLASH",
+      "model": "gemini-2.5-flash"
+    },
+    {
+      "idx": 36,
+      "signals": {
+        "novelty_score": 0.1784,
+        "struct_completeness_score": 0.917,
+        "vital_instability_count": 0,
+        "text_density_chars": 864
+      },
+      "tier": "PRO",
+      "model": "gemini-2.5-pro"
+    },
+    {
+      "idx": 37,
+      "signals": {
+        "novelty_score": 0.1698,
+        "struct_completeness_score": 0.833,
+        "vital_instability_count": 0,
+        "text_density_chars": 746
+      },
+      "tier": "PRO",
+      "model": "gemini-2.5-pro"
+    },
+    {
+      "idx": 38,
+      "signals": {
+        "novelty_score": 0.0791,
+        "struct_completeness_score": 1.0,
+        "vital_instability_count": 2,
+        "text_density_chars": 864
+      },
+      "tier": "PRO",
+      "model": "gemini-2.5-pro"
+    },
+    {
+      "idx": 39,
+      "signals": {
+        "novelty_score": 0.1277,
+        "struct_completeness_score": 0.833,
+        "vital_instability_count": 0,
+        "text_density_chars": 950
+      },
+      "tier": "FLASH",
+      "model": "gemini-2.5-flash"
+    },
+    {
+      "idx": 40,
+      "signals": {
+        "novelty_score": 0.0984,
+        "struct_completeness_score": 0.833,
+        "vital_instability_count": 0,
+        "text_density_chars": 582
+      },
+      "tier": "FLASH",
+      "model": "gemini-2.5-flash"
+    },
+    {
+      "idx": 41,
+      "signals": {
+        "novelty_score": 0.1333,
+        "struct_completeness_score": 0.583,
+        "vital_instability_count": 0,
+        "text_density_chars": 840
+      },
+      "tier": "PRO",
+      "model": "gemini-2.5-pro"
+    },
+    {
+      "idx": 42,
+      "signals": {
+        "novelty_score": 0.1503,
+        "struct_completeness_score": 1.0,
+        "vital_instability_count": 0,
+        "text_density_chars": 708
+      },
+      "tier": "PRO",
+      "model": "gemini-2.5-pro"
+    },
+    {
+      "idx": 43,
+      "signals": {
+        "novelty_score": 0.1271,
+        "struct_completeness_score": 1.0,
+        "vital_instability_count": 1,
+        "text_density_chars": 766
+      },
+      "tier": "FLASH",
+      "model": "gemini-2.5-flash"
+    },
+    {
+      "idx": 44,
+      "signals": {
+        "novelty_score": 0.162,
+        "struct_completeness_score": 1.0,
+        "vital_instability_count": 1,
+        "text_density_chars": 890
+      },
+      "tier": "PRO",
+      "model": "gemini-2.5-pro"
+    },
+    {
+      "idx": 45,
+      "signals": {
+        "novelty_score": 0.101,
+        "struct_completeness_score": 0.917,
+        "vital_instability_count": 0,
+        "text_density_chars": 701
+      },
+      "tier": "FLASH",
+      "model": "gemini-2.5-flash"
+    },
+    {
+      "idx": 46,
+      "signals": {
+        "novelty_score": 0.1017,
+        "struct_completeness_score": 0.917,
+        "vital_instability_count": 0,
+        "text_density_chars": 889
+      },
+      "tier": "FLASH",
+      "model": "gemini-2.5-flash"
+    },
+    {
+      "idx": 47,
+      "signals": {
+        "novelty_score": 0.1233,
+        "struct_completeness_score": 1.0,
+        "vital_instability_count": 1,
+        "text_density_chars": 928
+      },
+      "tier": "FLASH",
+      "model": "gemini-2.5-flash"
+    },
+    {
+      "idx": 48,
+      "signals": {
+        "novelty_score": 0.077,
+        "struct_completeness_score": 1.0,
+        "vital_instability_count": 1,
+        "text_density_chars": 829
+      },
+      "tier": "FLASH",
+      "model": "gemini-2.5-flash"
+    },
+    {
+      "idx": 49,
+      "signals": {
+        "novelty_score": 0.2138,
+        "struct_completeness_score": 0.75,
+        "vital_instability_count": 3,
+        "text_density_chars": 784
+      },
+      "tier": "PRO",
+      "model": "gemini-2.5-pro"
+    }
+  ],
+  "per_encounter_note": "Showing 50/401 \u2014 full data in routing_decision_ledger.json"
+}
