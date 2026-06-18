@@ -1,4 +1,5 @@
 # healthcare-ai-data-engineer
+**Built by [Anix Lynch](https://gozeroshot.dev) — LA-based AI/Data Engineer**
 
 ![Demo](demo.gif)
 
