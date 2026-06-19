@@ -1,4 +1,4 @@
-# Governance + access control (Bullet 4)
+# Governance + access control
 
 > "ไม่ใช่ทุกคนควรเห็นทุกอย่าง" — not everyone should see everything.
 

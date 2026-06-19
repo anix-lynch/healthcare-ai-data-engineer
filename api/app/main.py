@@ -211,7 +211,7 @@ def root():
             "stats": "/api/stats"
         },
         "docs": "/docs",
-        "github": "https://github.com/anix-lynch/healthcare-analytics"
+        "github": "https://github.com/anix-lynch/healthcare-ai-data-engineer"
     }
 
 
@@ -222,6 +222,15 @@ def app_shell():
     if not index_path.exists():
         raise HTTPException(status_code=404, detail="UI not built")
     return FileResponse(index_path)
+
+
+@app.get("/storyboard")
+def storyboard_shell():
+    """Serve the Baymax Storyboard — B1→B5 hero journey demo."""
+    p = WEB_DIR / "storyboard.html"
+    if not p.exists():
+        raise HTTPException(status_code=404, detail="storyboard.html not found")
+    return FileResponse(p)
 
 
 def _ingestion_mod():
@@ -238,7 +247,7 @@ def _ingestion_mod():
 
 @app.post("/api/ingest")
 def ingest_record(record: dict = Body(...)):
-    """Stateless classify endpoint — the HTTP demo face of Bullet 1.
+    """Stateless classify endpoint — the HTTP demo face of the ingestion stage.
 
     POST a single encounter record; it runs through the SAME validator that both
     the batch stream ingester and the live Pub/Sub consumer use, so the
@@ -258,7 +267,7 @@ def ingest_record(record: dict = Body(...)):
 
 @app.post("/pubsub/push")
 def pubsub_push(envelope: dict = Body(...)):
-    """Pub/Sub push subscription target — the real streaming leg of Bullet 1.
+    """Pub/Sub push subscription target — the real streaming leg of ingestion.
 
     A message published to the `encounter-events` topic is delivered here by a
     Pub/Sub push subscription. We unwrap the envelope, classify with the SHARED
@@ -631,6 +640,183 @@ def get_storyboard_b():
         return json.load(f)
 
 
+@app.get("/api/storyboard/platform")
+def get_storyboard_platform():
+    """Recruiter-facing storyboard data for the B1->B5 platform (Tommy & Eleanor).
+
+    Reads the REAL platform artifacts at request time — every number traces to a
+    committed artifact file. Nothing here is hardcoded; if an artifact changes,
+    this payload changes. Baymax is NOT consumed; this visualizes the platform only.
+    """
+    import re as _re
+
+    def _json(rel):
+        fp = BASE_DIR / rel
+        if fp.exists():
+            try:
+                with open(fp) as f:
+                    return json.load(f)
+            except Exception:
+                return {}
+        return {}
+
+    def _text(rel):
+        fp = BASE_DIR / rel
+        try:
+            return fp.read_text() if fp.exists() else ""
+        except Exception:
+            return ""
+
+    def _find(obj, key):
+        if isinstance(obj, dict):
+            if key in obj:
+                return obj[key]
+            for v in obj.values():
+                r = _find(v, key)
+                if r is not None:
+                    return r
+        elif isinstance(obj, list):
+            for v in obj:
+                r = _find(v, key)
+                if r is not None:
+                    return r
+        return None
+
+    recon = _json("quality/proof_reconciliation.json")
+    ingest = _json("ingestion/proof_ingestion.json")
+    ge = _json("data/quality/ge_release_gate_report.json")
+    ground = _json("artifacts/grounding_coverage.json")
+    spend = _json("artifacts/spend_signals.json")
+    storyb = _json("artifacts/story_b_encounter_225.json")
+    rel = _text("artifacts/reliability_summary.md")
+    schema = _text("dbt-project/models/marts/core/schema.yml")
+
+    gc = recon.get("grain_chain", {})
+
+    def _pct(label):
+        m = _re.search(_re.escape(label) + r"\s*\|\s*\*\*([\d.]+\s*(?:%|ms)?)\*\*", rel)
+        return m.group(1).replace(" ", "") if m else None
+
+    dims = _re.findall(r"^\s*- name:\s*(dim_\w+)", schema, _re.M)
+    facts = _re.findall(r"^\s*- name:\s*(fact_\w+)", schema, _re.M)
+    api_routes = sorted({r.path for r in app.routes if str(getattr(r, "path", "")).startswith("/api") and getattr(r, "methods", None)})
+
+    ge_total = _find(ge, "total_expectations")
+    ge_pass = _find(ge, "passed_expectations")
+    reco_checks = recon.get("checks", [])
+    reco_pass = sum(1 for c in reco_checks if c.get("pass"))
+    gv = ground.get("vertex_genai_eval", {})
+
+    GH = "https://github.com/anix-lynch/healthcare-ai-data-engineer/blob/main/"
+
+    def metric(label, value, source):
+        return {"label": label, "value": value, "source": source, "proof": GH + source}
+
+    stages = [
+        {
+            "id": "B1", "organ": "Capture Reality", "dot": "b1",
+            "question": "Did every record arrive — and get caught if messy?",
+            "plain": "Every encounter is streamed in. Malformed, duplicate, and implausible records are quarantined at the door, not hand-cleaned later.",
+            "metrics": [
+                metric("records captured", f"{gc.get('source_csv_rows', 0):,}", "quality/proof_reconciliation.json"),
+                metric("quarantined at the gate", f"{gc.get('bulk_quarantine_rows', 0):,}", "quality/proof_reconciliation.json"),
+                metric("clean encounters", f"{gc.get('clean_raw_rows', 0):,}", "quality/proof_reconciliation.json"),
+                metric("identities resolved (canonical patients)", f"{gc.get('canonical_patients_dim', 0):,}", "quality/proof_reconciliation.json"),
+                metric("stream reconciliation", "match" if ingest.get("reconciliation", {}).get("match") else "—", "ingestion/proof_ingestion.json"),
+            ],
+            "screenshot": "/portfolio-assets/B1_executive_dashboard/screenshots/executive_dashboard.png",
+            "api": "/api/storyboard/b",
+        },
+        {
+            "id": "B2", "organ": "Trust Reality", "dot": "b2",
+            "question": "Can we trust this data before anything downstream uses it?",
+            "plain": "Versioned contracts + Great Expectations gate every load. Untrusted data is blocked before it reaches analytics, ML, or AI.",
+            "metrics": [
+                metric("quality expectations passed", (f"{ge_pass}/{ge_total}" if ge_total else "—"), "data/quality/ge_release_gate_report.json"),
+                metric("reconciliation checks passed", (f"{reco_pass}/{len(reco_checks)}" if reco_checks else "—"), "quality/proof_reconciliation.json"),
+                metric("grain chain reconciles", "ALL_PASS" if recon.get("all_pass") else "—", "quality/proof_reconciliation.json"),
+                metric("stale-data incidents", (_pct("Stale-data incidents") or "—"), "artifacts/reliability_summary.md"),
+            ],
+            "screenshot": "/portfolio-assets/B2_trust_dashboard/screenshots/trust_dashboard.png",
+            "api": "/api/storyboard/a",
+        },
+        {
+            "id": "B3", "organ": "Understand Reality", "dot": "b3",
+            "question": "Is it modeled so humans AND AI can query the same truth?",
+            "plain": "Governed medallion marts + dimensional products + APIs — one substrate that BI tools and grounded LLMs query directly.",
+            "metrics": [
+                metric("governed models (dimensions + fact)", f"{len(dims)} dims + {len(facts)} fact", "dbt-project/models/marts/core/schema.yml"),
+                metric("API routes serving the substrate", str(len(api_routes)), "api/app/main.py"),
+                metric("grounded-response rate (Vertex eval)", (f"{gv.get('grounded_response_rate_substantive', 0) * 100:.1f}%" if gv.get('grounded_response_rate_substantive') else "—"), "artifacts/grounding_coverage.json"),
+                metric("retrieval hit@5", str(ground.get("metrics", {}).get("hit_at_5", "—")), "artifacts/grounding_coverage.json"),
+            ],
+            "screenshot": "/portfolio-assets/B3_dbt_documentation/screenshots/mart_catalog.png",
+            "api": "/api/ask?q=which%20patients%20show%20cardiac%20red%20flags",
+        },
+        {
+            "id": "B4", "organ": "Protect Reality", "dot": "b4",
+            "question": "When something fails, does it self-heal before AI is impacted?",
+            "plain": "Orchestration with anomaly detection, bounded retries, SLA monitoring, and automated recovery — failures resolved before downstream AI sees them.",
+            "metrics": [
+                metric("pipeline success rate", (_pct("Pipeline success rate") or "—"), "artifacts/reliability_summary.md"),
+                metric("automated recovery rate", (_pct("Automated recovery rate") or "—"), "artifacts/reliability_summary.md"),
+                metric("SLA compliance", (_pct("SLA compliance rate") or "—"), "artifacts/reliability_summary.md"),
+                metric("mean time to recovery", (_pct("Mean time to recovery") or "—"), "artifacts/reliability_summary.md"),
+            ],
+            "screenshot": "/portfolio-assets/B4_airflow_dag/screenshots/airflow_dag.png",
+            "api": "/api/storyboard/b",
+        },
+        {
+            "id": "B5", "organ": "Govern Attention & Cost", "dot": "b5",
+            "question": "How much compute does THIS case deserve?",
+            "plain": "A portable spend-governance layer routes each record to the right model tier and caches static context — separating semantic reasoning from attention allocation.",
+            "metrics": [
+                metric("encounters governed", f"{spend.get('metadata', {}).get('n_encounters', 0):,}", "artifacts/spend_signals.json"),
+                metric("context-cache cost reduction", (f"{_find(storyb, 'per_call_reduction_pct')}%" if _find(storyb, 'per_call_reduction_pct') is not None else "—"), "artifacts/story_b_encounter_225.json"),
+                metric("cost reduction vs all-Pro routing", (f"{_find(storyb, 'vs_naive_all_pro_pct')}%" if _find(storyb, 'vs_naive_all_pro_pct') is not None else "—"), "artifacts/story_b_encounter_225.json"),
+            ],
+            "screenshot": "/portfolio-assets/B5_bigquery_dataset/screenshots/bigquery_tables.png",
+            "api": "/api/storyboard/b",
+        },
+    ]
+
+    return {
+        "title": "A Busy Day at the Hospital",
+        "subtitle": "Two records walk through the data platform. One is protected. One is helped. Every number on this page reads a committed artifact live.",
+        "repo": "https://github.com/anix-lynch/healthcare-ai-data-engineer",
+        "stages": stages,
+        "tommy": {
+            "name": "Tommy", "emoji": "\U0001F466", "verdict": "PROTECTED",
+            "hook": "Something doesn't look right.",
+            "steps": [
+                "B1 captures the record",
+                "B2 detects uncertainty — it fails a blocking quality contract",
+                "⛔ The platform refuses to guess — the record is quarantined, never served",
+                "\U0001F4e3 A human is called to verify",
+            ],
+            "close": "Tommy is protected — a bad record never reached analytics, ML, or AI.",
+        },
+        "eleanor": {
+            "name": "Eleanor", "emoji": "\U0001F475", "verdict": "HELPED",
+            "hook": "Data looks trustworthy.",
+            "steps": [
+                "B1 captures her clean record",
+                "B2 validates her — passes every blocking contract",
+                "B3 understands her — modeled into governed marts, queryable by humans + AI",
+                "B4 keeps the system healthy — reliable, auto-recovers from faults",
+                "B5 allocates attention & cost — routes to the right model tier, caches static context",
+                "\U0001F4ac An evidence-backed, grounded answer is produced",
+            ],
+            "close": "Eleanor is helped — a trusted answer, grounded in committed evidence.",
+        },
+        "finale": [
+            "\U0001F499 Tommy was protected",
+            "\U0001F499 Eleanor was helped",
+            "\U0001F499 Baymax never guesses when unsure",
+        ],
+    }
+
+
 @app.get("/api/search")
 def search(
     q: str = Query(..., min_length=2, description="Search query"),
@@ -769,7 +955,7 @@ def get_state_diff(patient_id: str = Query(..., description="patient id")):
     """
     Baymax NERVES ⚡ — longitudinal state-diff (completes Yellow).
     Returns past vs now + changed fields (e.g. CKD Stage 2 → 3). STUB: demo
-    timeline; CODEX wires to real longitudinal EHR diff.
+    timeline; a future integration wires to real longitudinal EHR diff.
     """
     if build_state_diff is None:
         raise HTTPException(status_code=503, detail="state-diff adapter unavailable")

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Publish one encounter record to the `encounter-events` Pub/Sub topic.
 
-This is the *producer* side of Bullet 1's streaming leg. The message is delivered
+This is the *producer* side of the platform's streaming leg. The message is delivered
 by a push subscription to the Cloud Run `/pubsub/push` endpoint, which validates
 and persists it to BigQuery — proving a real event flows
 Pub/Sub → Cloud Run → BigQuery end to end.

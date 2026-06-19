@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Source-to-warehouse reconciliation (Bullet 5).
+"""Source-to-warehouse reconciliation.
 
 A quality gate that walks the full grain chain and proves every row is accounted
 for — raw load → deduped encounters → canonical patients — and that the warehouse

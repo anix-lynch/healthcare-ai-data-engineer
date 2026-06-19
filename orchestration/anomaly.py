@@ -1,4 +1,4 @@
-"""ML anomaly detection for the quality gate (Bullet 2).
+"""ML anomaly detection for the quality gate.
 
 An IsolationForest over the numeric encounter features flags rows that don't look
 like the rest of the population (e.g. a billing amount or length-of-stay far off

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Stand up the Bullet 4 governance apparatus on BigQuery (idempotent).
+"""Stand up the this stage governance apparatus on BigQuery (idempotent).
 
 Builds the least-privilege access model — an analyst sees an approved, PII-masked
 view and is denied the raw base tables:
@@ -54,7 +54,7 @@ def main() -> None:
     # 1. governed dataset
     gov = bigquery.Dataset(f"{PROJECT}.{GOV_DS}")
     gov.location = "US"
-    gov.description = "Approved, PII-masked views for least-privilege analyst access (Bullet 4)."
+    gov.description = "Approved, PII-masked views for least-privilege analyst access."
     client.create_dataset(gov, exists_ok=True)
     print(f"[1] dataset {GOV_DS} ready")
 

@@ -1,8 +1,8 @@
-# Event-driven ingestion + record-level quarantine (Bullet 1)
+# Event-driven ingestion + record-level quarantine
 
 The batch loader (`scripts/load_bigquery.py`, `WRITE_TRUNCATE`) proves the *bulk*
 path. This module proves the **streaming** path and the **data-quality resilience**
-that Bullet 1 claims: messy records arrive one at a time, good rows land, bad rows
+that this stage claims: messy records arrive one at a time, good rows land, bad rows
 are isolated *with a reason*, and re-running never duplicates.
 
 ## What it does
@@ -56,7 +56,7 @@ GOOGLE_APPLICATION_CREDENTIALS=/path/to/sa-key.json python ingestion/ingest.py
 GOOGLE_APPLICATION_CREDENTIALS=/path/to/sa-key.json python ingestion/publish_event.py --demo
 ```
 
-## Entity resolution (same Bullet 1 claim)
+## Entity resolution (same claim)
 
 Idempotency here collapses *re-sent encounters* on the natural key. The
 **patient-level** resolver (`scripts/patient_identity.py`) is the other half of

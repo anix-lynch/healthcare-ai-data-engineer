@@ -1,4 +1,4 @@
-"""LLM-explained pipeline failures (Bullet 2).
+"""LLM-explained pipeline failures.
 
 When the quality gate quarantines rows, a single Gemini call turns the raw
 counts + sample into a plain-language explanation an on-call human can act on —

@@ -1,4 +1,4 @@
-# Self-monitoring orchestration (Bullet 2)
+# Self-monitoring orchestration
 
 > "พังต้องรู้ / ซ่อมได้ต้องซ่อม / ซ่อมไม่ได้ต้องเรียกคน" —
 > when it breaks you must know; fix what's fixable; page a human for what isn't.

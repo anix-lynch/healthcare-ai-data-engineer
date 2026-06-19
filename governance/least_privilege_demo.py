@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Observable least-privilege proof (Bullet 4): the analyst reads the approved
+"""Observable least-privilege proof: the analyst reads the approved
 masked view (200) but is denied the raw base table (403).
 
 Authenticate AS the restricted reader, then run both queries:

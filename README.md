@@ -1,5 +1,4 @@
 # healthcare-ai-data-engineer
-**Built by [Anix Lynch](https://gozeroshot.dev) — LA-based AI/Data Engineer**
 
 ![Demo](demo.gif)
 
@@ -68,13 +67,13 @@ healthcare-ai-data-engineer/
 │   ├── feature_store.yaml            ✅ Feast config (BigQuery offline / sqlite online)
 │   ├── requirements.txt              ✅ feast[gcp] — kept out of the API image
 │   └── README.md                     📖 what the features are + how to apply them
-├── ingestion/                        Bullet 1 — event-driven streaming leg
+├── ingestion/                        event-driven streaming leg
 │   ├── ingest.py · validate.py        ✅ batch replay + shared pure validator
 │   ├── sink.py                        ✅ one idempotent-MERGE / quarantine contract
 │   ├── publish_event.py               ✅ producer → Pub/Sub topic encounter-events
 │   ├── proof_streaming.json           ✅ real Pub/Sub→Cloud Run→BigQuery flow
 │   └── README.md                      📖 streaming + quarantine + entity-res
-├── orchestration/                    Bullet 2 — self-monitoring Airflow DAG
+├── orchestration/                    self-monitoring Airflow DAG
 │   ├── dags/data_platform_dag.py      ✅ parallel→transform→freshness→gate→publish/escalate
 │   ├── anomaly.py                     ✅ IsolationForest auto-quarantine
 │   ├── explain.py                     ✅ Gemini explains a failure in plain language
@@ -86,7 +85,7 @@ healthcare-ai-data-engineer/
 │   └── run_suite.py                  ✅ `make reliability` → artifacts/ (no hand-typed numbers)
 ├── artifacts/                        🖼️  reliability evidence (success/recovery/SLA/failures)
 │   └── reliability_summary.md        📖 99% success · 86% recovery · 0 stale-data incidents
-├── governance/                       Bullet 4 — least-privilege + masking
+├── governance/                       least-privilege + masking
 │   ├── setup_governance.py            ✅ masked authorized view + view-only grant + retention
 │   ├── least_privilege_demo.py        ✅ 200 on safe view · 403 on base table
 │   └── README.md · proof_*.json       📖 the access model + its proof

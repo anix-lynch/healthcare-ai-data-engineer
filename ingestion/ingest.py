@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Event-driven ingestion → BigQuery, with record-level quarantine + idempotent merge.
 
-This is the "stream" entry point for Bullet 1. It reads `stream_source.jsonl`
+This is the "stream" entry point for ingestion. It reads `stream_source.jsonl`
 one record at a time (the same shape an HTTP producer would POST to
 `/api/ingest`), classifies each with the SHARED validator in `validate.py`, and
 routes it:
@@ -217,7 +217,7 @@ def main() -> None:
     proof = build_proof(decisions, bq_counts)
     PROOF.write_text(json.dumps(proof, indent=2))
 
-    print(f"=== Bullet 1 — event-driven ingestion ({len(records)} rows streamed) ===")
+    print(f"=== event-driven ingestion ({len(records)} rows streamed) ===")
     for d in decisions:
         mark = {"accepted_new": "✅", "accepted_revised": "♻️", "quarantined": "🚫"}[d.status]
         why = f"  ({', '.join(d.reasons)})" if d.reasons else ""

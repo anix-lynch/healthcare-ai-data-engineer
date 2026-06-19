@@ -3,27 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Baymax Storyboard · healthcare-ai-data-engineer</title>
+<title>A Busy Day at the Hospital · healthcare-ai-data-engineer</title>
 <style>
   :root{
     --cream:#FBF7F0; --paper:#FFFDF8; --ink:#2B2A27; --ink-soft:#6B675E;
     --line:#E7DFD1; --line-strong:#C9BCA2;
     --coral:#E8765B; --green:#5FA978; --green-deep:#2f6a45;
-    --amber:#D4A23A; --red:#D9534F; --blue:#5B7FB9;
+    --amber:#D4A23A; --red:#D9534F; --blue:#5B7FB9; --violet:#8b5cf6;
     --mono:"SF Mono",ui-monospace,Menlo,Consolas,"Roboto Mono",monospace;
   }
   *{box-sizing:border-box}
   html,body{margin:0;padding:0}
   body{background:var(--cream);color:var(--ink);font-family:var(--mono);
     line-height:1.55;-webkit-font-smoothing:antialiased;font-size:14px}
-  .wrap{max-width:920px;margin:0 auto;padding:16px 16px 70px}
+  .wrap{max-width:960px;margin:0 auto;padding:16px 16px 80px}
   a{color:inherit}
-
-  .d{display:inline-block;width:10px;height:10px;border-radius:50%;vertical-align:middle}
-  .d.g{background:var(--green);box-shadow:0 0 0 3px rgba(95,169,120,.18)}
-  .d.a{background:var(--amber);box-shadow:0 0 0 3px rgba(212,162,58,.18)}
-  .d.r{background:var(--red);box-shadow:0 0 0 3px rgba(217,83,79,.18)}
-  .d.b{background:var(--blue);box-shadow:0 0 0 3px rgba(91,127,185,.18)}
 
   header{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:12px 15px;
     background:var(--paper);border:2px solid var(--ink);border-radius:12px}
@@ -37,105 +31,80 @@
     border-bottom:1.5px dashed var(--line-strong)}
   .back:hover{color:var(--coral);border-color:var(--coral)}
 
-  nav.story-nav{display:flex;gap:7px;flex-wrap:wrap;margin:16px 0 14px}
-  .stab{cursor:pointer;font-size:12.5px;font-weight:700;padding:8px 14px;border-radius:9px;
-    background:var(--paper);border:2px solid var(--line-strong);color:var(--ink-soft);
-    transition:transform .08s ease;user-select:none}
-  .stab:hover{transform:translateY(-2px);color:var(--ink)}
-  .stab.active{background:var(--ink);color:#fff;border-color:var(--ink)}
-  .stab.a-story.active{background:var(--coral);border-color:var(--coral)}
-  .stab.b-story.active{background:var(--blue);border-color:var(--blue)}
+  h1.title{font-size:24px;margin:22px 0 6px;letter-spacing:-.5px}
+  .subtitle{font-size:13px;color:var(--ink-soft);margin-bottom:18px;max-width:760px}
 
-  /* Layer strip */
-  .layers{display:flex;gap:6px;margin-bottom:12px;align-items:center}
-  .layer-label{font-size:11px;color:var(--ink-soft);margin-right:4px}
-  .lp{font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;
-    border:1.5px solid var(--line-strong);color:var(--ink-soft);background:var(--cream)}
-  .lp.active-b1{background:#e8f4ec;border-color:#5FA978;color:#2f6a45}
-  .lp.active-b2{background:#fef3e2;border-color:#D4A23A;color:#8a6516}
-  .lp.active-b3{background:#e8eef7;border-color:#5B7FB9;color:#2b4d80}
-  .lp.active-b4{background:#fce8e6;border-color:#E8765B;color:#8b3520}
-  .lp.active-b5{background:#f0e8f7;border-color:#8b5cf6;color:#5b21b6}
+  /* Hero: Tommy + Eleanor side by side */
+  .hero{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:10px}
+  @media(max-width:680px){.hero{grid-template-columns:1fr}}
+  .patient{background:var(--paper);border:2px solid var(--ink);border-radius:14px;
+    padding:18px;display:flex;flex-direction:column}
+  .patient.tommy{border-color:var(--amber)}
+  .patient.eleanor{border-color:var(--green)}
+  .p-head{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+  .p-emoji{font-size:30px;line-height:1}
+  .p-name{font-size:18px;font-weight:700}
+  .p-hook{font-size:12.5px;color:var(--ink-soft);font-style:italic;margin-bottom:12px}
+  .p-steps{list-style:none;padding:0;margin:0 0 14px}
+  .p-steps li{padding:6px 0;font-size:12.5px;border-bottom:1px dashed var(--line)}
+  .p-steps li:last-child{border-bottom:none}
+  .p-steps li::before{content:"↓ ";color:var(--line-strong);font-weight:700}
+  .p-close{font-size:12.5px;color:var(--ink);margin-top:auto;padding-top:10px}
+  .verdict{align-self:flex-start;font-size:12px;font-weight:700;padding:5px 14px;
+    border-radius:999px;border:2px solid;margin-bottom:12px}
+  .verdict.protected{background:#fef3e2;border-color:var(--amber);color:#8a6516}
+  .verdict.helped{background:#e8f4ec;border-color:var(--green);color:var(--green-deep)}
 
-  /* Story panels */
-  .story-panel{display:none}
-  .story-panel.show{display:block}
+  .section-label{font-size:12px;font-weight:700;color:var(--ink-soft);
+    text-transform:uppercase;letter-spacing:.06em;margin:26px 0 12px}
 
-  /* Act stepper */
-  .act-header{background:var(--paper);border:2px solid var(--ink);border-radius:12px;
-    padding:14px 18px;margin-bottom:12px}
-  .act-title{font-size:16px;font-weight:700;margin-bottom:4px}
-  .act-meta{font-size:11.5px;color:var(--ink-soft)}
-  .act-nav{display:flex;gap:8px;margin-top:12px;align-items:center}
-  .act-btn{cursor:pointer;font-size:12px;font-weight:700;padding:6px 14px;
-    border-radius:8px;border:2px solid var(--ink);background:var(--cream);
-    color:var(--ink);transition:all .1s}
-  .act-btn:hover{background:var(--ink);color:#fff}
-  .act-btn:disabled{opacity:.35;cursor:default;pointer-events:none}
-  .act-counter{font-size:12px;color:var(--ink-soft);flex:1;text-align:center}
-  .act-steps{display:flex;gap:5px;margin:0 8px}
-  .step-dot{width:8px;height:8px;border-radius:50%;background:var(--line-strong);
-    cursor:pointer;transition:background .15s}
-  .step-dot.active{background:var(--ink)}
-  .step-dot.done{background:var(--green)}
+  /* B1-B5 accordion */
+  .stage{background:var(--paper);border:2px solid var(--line-strong);border-radius:12px;
+    margin-bottom:10px;overflow:hidden;transition:border-color .15s}
+  .stage.open{border-color:var(--ink)}
+  .stage-head{display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;
+    user-select:none}
+  .stage-head:hover{background:var(--cream)}
+  .b-id{font-size:13px;font-weight:700;padding:4px 9px;border-radius:8px;color:#fff;flex-shrink:0}
+  .b-id.b1{background:var(--green)} .b-id.b2{background:var(--amber)}
+  .b-id.b3{background:var(--blue)} .b-id.b4{background:var(--coral)}
+  .b-id.b5{background:var(--violet)}
+  .stage-titles{flex:1;min-width:0}
+  .stage-organ{font-size:14px;font-weight:700}
+  .stage-q{font-size:11.5px;color:var(--ink-soft)}
+  .chev{font-size:13px;color:var(--ink-soft);transition:transform .18s}
+  .stage.open .chev{transform:rotate(90deg)}
+  .stage-body{display:none;padding:0 16px 16px}
+  .stage.open .stage-body{display:block}
+  .stage-plain{font-size:12.5px;color:var(--ink-soft);font-style:italic;
+    padding:10px 12px;background:var(--cream);border-radius:8px;
+    border-left:3px solid var(--line-strong);margin:4px 0 12px}
 
-  /* Data box */
-  .box{background:var(--paper);border:1.5px solid var(--line-strong);
-    border-radius:10px;padding:14px 16px;margin-bottom:10px}
-  .box.solid{border:2px solid var(--ink)}
-  .box-title{font-size:12px;font-weight:700;color:var(--ink-soft);
-    text-transform:uppercase;letter-spacing:.04em;margin-bottom:10px}
+  table.kv{width:100%;border-collapse:collapse;margin-bottom:12px}
+  table.kv tr{border-bottom:1px solid var(--line)}
+  table.kv tr:last-child{border-bottom:none}
+  table.kv td{padding:7px 6px;vertical-align:middle}
+  table.kv td.k{color:var(--ink-soft);font-size:12px;width:54%}
+  table.kv td.v{font-size:15px;font-weight:700;text-align:right;white-space:nowrap}
+  .proof{display:inline-block;font-size:10px;font-weight:700;margin-left:8px;
+    padding:2px 7px;border-radius:6px;background:var(--cream);
+    border:1px solid var(--line-strong);color:var(--ink-soft);text-decoration:none}
+  .proof:hover{border-color:var(--coral);color:var(--coral)}
+  .shot{width:100%;border:1.5px solid var(--line-strong);border-radius:8px;display:block;margin-bottom:8px}
+  .api-link{font-size:11.5px;color:var(--blue);text-decoration:none;
+    border-bottom:1.5px dashed var(--blue)}
+  .api-link:hover{color:var(--coral);border-color:var(--coral)}
 
-  /* KV table */
-  .kv{width:100%;border-collapse:collapse}
-  .kv tr{border-bottom:1px solid var(--line)}
-  .kv tr:last-child{border-bottom:none}
-  .kv td{padding:5px 6px;vertical-align:top}
-  .kv td:first-child{width:38%;color:var(--ink-soft);font-size:12px;padding-right:12px}
-  .kv td:last-child{font-size:13px;font-weight:600}
-  .kv .nested{padding-left:12px;border-left:2px solid var(--line)}
+  /* Finale */
+  .finale{background:var(--ink);color:var(--cream);border-radius:14px;
+    padding:24px;text-align:center;margin-top:26px}
+  .finale .fl{font-size:16px;font-weight:700;padding:7px 0}
+  .finale .fl.dim{color:#cbb8a0;font-size:13px;font-weight:400;margin-top:6px}
 
-  /* Verdict badges */
-  .badge{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;
-    border-radius:999px;border:1.5px solid}
-  .badge.pass{background:#e8f4ec;border-color:#5FA978;color:#2f6a45}
-  .badge.fail{background:#fce8e6;border-color:#E8765B;color:#8b3520}
-  .badge.pro{background:#f0e8f7;border-color:#8b5cf6;color:#5b21b6}
-  .badge.flash{background:#e8eef7;border-color:#5B7FB9;color:#2b4d80}
-  .badge.quarantine{background:#fef3e2;border-color:#D4A23A;color:#8a6516}
-  .badge.grounded{background:#e8f4ec;border-color:#5FA978;color:#2f6a45}
-
-  /* Source caption */
-  .source-caption{font-size:10.5px;color:var(--ink-soft);margin-top:6px;
-    padding:5px 10px;background:var(--cream);border-left:2px solid var(--line-strong);
-    border-radius:0 6px 6px 0}
-
-  /* Annotation */
-  .annotation{font-size:12.5px;color:var(--ink-soft);font-style:italic;
-    padding:9px 12px;background:var(--cream);border-radius:8px;
-    border-left:3px solid var(--line-strong);margin-bottom:10px}
-
-  /* Pipeline chain */
-  .chain{list-style:none;padding:0;margin:0}
-  .chain li{padding:5px 0;font-size:12.5px;border-bottom:1px dashed var(--line)}
-  .chain li:last-child{border-bottom:none}
-  .chain li::before{content:"→ ";color:var(--green);font-weight:700}
-
-  /* Loading */
-  .loading{text-align:center;padding:40px;color:var(--ink-soft);font-size:13px}
-
-  /* Tagline */
-  .tagline{font-size:13px;color:var(--ink-soft);margin-bottom:14px;
-    padding:10px 14px;background:var(--paper);border:1.5px solid var(--line-strong);
-    border-radius:9px}
-
-  /* Score bar */
-  .score-bar-wrap{display:flex;align-items:center;gap:10px}
-  .score-bar{height:8px;background:var(--line);border-radius:4px;flex:1;overflow:hidden}
-  .score-fill{height:100%;border-radius:4px;background:var(--green);transition:width .4s}
-  .score-label{font-size:12px;font-weight:700;min-width:36px;text-align:right}
-
-  footer{margin-top:22px;text-align:center;font-size:11.5px;color:var(--ink-soft)}
+  .evidence-note{font-size:11px;color:var(--ink-soft);margin:14px 0;
+    padding:8px 12px;background:var(--paper);border:1.5px solid var(--line);border-radius:8px}
+  .loading{text-align:center;padding:50px;color:var(--ink-soft)}
+  footer{margin-top:24px;text-align:center;font-size:11.5px;color:var(--ink-soft)}
   footer .h{color:var(--coral)}
 </style>
 </head>
@@ -143,283 +112,82 @@
 <div class="wrap">
 
   <header>
-    <span class="logo">healthcare-ai-data-engineer<span class="s"> /</span> storyboard</span>
-    <span class="pill run">▲ Cloud Run</span>
-    <span class="pill" id="livepill"><span class="d a"></span> loading…</span>
+    <span class="logo">healthcare-ai-data<span class="s">-engineer</span></span>
+    <span class="pill run">● B1→B5 platform</span>
     <span class="sp"></span>
-    <a class="back" href="/">← back to control room</a>
+    <a class="back" href="/app">← cockpit</a>
+    <a class="back" href="https://gozeroshot.dev" style="margin-left:12px">gozeroshot.dev ↗</a>
   </header>
 
-  <nav class="story-nav">
-    <div class="stab a-story active" data-s="sa">Story A: The Record That Gets Rejected</div>
-    <div class="stab b-story" data-s="sb">Story B: The Record That Reaches Baymax</div>
-  </nav>
+  <div id="root"><div class="loading">Reading live artifacts…</div></div>
 
-  <!-- STORY A -->
-  <div class="story-panel show" id="sa">
-    <div class="tagline" id="sa-tagline">Loading…</div>
-    <div class="layers" id="sa-layers">
-      <span class="layer-label">B layers:</span>
-      <span class="lp" id="sa-l1">B1</span>
-      <span class="lp" id="sa-l2">B2</span>
-    </div>
-    <div class="act-header">
-      <div class="act-title" id="sa-act-title">Act 1</div>
-      <div class="act-meta" id="sa-act-meta"></div>
-      <div class="act-nav">
-        <button class="act-btn" id="sa-prev" onclick="stepStory('sa',-1)">← Prev</button>
-        <div class="act-steps" id="sa-dots"></div>
-        <div class="act-counter" id="sa-counter"></div>
-        <button class="act-btn" id="sa-next" onclick="stepStory('sa',1)">Next →</button>
-      </div>
-    </div>
-    <div id="sa-content"><div class="loading">Fetching story data…</div></div>
-  </div>
-
-  <!-- STORY B -->
-  <div class="story-panel" id="sb">
-    <div class="tagline" id="sb-tagline">Loading…</div>
-    <div class="layers" id="sb-layers">
-      <span class="layer-label">B layers:</span>
-      <span class="lp" id="sb-l1">B1</span>
-      <span class="lp" id="sb-l2">B2</span>
-      <span class="lp" id="sb-l3">B3</span>
-      <span class="lp" id="sb-l4">B4</span>
-      <span class="lp" id="sb-l5">B5</span>
-    </div>
-    <div class="act-header">
-      <div class="act-title" id="sb-act-title">Act 1</div>
-      <div class="act-meta" id="sb-act-meta"></div>
-      <div class="act-nav">
-        <button class="act-btn" id="sb-prev" onclick="stepStory('sb',-1)">← Prev</button>
-        <div class="act-steps" id="sb-dots"></div>
-        <div class="act-counter" id="sb-counter"></div>
-        <button class="act-btn" id="sb-next" onclick="stepStory('sb',1)">Next →</button>
-      </div>
-    </div>
-    <div id="sb-content"><div class="loading">Fetching story data…</div></div>
-  </div>
-
-<footer>healthcare-ai-data-engineer · <span class="h">Anix Lynch</span> · All data from real artifacts. No hardcoded display values.</footer>
+  <footer>Built by <span class="h">Anix Lynch</span> · every metric reads a committed artifact at request time · <span id="repolink"></span></footer>
 </div>
 
 <script>
-const API = '';
-const state = {
-  sa: { data: null, act: 0 },
-  sb: { data: null, act: 0 }
-};
+const root = document.getElementById('root');
 
-// Layer active class per act
-const LAYER_MAP = {
-  sa: { act_1:'b1', act_2:'b1', act_3:'b2', act_4:'b2', act_5:'b2' },
-  sb: { act_1:'b1', act_2:'b2', act_3:'b3', act_4:'b4',
-        act_5:'b5', act_6:'b5', act_7:'b5', act_8:'b3 b5' }
-};
-
-function setLayers(sid, actKey) {
-  const layers = LAYER_MAP[sid] || {};
-  const active = (layers[actKey] || '').split(' ');
-  const max = sid === 'sa' ? 2 : 5;
-  for (let i = 1; i <= max; i++) {
-    const el = document.getElementById(sid + '-l' + i);
-    if (!el) continue;
-    el.className = 'lp';
-    if (active.includes('b' + i)) el.className += ' active-b' + i;
-  }
+function metricRow(m){
+  const proof = m.proof ? `<a class="proof" href="${m.proof}" target="_blank" rel="noopener">proof ↗</a>` : '';
+  return `<tr><td class="k">${m.label}<br><span style="font-size:10px;opacity:.7">${m.source}</span></td>
+          <td class="v">${m.value}${proof}</td></tr>`;
 }
 
-function buildDots(sid, total) {
-  const el = document.getElementById(sid + '-dots');
-  if (!el) return;
-  el.innerHTML = '';
-  for (let i = 0; i < total; i++) {
-    const d = document.createElement('div');
-    d.className = 'step-dot';
-    d.dataset.i = i;
-    d.onclick = () => { state[sid].act = i; renderAct(sid); };
-    el.appendChild(d);
-  }
+function stageBlock(s){
+  const rows = s.metrics.map(metricRow).join('');
+  const shot = s.screenshot ? `<img class="shot" loading="lazy" src="${s.screenshot}" alt="${s.organ} screenshot"
+       onerror="this.style.display='none'">` : '';
+  const api = s.api ? `<div>▶ live: <a class="api-link" href="${s.api}" target="_blank" rel="noopener">${s.api}</a></div>` : '';
+  return `<div class="stage" data-id="${s.id}">
+    <div class="stage-head" onclick="this.parentNode.classList.toggle('open')">
+      <span class="b-id ${s.dot}">${s.id}</span>
+      <span class="stage-titles"><span class="stage-organ">${s.organ}</span><br>
+        <span class="stage-q">${s.question}</span></span>
+      <span class="chev">▶</span>
+    </div>
+    <div class="stage-body">
+      <div class="stage-plain">${s.plain}</div>
+      <table class="kv">${rows}</table>
+      ${shot}
+      ${api}
+    </div>
+  </div>`;
 }
 
-function updateDots(sid) {
-  const cur = state[sid].act;
-  document.querySelectorAll('#' + sid + '-dots .step-dot').forEach((d, i) => {
-    d.className = 'step-dot' + (i < cur ? ' done' : i === cur ? ' active' : '');
-  });
+function patientCard(p, cls){
+  const steps = p.steps.map(s=>`<li>${s}</li>`).join('');
+  const vcls = p.verdict === 'PROTECTED' ? 'protected' : 'helped';
+  return `<div class="patient ${cls}">
+    <div class="p-head"><span class="p-emoji">${p.emoji}</span><span class="p-name">${p.name}</span></div>
+    <div class="p-hook">"${p.hook}"</div>
+    <span class="verdict ${vcls}">💙 ${p.verdict}</span>
+    <ul class="p-steps">${steps}</ul>
+    <div class="p-close">${p.close}</div>
+  </div>`;
 }
 
-function stepStory(sid, dir) {
-  const s = state[sid];
-  if (!s.data) return;
-  const acts = Object.keys(s.data.acts);
-  s.act = Math.max(0, Math.min(acts.length - 1, s.act + dir));
-  renderAct(sid);
-}
-
-function badge(text, cls) {
-  return '<span class="badge ' + cls + '">' + text + '</span>';
-}
-
-function verdictBadge(val) {
-  if (typeof val !== 'string') return null;
-  const v = val.toUpperCase();
-  if (v === 'PASS' || v === 'ALL_PASS' || v === 'CLEAN') return badge(val, 'pass');
-  if (v.includes('QUARANTINE')) return badge(val, 'quarantine');
-  if (v.includes('PRO')) return badge(val, 'pro');
-  if (v.includes('FLASH')) return badge(val, 'flash');
-  if (v === 'GROUNDED') return badge(val, 'grounded');
-  if (v === 'FAIL' || v.includes('FAIL')) return badge(val, 'fail');
-  return null;
-}
-
-function renderVal(val, depth) {
-  depth = depth || 0;
-  if (val === null || val === undefined) return '<span style="color:var(--ink-soft)">—</span>';
-  if (typeof val === 'boolean') return val ? badge('true','pass') : badge('false','fail');
-  if (Array.isArray(val)) {
-    if (val.length === 0) return '<span style="color:var(--ink-soft)">[]</span>';
-    if (val.every(v => typeof v === 'string')) {
-      return val.map(v => {
-        const b = verdictBadge(v);
-        return b || '<span style="display:inline-block;background:var(--cream);border:1px solid var(--line-strong);border-radius:4px;padding:1px 6px;font-size:11.5px;margin:1px">' + esc(v) + '</span>';
-      }).join(' ');
-    }
-    return '<div class="nested">' + val.map(function(v,i){var o={};o['['+i+']']=v;return renderKV(o,depth+1);}).join('') + '</div>';
-  }
-  if (typeof val === 'object') {
-    return '<div class="nested">' + renderKV(val, depth + 1) + '</div>';
-  }
-  const b = verdictBadge(String(val));
-  if (b) return b;
-  // Numbers with known patterns
-  if (typeof val === 'number') {
-    if (val >= 0 && val <= 1 && String(val).includes('.')) {
-      return '<div class="score-bar-wrap"><div class="score-bar"><div class="score-fill" style="width:' + (val*100) + '%"></div></div><span class="score-label">' + val.toFixed(3) + '</span></div>';
-    }
-  }
-  return '<strong>' + esc(String(val)) + '</strong>';
-}
-
-function renderKV(obj, depth) {
-  if (!obj || typeof obj !== 'object' || Array.isArray(obj)) return '';
-  const SKIP = new Set(['title','annotation','layer','source_artifact','story','tagline','source_artifacts','acts']);
-  let rows = '';
-  for (const [k, v] of Object.entries(obj)) {
-    if (SKIP.has(k) && depth === 0) continue;
-    const label = k.replace(/_/g, ' ');
-    rows += '<tr><td>' + esc(label) + '</td><td>' + renderVal(v, depth) + '</td></tr>';
-  }
-  return rows ? '<table class="kv">' + rows + '</table>' : '';
-}
-
-function esc(s) {
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-
-function renderAct(sid) {
-  const s = state[sid];
-  if (!s.data) return;
-  const acts = s.data.acts;
-  const actKeys = Object.keys(acts);
-  const actKey = actKeys[s.act];
-  const act = acts[actKey];
-  if (!act) return;
-
-  // Header
-  document.getElementById(sid + '-act-title').textContent = act.title || actKey;
-  document.getElementById(sid + '-act-meta').textContent = 'Act ' + (s.act + 1) + ' of ' + actKeys.length;
-  document.getElementById(sid + '-counter').textContent = actKey;
-
-  // Prev/next buttons
-  document.getElementById(sid + '-prev').disabled = s.act === 0;
-  document.getElementById(sid + '-next').disabled = s.act === actKeys.length - 1;
-
-  // Dots
-  updateDots(sid);
-
-  // Layer strip
-  setLayers(sid, actKey);
-
-  // Content
-  const content = document.getElementById(sid + '-content');
-  let html = '';
-
-  // Annotation
-  if (act.annotation) {
-    html += '<div class="annotation">' + esc(act.annotation) + '</div>';
-  }
-
-  // Data boxes — render each top-level key as a separate box
-  const SKIP_TOP = new Set(['title','annotation','layer','source_artifact']);
-  for (const [k, v] of Object.entries(act)) {
-    if (SKIP_TOP.has(k)) continue;
-    const label = k.replace(/_/g, ' ');
-
-    if (k === 'pipeline_chain' && Array.isArray(v)) {
-      html += '<div class="box"><div class="box-title">B1 → B5 chain</div><ul class="chain">';
-      v.forEach(item => { html += '<li>' + esc(item) + '</li>'; });
-      html += '</ul></div>';
-      continue;
-    }
-
-    if (typeof v === 'object' && !Array.isArray(v)) {
-      html += '<div class="box"><div class="box-title">' + esc(label) + '</div>' + renderKV(v) + '</div>';
-    } else if (Array.isArray(v)) {
-      html += '<div class="box"><div class="box-title">' + esc(label) + '</div>' + renderVal(v) + '</div>';
-    } else {
-      html += '<div class="box"><table class="kv"><tr><td>' + esc(label) + '</td><td>' + renderVal(v) + '</td></tr></table></div>';
-    }
-  }
-
-  // Source caption
-  if (act.source_artifact) {
-    html += '<div class="source-caption">source: ' + esc(act.source_artifact) + '</div>';
-  }
-
-  content.innerHTML = html;
-}
-
-function initStory(sid, data) {
-  state[sid].data = data;
-  state[sid].act = 0;
-  const actCount = Object.keys(data.acts).length;
-
-  document.getElementById(sid + '-tagline').textContent = data.tagline || data.title;
-  buildDots(sid, actCount);
-  renderAct(sid);
-}
-
-// Story nav
-document.querySelector('.story-nav').addEventListener('click', e => {
-  const t = e.target.closest('.stab');
-  if (!t) return;
-  const s = t.dataset.s;
-  document.querySelectorAll('.stab').forEach(x => x.classList.remove('active'));
-  t.classList.add('active');
-  document.querySelectorAll('.story-panel').forEach(x => x.classList.remove('show'));
-  document.getElementById(s).classList.add('show');
+fetch('/api/storyboard/platform').then(r=>r.json()).then(d=>{
+  document.getElementById('repolink').innerHTML =
+    `<a class="back" href="${d.repo}" target="_blank" rel="noopener">source ↗</a>`;
+  const stages = d.stages.map(stageBlock).join('');
+  const finale = d.finale.map((f,i)=>`<div class="fl${i===2?' dim':''}">${f}</div>`).join('');
+  root.innerHTML = `
+    <h1 class="title">${d.title}</h1>
+    <div class="subtitle">${d.subtitle}</div>
+    <div class="hero">
+      ${patientCard(d.tommy,'tommy')}
+      ${patientCard(d.eleanor,'eleanor')}
+    </div>
+    <div class="evidence-note">📎 Evidence-first: every number below is read live from a committed JSON / report artifact. Click <b>proof ↗</b> on any metric to see the source file on GitHub.</div>
+    <div class="section-label">The platform, stage by stage — click to expand</div>
+    ${stages}
+    <div class="finale">${finale}</div>`;
+  // open B1 by default
+  const first = root.querySelector('.stage');
+  if(first) first.classList.add('open');
+}).catch(e=>{
+  root.innerHTML = `<div class="loading">Could not load platform data: ${e}</div>`;
 });
-
-// Load data
-async function loadStories() {
-  const pill = document.getElementById('livepill');
-  try {
-    const [a, b] = await Promise.all([
-      fetch(API + '/api/storyboard/a').then(r => r.json()),
-      fetch(API + '/api/storyboard/b').then(r => r.json())
-    ]);
-    initStory('sa', a);
-    initStory('sb', b);
-    pill.innerHTML = '<span class="d g"></span> live · PROD';
-  } catch(e) {
-    pill.innerHTML = '<span class="d r"></span> fetch failed';
-    document.getElementById('sa-content').innerHTML = '<div class="loading">Error loading story data. Is the API running?</div>';
-    document.getElementById('sb-content').innerHTML = '<div class="loading">Error loading story data. Is the API running?</div>';
-  }
-}
-
-loadStories();
 </script>
 </body>
 </html>

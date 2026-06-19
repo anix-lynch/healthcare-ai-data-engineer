@@ -1,4 +1,4 @@
-"""Bullet 2 — self-monitoring data-platform DAG.
+"""self-monitoring data-platform DAG.
 
     ingest_source_a ─┐
                      ├─► transform ─► freshness_sla ─► quality_gate ─┬─► publish   (ALL_SUCCESS)
