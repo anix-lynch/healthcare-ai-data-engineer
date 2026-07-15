@@ -192,6 +192,30 @@ make test          # run pytest
 
 ---
 
+## Tableau BI Delivery Layer
+
+The data pipeline extends to a Tableau extract for BI team consumption — no Tableau Desktop required on the data engineering side.
+
+```
+BigQuery gold layer (raw_ingest_clean)
+    ↓ tableau/export_hyper.py
+healthcare_by_condition.hyper        ← handed to viz team
+```
+
+**What it does:** aggregates patient encounters by medical condition (count, avg billing, avg age) → writes a `.hyper` Tableau extract via Tableau Hyper API → viz team opens in Tableau Desktop/Public, data is already there.
+
+```bash
+# BigQuery mode (needs GOOGLE_APPLICATION_CREDENTIALS)
+python tableau/export_hyper.py
+
+# Dry-run (local JSONL, no GCP creds needed)
+python tableau/export_hyper.py --dry-run
+```
+
+![Tableau extract preview](tableau/healthcare_by_condition.png)
+
+---
+
 ## Related Repos
 
 This repo is the backbone — it publishes the data product; the others consume it.
